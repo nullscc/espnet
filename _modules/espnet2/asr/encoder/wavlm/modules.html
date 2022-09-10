@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>espnet2.asr.encoder.wavlm.modules &mdash; ESPnet 202205 documentation</title><link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> ESPnet
+          </a>
+              <div class="version">
+                202205
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parallelization.html">Using Job scheduling system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docker.html">Docker</a></li>
+</ul>
+<p><span class="caption-text">ESPnet2:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../espnet2_tutorial.html">ESPnet2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../espnet2_tutorial.html#instruction-for-run-sh">Instruction for run.sh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../espnet2_training_option.html">Change the configuration for training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../espnet2_task.html">Task class and data input system for training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../espnet2_distributed.html">Distributed training</a></li>
+</ul>
+<p><span class="caption-text">Notebook:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/asr_cli.html">Speech Recognition (Recipe)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/asr_library.html">Speech Recognition (Library)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_asr_realtime_demo.html">ESPnet2-ASR realtime demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_asr_transfer_learning_demo.html"><strong>Use transfer learning for ASR in ESPnet2</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_asr_transfer_learning_demo.html#Abstract">Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_asr_transfer_learning_demo.html#ESPnet-installation-(about-10-minutes-in-total)">ESPnet installation (about 10 minutes in total)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_asr_transfer_learning_demo.html#mini_an4-recipe-as-a-transfer-learning-example">mini_an4 recipe as a transfer learning example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_streaming_asr_demo.html">ESPnet2 real streaming Transformer demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_tts_realtime_demo.html">ESPnet2-TTS realtime demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_tutorial_2021_CMU_11751_18781.html">CMU 11751/18781 2021: ESPnet Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_tutorial_2021_CMU_11751_18781.html#Run-an-inference-example">Run an inference example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_tutorial_2021_CMU_11751_18781.html#Full-installation">Full installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_tutorial_2021_CMU_11751_18781.html#Run-a-recipe-example">Run a recipe example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet_se_demonstration_for_waspaa_2021.html">ESPnet Speech Enhancement Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet_se_demonstration_for_waspaa_2021.html#Contents">Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet_se_demonstration_for_waspaa_2021.html#(1)-Tutorials-on-the-Basic-Usage">(1) Tutorials on the Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet_se_demonstration_for_waspaa_2021.html#(2)-Tutorials-on-Contributing-to-ESPNet-SE-Project">(2) Tutorials on Contributing to ESPNet-SE Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/pretrained.html">Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/se_demo.html">ESPnet Speech Enhancement Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/st_demo.html">ESPnet Speech Translation Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/tts_cli.html">Text-to-Speech (Recipe)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/tts_realtime_demo.html">ESPnet real time E2E-TTS demonstration</a></li>
+</ul>
+<p><span class="caption-text">Package Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.lm.html">espnet.lm package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.vc.html">espnet.vc package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.nets.html">espnet.nets package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.utils.html">espnet.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.scheduler.html">espnet.scheduler package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.tts.html">espnet.tts package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.asr.html">espnet.asr package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.st.html">espnet.st package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.transform.html">espnet.transform package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.mt.html">espnet.mt package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.optimizer.html">espnet.optimizer package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.bin.html">espnet.bin package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.schedulers.html">espnet2.schedulers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.lm.html">espnet2.lm package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.hubert.html">espnet2.hubert package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.gan_tts.html">espnet2.gan_tts package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.torch_utils.html">espnet2.torch_utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.fileio.html">espnet2.fileio package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.diar.html">espnet2.diar package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.main_funcs.html">espnet2.main_funcs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.train.html">espnet2.train package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.fst.html">espnet2.fst package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.utils.html">espnet2.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.tts.html">espnet2.tts package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.asr.html">espnet2.asr package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.text.html">espnet2.text package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.iterators.html">espnet2.iterators package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.layers.html">espnet2.layers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.enh.html">espnet2.enh package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.optimizers.html">espnet2.optimizers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.st.html">espnet2.st package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.tasks.html">espnet2.tasks package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.mt.html">espnet2.mt package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.bin.html">espnet2.bin package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.samplers.html">espnet2.samplers package</a></li>
+</ul>
+<p><span class="caption-text">Tool Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../apis/espnet_bin.html">core tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../apis/espnet2_bin.html">core tools (espnet2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../apis/utils_py.html">python utility tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../apis/utils_sh.html">bash utility tools</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">ESPnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+      <li>espnet2.asr.encoder.wavlm.modules</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for espnet2.asr.encoder.wavlm.modules</h1><div class="highlight"><pre>
+<span></span><span class="c1"># --------------------------------------------------------</span>
+<span class="c1"># WavLM: Large-Scale Self-Supervised  Pre-training  for Full Stack Speech Processing (https://arxiv.org/abs/2110.13900.pdf)</span>
+<span class="c1"># Github source: https://github.com/microsoft/unilm/tree/master/wavlm</span>
+<span class="c1"># Copyright (c) 2021 Microsoft</span>
+<span class="c1"># Licensed under The MIT License [see LICENSE for details]</span>
+<span class="c1"># Based on fairseq code bases</span>
+<span class="c1"># https://github.com/pytorch/fairseq</span>
+<span class="c1"># --------------------------------------------------------</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+
+
+<div class="viewcode-block" id="TransposeLast"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.TransposeLast">[docs]</a><span class="k">class</span> <span class="nc">TransposeLast</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deconstruct_idx</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deconstruct_idx</span> <span class="o">=</span> <span class="n">deconstruct_idx</span>
+
+<div class="viewcode-block" id="TransposeLast.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.TransposeLast.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deconstruct_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">deconstruct_idx</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Fp32LayerNorm"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.Fp32LayerNorm">[docs]</a><span class="k">class</span> <span class="nc">Fp32LayerNorm</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Fp32LayerNorm.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.Fp32LayerNorm.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">layer_norm</span><span class="p">(</span>
+            <span class="nb">input</span><span class="o">.</span><span class="n">float</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normalized_shape</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Fp32GroupNorm"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.Fp32GroupNorm">[docs]</a><span class="k">class</span> <span class="nc">Fp32GroupNorm</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Fp32GroupNorm.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.Fp32GroupNorm.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">group_norm</span><span class="p">(</span>
+            <span class="nb">input</span><span class="o">.</span><span class="n">float</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_groups</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="GradMultiply"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.GradMultiply">[docs]</a><span class="k">class</span> <span class="nc">GradMultiply</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">Function</span><span class="p">):</span>
+<div class="viewcode-block" id="GradMultiply.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.GradMultiply.forward">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="GradMultiply.backward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.GradMultiply.backward">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">grad</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grad</span> <span class="o">*</span> <span class="n">ctx</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="kc">None</span></div></div>
+
+
+<div class="viewcode-block" id="SamePad"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.SamePad">[docs]</a><span class="k">class</span> <span class="nc">SamePad</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">causal</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove</span> <span class="o">=</span> <span class="n">kernel_size</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">kernel_size</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="SamePad.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.SamePad.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">x</span></div></div>
+
+
+<div class="viewcode-block" id="Swish"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.Swish">[docs]</a><span class="k">class</span> <span class="nc">Swish</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Swish function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct an MultiHeadedAttention object.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Swish</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Swish.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.Swish.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="GLU_Linear"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.GLU_Linear">[docs]</a><span class="k">class</span> <span class="nc">GLU_Linear</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">,</span> <span class="n">glu_type</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">,</span> <span class="n">bias_in_glu</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GLU_Linear</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">glu_type</span> <span class="o">=</span> <span class="n">glu_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">=</span> <span class="n">output_dim</span>
+
+        <span class="k">if</span> <span class="n">glu_type</span> <span class="o">==</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">glu_act</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">glu_type</span> <span class="o">==</span> <span class="s2">&quot;swish&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">glu_act</span> <span class="o">=</span> <span class="n">Swish</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">glu_type</span> <span class="o">==</span> <span class="s2">&quot;relu&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">glu_act</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">glu_type</span> <span class="o">==</span> <span class="s2">&quot;gelu&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">glu_act</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">bias_in_glu</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">output_dim</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">output_dim</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GLU_Linear.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.GLU_Linear.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># to be consistent with GLU_Linear, we assume the input always has the #channel (#dim) in the last dimension of the tensor, so need to switch the dimension first for 1D-Conv case</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">glu_type</span> <span class="o">==</span> <span class="s2">&quot;bilinear&quot;</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">*</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">glu_act</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">*</span> <span class="mi">2</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="n">x</span></div></div>
+
+
+<div class="viewcode-block" id="gelu_accurate"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.gelu_accurate">[docs]</a><span class="k">def</span> <span class="nf">gelu_accurate</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">gelu_accurate</span><span class="p">,</span> <span class="s2">&quot;_a&quot;</span><span class="p">):</span>
+        <span class="n">gelu_accurate</span><span class="o">.</span><span class="n">_a</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">gelu_accurate</span><span class="o">.</span><span class="n">_a</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.044715</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">))))</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gelu"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.gelu">[docs]</a><span class="k">def</span> <span class="nf">gelu</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">gelu</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">float</span><span class="p">())</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_activation_fn"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.get_activation_fn">[docs]</a><span class="k">def</span> <span class="nf">get_activation_fn</span><span class="p">(</span><span class="n">activation</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the activation function corresponding to `activation`&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">activation</span> <span class="o">==</span> <span class="s2">&quot;relu&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span>
+    <span class="k">elif</span> <span class="n">activation</span> <span class="o">==</span> <span class="s2">&quot;gelu&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">gelu</span>
+    <span class="k">elif</span> <span class="n">activation</span> <span class="o">==</span> <span class="s2">&quot;gelu_fast&quot;</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;--activation-fn=gelu_fast has been renamed to gelu_accurate&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">gelu_accurate</span>
+    <span class="k">elif</span> <span class="n">activation</span> <span class="o">==</span> <span class="s2">&quot;gelu_accurate&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">gelu_accurate</span>
+    <span class="k">elif</span> <span class="n">activation</span> <span class="o">==</span> <span class="s2">&quot;tanh&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span>
+    <span class="k">elif</span> <span class="n">activation</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span>
+    <span class="k">elif</span> <span class="n">activation</span> <span class="o">==</span> <span class="s2">&quot;glu&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;--activation-fn </span><span class="si">{}</span><span class="s2"> not supported&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">activation</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="init_bert_params"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.init_bert_params">[docs]</a><span class="k">def</span> <span class="nf">init_bert_params</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize the weights specific to the BERT Model.</span>
+<span class="sd">    This overrides the default initializations depending on the specified arguments.</span>
+<span class="sd">        1. If normal_init_linear_weights is set then weights of linear</span>
+<span class="sd">           layer will be initialized using the normal distribution and</span>
+<span class="sd">           bais will be set to the specified value.</span>
+<span class="sd">        2. If normal_init_embed_weights is set then weights of embedding</span>
+<span class="sd">           layer will be initialized using the normal distribution.</span>
+<span class="sd">        3. If normal_init_proj_weights is set then weights of</span>
+<span class="sd">           in_project_weight for MultiHeadAttention initialized using</span>
+<span class="sd">           the normal distribution (to be validated).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">normal_</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="c1"># with FSDP, module params will be on CUDA, so we cast them back to CPU</span>
+        <span class="c1"># so that the RNG is consistent with and without FSDP</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">):</span>
+        <span class="n">normal_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">):</span>
+        <span class="n">normal_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">padding_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">module</span><span class="o">.</span><span class="n">padding_idx</span><span class="p">]</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">MultiheadAttention</span><span class="p">):</span>
+        <span class="n">normal_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">q_proj</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">normal_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">k_proj</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">normal_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">v_proj</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="quant_noise"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.quant_noise">[docs]</a><span class="k">def</span> <span class="nf">quant_noise</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">block_size</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wraps modules and applies quantization noise to the weights for</span>
+<span class="sd">    subsequent quantization with Iterative Product Quantization as</span>
+<span class="sd">    described in &quot;Training with Quantization Noise for Extreme Model Compression&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        - module: nn.Module</span>
+<span class="sd">        - p: amount of Quantization Noise</span>
+<span class="sd">        - block_size: size of the blocks for subsequent quantization with iPQ</span>
+
+<span class="sd">    Remarks:</span>
+<span class="sd">        - Module weights must have the right sizes wrt the block size</span>
+<span class="sd">        - Only Linear, Embedding and Conv2d modules are supported for the moment</span>
+<span class="sd">        - For more detail on how to quantize by blocks with convolutional weights,</span>
+<span class="sd">          see &quot;And the Bit Goes Down: Revisiting the Quantization of Neural Networks&quot;</span>
+<span class="sd">        - We implement the simplest form of noise here as stated in the paper</span>
+<span class="sd">          which consists in randomly dropping blocks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># if no quantization noise, don&#39;t register hook</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">module</span>
+
+    <span class="c1"># supported modules</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">))</span>
+
+    <span class="c1"># test whether module.weight has the right sizes wrt block_size</span>
+    <span class="n">is_conv</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span>
+
+    <span class="c1"># 2D matrix</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_conv</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">block_size</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="p">),</span> <span class="s2">&quot;Input features must be a multiple of block sizes&quot;</span>
+
+    <span class="c1"># 4D matrix</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># 1x1 convolutions</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">kernel_size</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="n">module</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">%</span> <span class="n">block_size</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="p">),</span> <span class="s2">&quot;Input channels must be a multiple of block sizes&quot;</span>
+        <span class="c1"># regular convolutions</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">module</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">k</span> <span class="o">%</span> <span class="n">block_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Kernel size must be a multiple of block size&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_forward_pre_hook</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+        <span class="c1"># no noise for evaluation</span>
+        <span class="k">if</span> <span class="n">mod</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_conv</span><span class="p">:</span>
+                <span class="c1"># gather weight and sizes</span>
+                <span class="n">weight</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">weight</span>
+                <span class="n">in_features</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">out_features</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+                <span class="c1"># split weight matrix into blocks and randomly drop selected blocks</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="n">in_features</span> <span class="o">//</span> <span class="n">block_size</span> <span class="o">*</span> <span class="n">out_features</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">device</span>
+                <span class="p">)</span>
+                <span class="n">mask</span><span class="o">.</span><span class="n">bernoulli_</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">block_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_features</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># gather weight and sizes</span>
+                <span class="n">weight</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">weight</span>
+                <span class="n">in_channels</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">in_channels</span>
+                <span class="n">out_channels</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">out_channels</span>
+
+                <span class="c1"># split weight matrix into blocks and randomly drop selected blocks</span>
+                <span class="k">if</span> <span class="n">mod</span><span class="o">.</span><span class="n">kernel_size</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                        <span class="nb">int</span><span class="p">(</span><span class="n">in_channels</span> <span class="o">//</span> <span class="n">block_size</span> <span class="o">*</span> <span class="n">out_channels</span><span class="p">),</span>
+                        <span class="n">device</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">mask</span><span class="o">.</span><span class="n">bernoulli_</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">block_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                        <span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">device</span>
+                    <span class="p">)</span>
+                    <span class="n">mask</span><span class="o">.</span><span class="n">bernoulli_</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mod</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mod</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="p">)</span>
+
+            <span class="c1"># scale weights and apply mask</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">bool</span>
+            <span class="p">)</span>  <span class="c1"># x.bool() is not currently supported in TorchScript</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span>
+            <span class="n">mod</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">s</span> <span class="o">*</span> <span class="n">weight</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">module</span><span class="o">.</span><span class="n">register_forward_pre_hook</span><span class="p">(</span><span class="n">_forward_pre_hook</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">module</span></div>
+
+
+<div class="viewcode-block" id="MultiheadAttention"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.MultiheadAttention">[docs]</a><span class="k">class</span> <span class="nc">MultiheadAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Multi-headed attention.</span>
+
+<span class="sd">    See &quot;Attention Is All You Need&quot; for more details.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">embed_dim</span><span class="p">,</span>
+            <span class="n">num_heads</span><span class="p">,</span>
+            <span class="n">kdim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">vdim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">dropout</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">add_bias_kv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">add_zero_attn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">self_attention</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">encoder_decoder_attention</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">q_noise</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">qn_block_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+            <span class="n">has_relative_attention_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">num_buckets</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+            <span class="n">max_distance</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+            <span class="n">gru_rel_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">rescale_init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span> <span class="o">=</span> <span class="n">embed_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kdim</span> <span class="o">=</span> <span class="n">kdim</span> <span class="k">if</span> <span class="n">kdim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">embed_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vdim</span> <span class="o">=</span> <span class="n">vdim</span> <span class="k">if</span> <span class="n">vdim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">embed_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qkv_same_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kdim</span> <span class="o">==</span> <span class="n">embed_dim</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">vdim</span> <span class="o">==</span> <span class="n">embed_dim</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout_module</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_relative_attention_bias</span> <span class="o">=</span> <span class="n">has_relative_attention_bias</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_buckets</span> <span class="o">=</span> <span class="n">num_buckets</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_distance</span> <span class="o">=</span> <span class="n">max_distance</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_relative_attention_bias</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">relative_attention_bias</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">num_buckets</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">=</span> <span class="n">embed_dim</span> <span class="o">//</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_head_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_head_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span>
+        <span class="k">assert</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">*</span> <span class="n">num_heads</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span>
+        <span class="p">),</span> <span class="s2">&quot;embed_dim must be divisible by num_heads&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">**</span> <span class="o">-</span><span class="mf">0.5</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">self_attention</span> <span class="o">=</span> <span class="n">self_attention</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder_decoder_attention</span> <span class="o">=</span> <span class="n">encoder_decoder_attention</span>
+
+        <span class="k">assert</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_attention</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">qkv_same_dim</span><span class="p">,</span> <span class="p">(</span>
+            <span class="s2">&quot;Self-attention requires query, key and &quot;</span> <span class="s2">&quot;value to be of the same size&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">k_bias</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">rescale_init</span><span class="p">:</span>
+            <span class="n">k_bias</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">k_embed_dim</span> <span class="o">=</span> <span class="n">embed_dim</span>
+        <span class="n">q_embed_dim</span> <span class="o">=</span> <span class="n">embed_dim</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_proj</span> <span class="o">=</span> <span class="n">quant_noise</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kdim</span><span class="p">,</span> <span class="n">k_embed_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">k_bias</span><span class="p">),</span> <span class="n">q_noise</span><span class="p">,</span> <span class="n">qn_block_size</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_proj</span> <span class="o">=</span> <span class="n">quant_noise</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vdim</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">),</span> <span class="n">q_noise</span><span class="p">,</span> <span class="n">qn_block_size</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_proj</span> <span class="o">=</span> <span class="n">quant_noise</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">,</span> <span class="n">q_embed_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">),</span> <span class="n">q_noise</span><span class="p">,</span> <span class="n">qn_block_size</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span> <span class="o">=</span> <span class="n">quant_noise</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">),</span> <span class="n">q_noise</span><span class="p">,</span> <span class="n">qn_block_size</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">add_bias_kv</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias_k</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias_v</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias_v</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_zero_attn</span> <span class="o">=</span> <span class="n">add_zero_attn</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gru_rel_pos</span> <span class="o">=</span> <span class="n">gru_rel_pos</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gru_rel_pos</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grep_linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_head_dim</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grep_a</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span>
+
+<div class="viewcode-block" id="MultiheadAttention.reset_parameters"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.MultiheadAttention.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qkv_same_dim</span><span class="p">:</span>
+            <span class="c1"># Empirically observed the convergence to be much better with</span>
+            <span class="c1"># the scaled initialization</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_proj</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_proj</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_proj</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_proj</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_proj</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_proj</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">constant_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias_k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_normal_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bias_k</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias_v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_normal_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bias_v</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_relative_attention_bias</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_normal_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relative_attention_bias</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_relative_positions_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_positions</span><span class="p">,</span> <span class="n">bidirectional</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">num_buckets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_buckets</span>
+        <span class="n">max_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_distance</span>
+        <span class="n">relative_buckets</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">bidirectional</span><span class="p">:</span>
+            <span class="n">num_buckets</span> <span class="o">=</span> <span class="n">num_buckets</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="n">relative_buckets</span> <span class="o">+=</span> <span class="p">(</span><span class="n">relative_positions</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_buckets</span>
+            <span class="n">relative_positions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">relative_positions</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">relative_positions</span> <span class="o">=</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">relative_positions</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">relative_positions</span><span class="p">))</span>
+
+        <span class="n">max_exact</span> <span class="o">=</span> <span class="n">num_buckets</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">is_small</span> <span class="o">=</span> <span class="n">relative_positions</span> <span class="o">&lt;</span> <span class="n">max_exact</span>
+
+        <span class="n">relative_postion_if_large</span> <span class="o">=</span> <span class="n">max_exact</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">relative_positions</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="o">/</span> <span class="n">max_exact</span><span class="p">)</span>
+                <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">max_distance</span> <span class="o">/</span> <span class="n">max_exact</span><span class="p">)</span>
+                <span class="o">*</span> <span class="p">(</span><span class="n">num_buckets</span> <span class="o">-</span> <span class="n">max_exact</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+        <span class="n">relative_postion_if_large</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">(</span>
+            <span class="n">relative_postion_if_large</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">relative_postion_if_large</span><span class="p">,</span> <span class="n">num_buckets</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">relative_buckets</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">is_small</span><span class="p">,</span> <span class="n">relative_positions</span><span class="p">,</span> <span class="n">relative_postion_if_large</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">relative_buckets</span>
+
+<div class="viewcode-block" id="MultiheadAttention.compute_bias"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.MultiheadAttention.compute_bias">[docs]</a>    <span class="k">def</span> <span class="nf">compute_bias</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_length</span><span class="p">,</span> <span class="n">key_length</span><span class="p">):</span>
+        <span class="n">context_position</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">query_length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">memory_position</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">key_length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">relative_position</span> <span class="o">=</span> <span class="n">memory_position</span> <span class="o">-</span> <span class="n">context_position</span>
+        <span class="n">relative_position_bucket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_relative_positions_bucket</span><span class="p">(</span>
+            <span class="n">relative_position</span><span class="p">,</span>
+            <span class="n">bidirectional</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">relative_position_bucket</span> <span class="o">=</span> <span class="n">relative_position_bucket</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relative_attention_bias</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative_attention_bias</span><span class="p">(</span><span class="n">relative_position_bucket</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">permute</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">values</span></div>
+
+<div class="viewcode-block" id="MultiheadAttention.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.MultiheadAttention.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">query</span><span class="p">,</span>
+            <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
+            <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
+            <span class="n">key_padding_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">incremental_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">need_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">static_kv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">attn_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">before_softmax</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">need_head_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">position_bias</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Input shape: Time x Batch x Channel</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key_padding_mask (ByteTensor, optional): mask to exclude</span>
+<span class="sd">                keys that are pads, of shape `(batch, src_len)`, where</span>
+<span class="sd">                padding elements are indicated by 1s.</span>
+<span class="sd">            need_weights (bool, optional): return the attention weights,</span>
+<span class="sd">                averaged over heads (default: False).</span>
+<span class="sd">            attn_mask (ByteTensor, optional): typically used to</span>
+<span class="sd">                implement causal attention, where the mask prevents the</span>
+<span class="sd">                attention from looking forward in time (default: None).</span>
+<span class="sd">            before_softmax (bool, optional): return the raw attention</span>
+<span class="sd">                weights and values before the attention softmax.</span>
+<span class="sd">            need_head_weights (bool, optional): return the attention</span>
+<span class="sd">                weights for each head. Implies *need_weights*. Default:</span>
+<span class="sd">                return the average attention weights over all heads.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">need_head_weights</span><span class="p">:</span>
+            <span class="n">need_weights</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">is_tpu</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;xla&quot;</span>
+
+        <span class="n">tgt_len</span><span class="p">,</span> <span class="n">bsz</span><span class="p">,</span> <span class="n">embed_dim</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+        <span class="n">src_len</span> <span class="o">=</span> <span class="n">tgt_len</span>
+        <span class="k">assert</span> <span class="n">embed_dim</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span>
+        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">size</span><span class="p">())</span> <span class="o">==</span> <span class="p">[</span><span class="n">tgt_len</span><span class="p">,</span> <span class="n">bsz</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">src_len</span><span class="p">,</span> <span class="n">key_bsz</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">is_scripting</span><span class="p">():</span>
+                <span class="k">assert</span> <span class="n">key_bsz</span> <span class="o">==</span> <span class="n">bsz</span>
+                <span class="k">assert</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="k">assert</span> <span class="n">src_len</span><span class="p">,</span> <span class="n">bsz</span> <span class="o">==</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_relative_attention_bias</span> <span class="ow">and</span> <span class="n">position_bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">position_bias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_bias</span><span class="p">(</span><span class="n">tgt_len</span><span class="p">,</span> <span class="n">src_len</span><span class="p">)</span>
+            <span class="n">position_bias</span> <span class="o">=</span> <span class="n">position_bias</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">bsz</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bsz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">tgt_len</span><span class="p">,</span> <span class="n">src_len</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+                <span class="ow">not</span> <span class="n">is_tpu</span>  <span class="c1"># don&#39;t use PyTorch version on TPUs</span>
+                <span class="ow">and</span> <span class="n">incremental_state</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">static_kv</span>
+                <span class="c1"># A workaround for quantization to work. Otherwise JIT compilation</span>
+                <span class="c1"># treats bias in linear module as method.</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">is_scripting</span><span class="p">()</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_head_dim</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span>
+        <span class="p">):</span>
+            <span class="k">assert</span> <span class="n">key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">assert</span> <span class="n">attn_mask</span> <span class="ow">is</span> <span class="kc">None</span>
+
+            <span class="n">attn_mask_rel_pos</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">position_bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">attn_mask_rel_pos</span> <span class="o">=</span> <span class="n">position_bias</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gru_rel_pos</span><span class="p">:</span>
+                    <span class="n">query_layer</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">new_x_shape</span> <span class="o">=</span> <span class="n">query_layer</span><span class="o">.</span><span class="n">size</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">query_layer</span> <span class="o">=</span> <span class="n">query_layer</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">new_x_shape</span><span class="p">)</span>
+                    <span class="n">query_layer</span> <span class="o">=</span> <span class="n">query_layer</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+                    <span class="n">_B</span><span class="p">,</span> <span class="n">_H</span><span class="p">,</span> <span class="n">_L</span><span class="p">,</span> <span class="n">__</span> <span class="o">=</span> <span class="n">query_layer</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+
+                    <span class="n">gate_a</span><span class="p">,</span> <span class="n">gate_b</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grep_linear</span><span class="p">(</span><span class="n">query_layer</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+                        <span class="n">_B</span><span class="p">,</span> <span class="n">_H</span><span class="p">,</span> <span class="n">_L</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">gate_a_1</span> <span class="o">=</span> <span class="n">gate_a</span> <span class="o">*</span> <span class="p">(</span><span class="n">gate_b</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">grep_a</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">2.0</span>
+                    <span class="n">attn_mask_rel_pos</span> <span class="o">=</span> <span class="n">gate_a_1</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bsz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">position_bias</span>
+
+                <span class="n">attn_mask_rel_pos</span> <span class="o">=</span> <span class="n">attn_mask_rel_pos</span><span class="o">.</span><span class="n">view</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">tgt_len</span><span class="p">,</span> <span class="n">tgt_len</span><span class="p">))</span>
+            <span class="n">k_proj_bias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_proj</span><span class="o">.</span><span class="n">bias</span>
+            <span class="k">if</span> <span class="n">k_proj_bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">k_proj_bias</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_proj</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
+
+            <span class="n">x</span><span class="p">,</span> <span class="n">attn</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">multi_head_attention_forward</span><span class="p">(</span>
+                <span class="n">query</span><span class="p">,</span>
+                <span class="n">key</span><span class="p">,</span>
+                <span class="n">value</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">q_proj</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_proj</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_proj</span><span class="o">.</span><span class="n">bias</span><span class="p">)),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bias_k</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bias_v</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_zero_attn</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dropout_module</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">,</span>
+                <span class="c1"># self.training or self.dropout_module.apply_during_inference,</span>
+                <span class="n">key_padding_mask</span><span class="p">,</span>
+                <span class="n">need_weights</span><span class="p">,</span>
+                <span class="n">attn_mask_rel_pos</span><span class="p">,</span>
+                <span class="n">use_separate_proj_weight</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">q_proj_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">q_proj</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span>
+                <span class="n">k_proj_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k_proj</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span>
+                <span class="n">v_proj_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">v_proj</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">attn</span><span class="p">,</span> <span class="n">position_bias</span>
+
+        <span class="k">if</span> <span class="n">incremental_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">saved_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_buffer</span><span class="p">(</span><span class="n">incremental_state</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">saved_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;prev_key&quot;</span> <span class="ow">in</span> <span class="n">saved_state</span><span class="p">:</span>
+                <span class="c1"># previous time steps are cached - no need to recompute</span>
+                <span class="c1"># key and value if they are static</span>
+                <span class="k">if</span> <span class="n">static_kv</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder_decoder_attention</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_attention</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">saved_state</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_attention</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_proj</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_proj</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_proj</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder_decoder_attention</span><span class="p">:</span>
+            <span class="c1"># encoder-decoder attention</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_proj</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">v</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_proj</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_proj</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_proj</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_proj</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_proj</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">q</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias_k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias_v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias_k</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">bsz</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias_v</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">bsz</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span>
+            <span class="k">if</span> <span class="n">attn_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">attn_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">attn_mask</span><span class="p">,</span> <span class="n">attn_mask</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">(</span><span class="n">attn_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">key_padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">key_padding_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">key_padding_mask</span><span class="p">,</span>
+                        <span class="n">key_padding_mask</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">(</span><span class="n">key_padding_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="p">],</span>
+                    <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="n">q</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">tgt_len</span><span class="p">,</span> <span class="n">bsz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_head_dim</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">k</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
+                    <span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">bsz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_head_dim</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
+                    <span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">bsz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">saved_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># saved states are stored with shape (bsz, num_heads, seq_len, head_dim)</span>
+            <span class="k">if</span> <span class="s2">&quot;prev_key&quot;</span> <span class="ow">in</span> <span class="n">saved_state</span><span class="p">:</span>
+                <span class="n">_prev_key</span> <span class="o">=</span> <span class="n">saved_state</span><span class="p">[</span><span class="s2">&quot;prev_key&quot;</span><span class="p">]</span>
+                <span class="k">assert</span> <span class="n">_prev_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="n">prev_key</span> <span class="o">=</span> <span class="n">_prev_key</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bsz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">static_kv</span><span class="p">:</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">prev_key</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">prev_key</span><span class="p">,</span> <span class="n">k</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">src_len</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;prev_value&quot;</span> <span class="ow">in</span> <span class="n">saved_state</span><span class="p">:</span>
+                <span class="n">_prev_value</span> <span class="o">=</span> <span class="n">saved_state</span><span class="p">[</span><span class="s2">&quot;prev_value&quot;</span><span class="p">]</span>
+                <span class="k">assert</span> <span class="n">_prev_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="n">prev_value</span> <span class="o">=</span> <span class="n">_prev_value</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bsz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">static_kv</span><span class="p">:</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="n">prev_value</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">prev_value</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">prev_key_padding_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="s2">&quot;prev_key_padding_mask&quot;</span> <span class="ow">in</span> <span class="n">saved_state</span><span class="p">:</span>
+                <span class="n">prev_key_padding_mask</span> <span class="o">=</span> <span class="n">saved_state</span><span class="p">[</span><span class="s2">&quot;prev_key_padding_mask&quot;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">key_padding_mask</span> <span class="o">=</span> <span class="n">MultiheadAttention</span><span class="o">.</span><span class="n">_append_prev_key_padding_mask</span><span class="p">(</span>
+                <span class="n">key_padding_mask</span><span class="o">=</span><span class="n">key_padding_mask</span><span class="p">,</span>
+                <span class="n">prev_key_padding_mask</span><span class="o">=</span><span class="n">prev_key_padding_mask</span><span class="p">,</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="n">bsz</span><span class="p">,</span>
+                <span class="n">src_len</span><span class="o">=</span><span class="n">k</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">static_kv</span><span class="o">=</span><span class="n">static_kv</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">saved_state</span><span class="p">[</span><span class="s2">&quot;prev_key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bsz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span>
+            <span class="n">saved_state</span><span class="p">[</span><span class="s2">&quot;prev_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bsz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span>
+            <span class="n">saved_state</span><span class="p">[</span><span class="s2">&quot;prev_key_padding_mask&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">key_padding_mask</span>
+            <span class="c1"># In this branch incremental_state is never None</span>
+            <span class="k">assert</span> <span class="n">incremental_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">incremental_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_input_buffer</span><span class="p">(</span><span class="n">incremental_state</span><span class="p">,</span> <span class="n">saved_state</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">k</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">src_len</span>
+
+        <span class="c1"># This is part of a workaround to get around fork/join parallelism</span>
+        <span class="c1"># not supporting Optional types.</span>
+        <span class="k">if</span> <span class="n">key_padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">key_padding_mask</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">key_padding_mask</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">key_padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">key_padding_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">bsz</span>
+            <span class="k">assert</span> <span class="n">key_padding_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">src_len</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_zero_attn</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">src_len</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">((</span><span class="n">k</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span><span class="o">.</span><span class="n">size</span><span class="p">()[</span><span class="mi">2</span><span class="p">:])],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">((</span><span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()[</span><span class="mi">2</span><span class="p">:])],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">attn_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">attn_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">attn_mask</span><span class="p">,</span> <span class="n">attn_mask</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">(</span><span class="n">attn_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">key_padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">key_padding_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">key_padding_mask</span><span class="p">,</span>
+                        <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">key_padding_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span>
+                            <span class="n">key_padding_mask</span>
+                        <span class="p">),</span>
+                    <span class="p">],</span>
+                    <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bmm</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">attn_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_sparse_mask</span><span class="p">(</span><span class="n">attn_weights</span><span class="p">,</span> <span class="n">tgt_len</span><span class="p">,</span> <span class="n">src_len</span><span class="p">,</span> <span class="n">bsz</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">attn_weights</span><span class="o">.</span><span class="n">size</span><span class="p">())</span> <span class="o">==</span> <span class="p">[</span><span class="n">bsz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">tgt_len</span><span class="p">,</span> <span class="n">src_len</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">attn_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attn_mask</span> <span class="o">=</span> <span class="n">attn_mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">attn_weights</span> <span class="o">+=</span> <span class="n">attn_mask</span>
+
+        <span class="k">if</span> <span class="n">key_padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># don&#39;t attend to padding symbols</span>
+            <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">attn_weights</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bsz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">tgt_len</span><span class="p">,</span> <span class="n">src_len</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_tpu</span><span class="p">:</span>
+                <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">attn_weights</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span>
+                    <span class="n">key_padding_mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">),</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">attn_weights</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">attn_weights</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="n">key_padding_mask</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">))</span>
+                <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">attn_weights</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">attn_weights</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bsz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">tgt_len</span><span class="p">,</span> <span class="n">src_len</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">before_softmax</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">attn_weights</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">position_bias</span>
+
+        <span class="k">if</span> <span class="n">position_bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gru_rel_pos</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">query_layer</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bsz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">tgt_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_head_dim</span><span class="p">)</span>
+                <span class="n">_B</span><span class="p">,</span> <span class="n">_H</span><span class="p">,</span> <span class="n">_L</span><span class="p">,</span> <span class="n">__</span> <span class="o">=</span> <span class="n">query_layer</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+                <span class="n">gate_a</span><span class="p">,</span> <span class="n">gate_b</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grep_linear</span><span class="p">(</span><span class="n">query_layer</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+                    <span class="n">_B</span><span class="p">,</span> <span class="n">_H</span><span class="p">,</span> <span class="n">_L</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">gate_a_1</span> <span class="o">=</span> <span class="n">gate_a</span> <span class="o">*</span> <span class="p">(</span><span class="n">gate_b</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">grep_a</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">2.0</span>
+                <span class="n">position_bias</span> <span class="o">=</span> <span class="n">gate_a_1</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bsz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">position_bias</span>
+
+            <span class="n">position_bias</span> <span class="o">=</span> <span class="n">position_bias</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">attn_weights</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+
+            <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">attn_weights</span> <span class="o">+</span> <span class="n">position_bias</span>
+
+        <span class="n">attn_weights_float</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
+            <span class="n">attn_weights</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">attn_weights_float</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span><span class="n">attn_weights</span><span class="p">)</span>
+        <span class="n">attn_probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_module</span><span class="p">(</span><span class="n">attn_weights</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">attn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bmm</span><span class="p">(</span><span class="n">attn_probs</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">attn</span><span class="o">.</span><span class="n">size</span><span class="p">())</span> <span class="o">==</span> <span class="p">[</span><span class="n">bsz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">tgt_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">]</span>
+        <span class="n">attn</span> <span class="o">=</span> <span class="n">attn</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">tgt_len</span><span class="p">,</span> <span class="n">bsz</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">)</span>
+        <span class="n">attn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span><span class="p">(</span><span class="n">attn</span><span class="p">)</span>
+        <span class="n">attn_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">need_weights</span><span class="p">:</span>
+            <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">attn_weights_float</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+                <span class="n">bsz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">tgt_len</span><span class="p">,</span> <span class="n">src_len</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">need_head_weights</span><span class="p">:</span>
+                <span class="c1"># average attention weights over heads</span>
+                <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">attn_weights</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">attn</span><span class="p">,</span> <span class="n">attn_weights</span><span class="p">,</span> <span class="n">position_bias</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_append_prev_key_padding_mask</span><span class="p">(</span>
+            <span class="n">key_padding_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
+            <span class="n">prev_key_padding_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
+            <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">src_len</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">static_kv</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="c1"># saved key padding masks have shape (bsz, seq_len)</span>
+        <span class="k">if</span> <span class="n">prev_key_padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">static_kv</span><span class="p">:</span>
+            <span class="n">new_key_padding_mask</span> <span class="o">=</span> <span class="n">prev_key_padding_mask</span>
+        <span class="k">elif</span> <span class="n">prev_key_padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">key_padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">new_key_padding_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">prev_key_padding_mask</span><span class="o">.</span><span class="n">float</span><span class="p">(),</span> <span class="n">key_padding_mask</span><span class="o">.</span><span class="n">float</span><span class="p">()],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+        <span class="c1"># During incremental decoding, as the padding token enters and</span>
+        <span class="c1"># leaves the frame, there will be a time when prev or current</span>
+        <span class="c1"># is None</span>
+        <span class="k">elif</span> <span class="n">prev_key_padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">src_len</span> <span class="o">&gt;</span> <span class="n">prev_key_padding_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">filler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">src_len</span> <span class="o">-</span> <span class="n">prev_key_padding_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span>
+                    <span class="n">device</span><span class="o">=</span><span class="n">prev_key_padding_mask</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">new_key_padding_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">prev_key_padding_mask</span><span class="o">.</span><span class="n">float</span><span class="p">(),</span> <span class="n">filler</span><span class="o">.</span><span class="n">float</span><span class="p">()],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_key_padding_mask</span> <span class="o">=</span> <span class="n">prev_key_padding_mask</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">key_padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">src_len</span> <span class="o">&gt;</span> <span class="n">key_padding_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">filler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">src_len</span> <span class="o">-</span> <span class="n">key_padding_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span>
+                    <span class="n">device</span><span class="o">=</span><span class="n">key_padding_mask</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">new_key_padding_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">filler</span><span class="o">.</span><span class="n">float</span><span class="p">(),</span> <span class="n">key_padding_mask</span><span class="o">.</span><span class="n">float</span><span class="p">()],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_key_padding_mask</span> <span class="o">=</span> <span class="n">key_padding_mask</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_key_padding_mask</span> <span class="o">=</span> <span class="n">prev_key_padding_mask</span>
+        <span class="k">return</span> <span class="n">new_key_padding_mask</span>
+
+    <span class="k">def</span> <span class="nf">_get_input_buffer</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">incremental_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incremental_state</span><span class="p">(</span><span class="n">incremental_state</span><span class="p">,</span> <span class="s2">&quot;attn_state&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">empty_result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">return</span> <span class="n">empty_result</span>
+
+    <span class="k">def</span> <span class="nf">_set_input_buffer</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incremental_state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]],</span>
+            <span class="n">buffer</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]],</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_incremental_state</span><span class="p">(</span><span class="n">incremental_state</span><span class="p">,</span> <span class="s2">&quot;attn_state&quot;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MultiheadAttention.apply_sparse_mask"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.MultiheadAttention.apply_sparse_mask">[docs]</a>    <span class="k">def</span> <span class="nf">apply_sparse_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attn_weights</span><span class="p">,</span> <span class="n">tgt_len</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">src_len</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bsz</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">attn_weights</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017, Shinji Watanabe.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

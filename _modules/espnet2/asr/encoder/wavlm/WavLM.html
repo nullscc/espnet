@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>espnet2.asr.encoder.wavlm.WavLM &mdash; ESPnet 202205 documentation</title><link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> ESPnet
+          </a>
+              <div class="version">
+                202205
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorial.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../parallelization.html">Using Job scheduling system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docker.html">Docker</a></li>
+</ul>
+<p><span class="caption-text">ESPnet2:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../espnet2_tutorial.html">ESPnet2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../espnet2_tutorial.html#instruction-for-run-sh">Instruction for run.sh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../espnet2_training_option.html">Change the configuration for training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../espnet2_task.html">Task class and data input system for training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../espnet2_distributed.html">Distributed training</a></li>
+</ul>
+<p><span class="caption-text">Notebook:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/asr_cli.html">Speech Recognition (Recipe)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/asr_library.html">Speech Recognition (Library)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_asr_realtime_demo.html">ESPnet2-ASR realtime demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_asr_transfer_learning_demo.html"><strong>Use transfer learning for ASR in ESPnet2</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_asr_transfer_learning_demo.html#Abstract">Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_asr_transfer_learning_demo.html#ESPnet-installation-(about-10-minutes-in-total)">ESPnet installation (about 10 minutes in total)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_asr_transfer_learning_demo.html#mini_an4-recipe-as-a-transfer-learning-example">mini_an4 recipe as a transfer learning example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_streaming_asr_demo.html">ESPnet2 real streaming Transformer demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_tts_realtime_demo.html">ESPnet2-TTS realtime demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_tutorial_2021_CMU_11751_18781.html">CMU 11751/18781 2021: ESPnet Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_tutorial_2021_CMU_11751_18781.html#Run-an-inference-example">Run an inference example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_tutorial_2021_CMU_11751_18781.html#Full-installation">Full installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet2_tutorial_2021_CMU_11751_18781.html#Run-a-recipe-example">Run a recipe example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet_se_demonstration_for_waspaa_2021.html">ESPnet Speech Enhancement Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet_se_demonstration_for_waspaa_2021.html#Contents">Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet_se_demonstration_for_waspaa_2021.html#(1)-Tutorials-on-the-Basic-Usage">(1) Tutorials on the Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/espnet_se_demonstration_for_waspaa_2021.html#(2)-Tutorials-on-Contributing-to-ESPNet-SE-Project">(2) Tutorials on Contributing to ESPNet-SE Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/pretrained.html">Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/se_demo.html">ESPnet Speech Enhancement Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/st_demo.html">ESPnet Speech Translation Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/tts_cli.html">Text-to-Speech (Recipe)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/tts_realtime_demo.html">ESPnet real time E2E-TTS demonstration</a></li>
+</ul>
+<p><span class="caption-text">Package Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.lm.html">espnet.lm package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.vc.html">espnet.vc package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.nets.html">espnet.nets package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.utils.html">espnet.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.scheduler.html">espnet.scheduler package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.tts.html">espnet.tts package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.asr.html">espnet.asr package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.st.html">espnet.st package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.transform.html">espnet.transform package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.mt.html">espnet.mt package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.optimizer.html">espnet.optimizer package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet.bin.html">espnet.bin package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.schedulers.html">espnet2.schedulers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.lm.html">espnet2.lm package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.hubert.html">espnet2.hubert package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.gan_tts.html">espnet2.gan_tts package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.torch_utils.html">espnet2.torch_utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.fileio.html">espnet2.fileio package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.diar.html">espnet2.diar package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.main_funcs.html">espnet2.main_funcs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.train.html">espnet2.train package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.fst.html">espnet2.fst package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.utils.html">espnet2.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.tts.html">espnet2.tts package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.asr.html">espnet2.asr package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.text.html">espnet2.text package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.iterators.html">espnet2.iterators package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.layers.html">espnet2.layers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.enh.html">espnet2.enh package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.optimizers.html">espnet2.optimizers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.st.html">espnet2.st package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.tasks.html">espnet2.tasks package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.mt.html">espnet2.mt package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.bin.html">espnet2.bin package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../_gen/espnet2.samplers.html">espnet2.samplers package</a></li>
+</ul>
+<p><span class="caption-text">Tool Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../apis/espnet_bin.html">core tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../apis/espnet2_bin.html">core tools (espnet2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../apis/utils_py.html">python utility tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../apis/utils_sh.html">bash utility tools</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">ESPnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+      <li>espnet2.asr.encoder.wavlm.WavLM</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for espnet2.asr.encoder.wavlm.WavLM</h1><div class="highlight"><pre>
+<span></span><span class="c1"># --------------------------------------------------------</span>
+<span class="c1"># WavLM: Large-Scale Self-Supervised  Pre-training  for Full Stack Speech Processing (https://arxiv.org/abs/2110.13900.pdf)</span>
+<span class="c1"># Github source: https://github.com/microsoft/unilm/tree/master/wavlm</span>
+<span class="c1"># Copyright (c) 2021 Microsoft</span>
+<span class="c1"># Licensed under The MIT License [see LICENSE for details]</span>
+<span class="c1"># Based on fairseq code bases</span>
+<span class="c1"># https://github.com/pytorch/fairseq</span>
+<span class="c1"># --------------------------------------------------------</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">LayerNorm</span>
+<span class="kn">from</span> <span class="nn">espnet2.asr.encoder.wavlm.modules</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Fp32GroupNorm</span><span class="p">,</span>
+    <span class="n">Fp32LayerNorm</span><span class="p">,</span>
+    <span class="n">GradMultiply</span><span class="p">,</span>
+    <span class="n">MultiheadAttention</span><span class="p">,</span>
+    <span class="n">SamePad</span><span class="p">,</span>
+    <span class="n">init_bert_params</span><span class="p">,</span>
+    <span class="n">get_activation_fn</span><span class="p">,</span>
+    <span class="n">TransposeLast</span><span class="p">,</span>
+    <span class="n">GLU_Linear</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="compute_mask_indices"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.compute_mask_indices">[docs]</a><span class="k">def</span> <span class="nf">compute_mask_indices</span><span class="p">(</span>
+    <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">padding_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+    <span class="n">mask_prob</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mask_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">mask_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;static&quot;</span><span class="p">,</span>
+    <span class="n">mask_other</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">min_masks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">no_overlap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">min_space</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes random mask spans for a given shape</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        shape: the the shape for which to compute masks.</span>
+<span class="sd">            should be of size 2 where first element is batch size and 2nd is timesteps</span>
+<span class="sd">        padding_mask: optional padding mask of the same size as shape, which will prevent masking padded elements</span>
+<span class="sd">        mask_prob: probability for each token to be chosen as start of the span to be masked. this will be multiplied by</span>
+<span class="sd">            number of timesteps divided by length of mask span to mask approximately this percentage of all elements.</span>
+<span class="sd">            however due to overlaps, the actual number will be smaller (unless no_overlap is True)</span>
+<span class="sd">        mask_type: how to compute mask lengths</span>
+<span class="sd">            static = fixed size</span>
+<span class="sd">            uniform = sample from uniform distribution [mask_other, mask_length*2]</span>
+<span class="sd">            normal = sample from normal distribution with mean mask_length and stdev mask_other. mask is min 1 element</span>
+<span class="sd">            poisson = sample from possion distribution with lambda = mask length</span>
+<span class="sd">        min_masks: minimum number of masked spans</span>
+<span class="sd">        no_overlap: if false, will switch to an alternative recursive algorithm that prevents spans from overlapping</span>
+<span class="sd">        min_space: only used if no_overlap is True, this is how many elements to keep unmasked between spans</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bsz</span><span class="p">,</span> <span class="n">all_sz</span> <span class="o">=</span> <span class="n">shape</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">bsz</span><span class="p">,</span> <span class="n">all_sz</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">all_num_mask</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+        <span class="c1"># add a random number for probabilistic rounding</span>
+        <span class="n">mask_prob</span> <span class="o">*</span> <span class="n">all_sz</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">mask_length</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="n">all_num_mask</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">min_masks</span><span class="p">,</span> <span class="n">all_num_mask</span><span class="p">)</span>
+
+    <span class="n">mask_idcs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bsz</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sz</span> <span class="o">=</span> <span class="n">all_sz</span> <span class="o">-</span> <span class="n">padding_mask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">long</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="n">num_mask</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="c1"># add a random number for probabilistic rounding</span>
+                <span class="n">mask_prob</span> <span class="o">*</span> <span class="n">sz</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">mask_length</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="n">num_mask</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">min_masks</span><span class="p">,</span> <span class="n">num_mask</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sz</span> <span class="o">=</span> <span class="n">all_sz</span>
+            <span class="n">num_mask</span> <span class="o">=</span> <span class="n">all_num_mask</span>
+
+        <span class="k">if</span> <span class="n">mask_type</span> <span class="o">==</span> <span class="s2">&quot;static&quot;</span><span class="p">:</span>
+            <span class="n">lengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">num_mask</span><span class="p">,</span> <span class="n">mask_length</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mask_type</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+            <span class="n">lengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">mask_other</span><span class="p">,</span> <span class="n">mask_length</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">num_mask</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mask_type</span> <span class="o">==</span> <span class="s2">&quot;normal&quot;</span><span class="p">:</span>
+            <span class="n">lengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mask_length</span><span class="p">,</span> <span class="n">mask_other</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">num_mask</span><span class="p">)</span>
+            <span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lengths</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">mask_type</span> <span class="o">==</span> <span class="s2">&quot;poisson&quot;</span><span class="p">:</span>
+            <span class="n">lengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">mask_length</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">num_mask</span><span class="p">)</span>
+            <span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lengths</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;unknown mask selection &quot;</span> <span class="o">+</span> <span class="n">mask_type</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">lengths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">lengths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">mask_length</span><span class="p">,</span> <span class="n">sz</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">no_overlap</span><span class="p">:</span>
+            <span class="n">mask_idc</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">def</span> <span class="nf">arrange</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">keep_length</span><span class="p">):</span>
+                <span class="n">span_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span> <span class="o">-</span> <span class="n">length</span><span class="p">)</span>
+                <span class="n">mask_idc</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">span_start</span> <span class="o">+</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+
+                <span class="n">new_parts</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">if</span> <span class="n">span_start</span> <span class="o">-</span> <span class="n">s</span> <span class="o">-</span> <span class="n">min_space</span> <span class="o">&gt;=</span> <span class="n">keep_length</span><span class="p">:</span>
+                    <span class="n">new_parts</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="n">span_start</span> <span class="o">-</span> <span class="n">min_space</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">e</span> <span class="o">-</span> <span class="n">span_start</span> <span class="o">-</span> <span class="n">keep_length</span> <span class="o">-</span> <span class="n">min_space</span> <span class="o">&gt;</span> <span class="n">keep_length</span><span class="p">:</span>
+                    <span class="n">new_parts</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">span_start</span> <span class="o">+</span> <span class="n">length</span> <span class="o">+</span> <span class="n">min_space</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">new_parts</span>
+
+            <span class="n">parts</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sz</span><span class="p">)]</span>
+            <span class="n">min_length</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">lengths</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">lengths</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="n">lens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">e</span> <span class="o">-</span> <span class="n">s</span> <span class="k">if</span> <span class="n">e</span> <span class="o">-</span> <span class="n">s</span> <span class="o">&gt;=</span> <span class="n">length</span> <span class="o">+</span> <span class="n">min_space</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">),</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">l_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">lens</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">l_sum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="n">probs</span> <span class="o">=</span> <span class="n">lens</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">lens</span><span class="p">)</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="n">probs</span><span class="p">)</span>
+                <span class="n">s</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">parts</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">arrange</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">min_length</span><span class="p">))</span>
+            <span class="n">mask_idc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mask_idc</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">min_len</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">lengths</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sz</span> <span class="o">-</span> <span class="n">min_len</span> <span class="o">&lt;=</span> <span class="n">num_mask</span><span class="p">:</span>
+                <span class="n">min_len</span> <span class="o">=</span> <span class="n">sz</span> <span class="o">-</span> <span class="n">num_mask</span> <span class="o">-</span> <span class="mi">1</span>
+
+            <span class="n">mask_idc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">sz</span> <span class="o">-</span> <span class="n">min_len</span><span class="p">,</span> <span class="n">num_mask</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="n">mask_idc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">mask_idc</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mask_idc</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lengths</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="n">mask_idcs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">mask_idc</span><span class="p">[</span><span class="n">mask_idc</span> <span class="o">&lt;</span> <span class="n">sz</span><span class="p">]))</span>
+
+    <span class="n">min_len</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mask_idcs</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">mask_idc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mask_idcs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mask_idc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">min_len</span><span class="p">:</span>
+            <span class="n">mask_idc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">mask_idc</span><span class="p">,</span> <span class="n">min_len</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">mask</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">mask_idc</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">mask</span></div>
+
+
+<div class="viewcode-block" id="WavLMConfig"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.WavLMConfig">[docs]</a><span class="k">class</span> <span class="nc">WavLMConfig</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extractor_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>     <span class="c1"># mode for feature extractor. default has a single group norm with d groups in the first conv block, whereas layer_norm has layer norms in every block (meant to use with normalize=True)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder_layers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span>     <span class="c1"># num encoder layers in the transformer</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder_embed_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">768</span>     <span class="c1"># encoder embedding dimension</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder_ffn_embed_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3072</span>     <span class="c1"># encoder embedding dimension for FFN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder_attention_heads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span>     <span class="c1"># num encoder attention heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_fn</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gelu&quot;</span>     <span class="c1"># activation function to use</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm_first</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>     <span class="c1"># apply layernorm first in the transformer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_feature_layers</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;[(512,10,5)] + [(512,3,2)] * 4 + [(512,2,2)] * 2&quot;</span>     <span class="c1"># string describing convolutional feature extraction layers in form of a python list that contains [(dim, kernel_size, stride), ...]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>     <span class="c1"># include bias in conv encoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_grad_mult</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>     <span class="c1"># multiply feature extractor var grads by this</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># normalize input to have 0 mean and unit variance during training</span>
+
+        <span class="c1"># dropouts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>     <span class="c1"># dropout probability for the transformer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention_dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>     <span class="c1"># dropout probability for attention weights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>     <span class="c1"># dropout probability after activation in FFN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder_layerdrop</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>     <span class="c1"># probability of dropping a tarnsformer layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout_input</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>     <span class="c1"># dropout to apply to the input (after feat extr)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout_features</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>     <span class="c1"># dropout to apply to the features (after feat extr)</span>
+
+        <span class="c1"># masking</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>     <span class="c1"># mask length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span>     <span class="c1"># probability of replacing a token with mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;static&quot;</span>     <span class="c1"># how to choose mask length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_other</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>     <span class="c1"># secondary mask argument (used for more complex distributions), see help in compute_mask_indicesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">no_mask_overlap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>     <span class="c1"># whether to allow masks to overlap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_min_space</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>     <span class="c1"># min space between spans (if no overlap is enabled)</span>
+
+        <span class="c1"># channel masking</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>     <span class="c1"># length of the mask for features (channels)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>     <span class="c1"># probability of replacing a feature with 0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;static&quot;</span>     <span class="c1"># how to choose mask length for channel masking</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_other</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>     <span class="c1"># secondary mask argument (used for more complex distributions), see help in compute_mask_indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">no_mask_channel_overlap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>     <span class="c1"># whether to allow channel masks to overlap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_min_space</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>     <span class="c1"># min space between spans (if no overlap is enabled)</span>
+
+        <span class="c1"># positional embeddings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_pos</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span>     <span class="c1"># number of filters for convolutional positional embeddings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_pos_groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span>     <span class="c1"># number of groups for convolutional positional embedding</span>
+
+        <span class="c1"># relative position embedding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relative_position_embedding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>     <span class="c1"># apply relative position embedding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_buckets</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">320</span>     <span class="c1"># number of buckets for relative position embedding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_distance</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1280</span>     <span class="c1"># maximum distance for relative position embedding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gru_rel_pos</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>     <span class="c1"># apply gated relative position embedding</span>
+
+        <span class="k">if</span> <span class="n">cfg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WavLMConfig.update"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.WavLMConfig.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="WavLM"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.WavLM">[docs]</a><span class="k">class</span> <span class="nc">WavLM</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">cfg</span><span class="p">:</span> <span class="n">WavLMConfig</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WavLM Config: </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="vm">__dict__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
+        <span class="n">feature_enc_layers</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">conv_feature_layers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embed</span> <span class="o">=</span> <span class="n">feature_enc_layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span> <span class="o">=</span> <span class="n">ConvFeatureExtractionModel</span><span class="p">(</span>
+            <span class="n">conv_layers</span><span class="o">=</span><span class="n">feature_enc_layers</span><span class="p">,</span>
+            <span class="n">dropout</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">extractor_mode</span><span class="p">,</span>
+            <span class="n">conv_bias</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">conv_bias</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">post_extract_proj</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">encoder_embed_dim</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed</span> <span class="o">!=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">encoder_embed_dim</span>
+            <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_prob</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">mask_prob</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_selection</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">mask_selection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_other</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">mask_other</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_length</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">mask_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">no_mask_overlap</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">no_mask_overlap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_min_space</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">mask_min_space</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_prob</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">mask_channel_prob</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_selection</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">mask_channel_selection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_other</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">mask_channel_other</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_length</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">mask_channel_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">no_mask_channel_overlap</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">no_mask_channel_overlap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_min_space</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">mask_channel_min_space</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout_input</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">dropout_input</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout_features</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">dropout_features</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_grad_mult</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">feature_grad_mult</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_emb</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">encoder_embed_dim</span><span class="p">)</span><span class="o">.</span><span class="n">uniform_</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">TransformerEncoder</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm</span> <span class="o">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WavLM.apply_mask"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.WavLM.apply_mask">[docs]</a>    <span class="k">def</span> <span class="nf">apply_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">padding_mask</span><span class="p">):</span>
+        <span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_prob</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">mask_indices</span> <span class="o">=</span> <span class="n">compute_mask_indices</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">),</span>
+                <span class="n">padding_mask</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mask_prob</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mask_length</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mask_selection</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mask_other</span><span class="p">,</span>
+                <span class="n">min_masks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">no_overlap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">no_mask_overlap</span><span class="p">,</span>
+                <span class="n">min_space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mask_min_space</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">mask_indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">mask_indices</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">mask_indices</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_emb</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mask_indices</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_prob</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">mask_channel_indices</span> <span class="o">=</span> <span class="n">compute_mask_indices</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">),</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_prob</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_length</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_selection</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_other</span><span class="p">,</span>
+                <span class="n">no_overlap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">no_mask_channel_overlap</span><span class="p">,</span>
+                <span class="n">min_space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mask_channel_min_space</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">mask_channel_indices</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">mask_channel_indices</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">mask_channel_indices</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask_indices</span></div>
+
+<div class="viewcode-block" id="WavLM.forward_padding_mask"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.WavLM.forward_padding_mask">[docs]</a>    <span class="k">def</span> <span class="nf">forward_padding_mask</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">padding_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="n">padding_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">features</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">extra</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">padding_mask</span> <span class="o">=</span> <span class="n">padding_mask</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="n">extra</span><span class="p">]</span>
+        <span class="n">padding_mask</span> <span class="o">=</span> <span class="n">padding_mask</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+            <span class="n">padding_mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">features</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">padding_mask</span> <span class="o">=</span> <span class="n">padding_mask</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">padding_mask</span></div>
+
+<div class="viewcode-block" id="WavLM.extract_features"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.WavLM.extract_features">[docs]</a>    <span class="k">def</span> <span class="nf">extract_features</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">source</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">padding_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">mask</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">ret_conv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">output_layer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ret_layer_results</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_grad_mult</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_grad_mult</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="n">GradMultiply</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_grad_mult</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">padding_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_padding_mask</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">padding_mask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_extract_proj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_extract_proj</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_input</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mask</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">mask_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_mask</span><span class="p">(</span>
+                <span class="n">features</span><span class="p">,</span> <span class="n">padding_mask</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">features</span>
+
+        <span class="c1"># feature: (B, T, D), float</span>
+        <span class="c1"># target: (B, T), long</span>
+        <span class="c1"># x: (B, T, D), float</span>
+        <span class="c1"># padding_mask: (B, T), bool</span>
+        <span class="c1"># mask_indices: (B, T), bool</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">layer_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">padding_mask</span><span class="o">=</span><span class="n">padding_mask</span><span class="p">,</span>
+            <span class="n">layer</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">output_layer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">output_layer</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="p">)</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;padding_mask&quot;</span><span class="p">:</span> <span class="n">padding_mask</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="n">features</span><span class="p">,</span> <span class="s2">&quot;layer_results&quot;</span><span class="p">:</span> <span class="n">layer_results</span><span class="p">}</span>
+
+        <span class="n">feature</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">ret_conv</span> <span class="k">else</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">ret_layer_results</span><span class="p">:</span>
+            <span class="n">feature</span> <span class="o">=</span> <span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;layer_results&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">feature</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;padding_mask&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="WavLM.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.WavLM.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">source</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">padding_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">mask</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">ret_conv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">output_layer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ret_layer_results</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_grad_mult</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_grad_mult</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="n">GradMultiply</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_grad_mult</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">padding_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_padding_mask</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">padding_mask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_extract_proj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_extract_proj</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_input</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mask</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">mask_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_mask</span><span class="p">(</span>
+                <span class="n">features</span><span class="p">,</span> <span class="n">padding_mask</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">features</span>
+
+        <span class="c1"># feature: (B, T, D), float</span>
+        <span class="c1"># target: (B, T), long</span>
+        <span class="c1"># x: (B, T, D), float</span>
+        <span class="c1"># padding_mask: (B, T), bool</span>
+        <span class="c1"># mask_indices: (B, T), bool</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">layer_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">padding_mask</span><span class="o">=</span><span class="n">padding_mask</span><span class="p">,</span>
+            <span class="n">layer</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">output_layer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">output_layer</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="p">)</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;padding_mask&quot;</span><span class="p">:</span> <span class="n">padding_mask</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="n">features</span><span class="p">,</span> <span class="s2">&quot;layer_results&quot;</span><span class="p">:</span> <span class="n">layer_results</span><span class="p">}</span>
+
+        <span class="n">feature</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">ret_conv</span> <span class="k">else</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">ret_layer_results</span><span class="p">:</span>
+            <span class="n">feature</span> <span class="o">=</span> <span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;layer_results&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">feature</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;padding_mask&quot;</span><span class="p">]</span></div></div>
+
+
+
+<div class="viewcode-block" id="ConvFeatureExtractionModel"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.ConvFeatureExtractionModel">[docs]</a><span class="k">class</span> <span class="nc">ConvFeatureExtractionModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">conv_layers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+            <span class="n">dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+            <span class="n">conv_bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">conv_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="s2">&quot;layer_norm&quot;</span><span class="p">}</span>
+
+        <span class="k">def</span> <span class="nf">block</span><span class="p">(</span>
+                <span class="n">n_in</span><span class="p">,</span>
+                <span class="n">n_out</span><span class="p">,</span>
+                <span class="n">k</span><span class="p">,</span>
+                <span class="n">stride</span><span class="p">,</span>
+                <span class="n">is_layer_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">is_group_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">conv_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="k">def</span> <span class="nf">make_conv</span><span class="p">():</span>
+                <span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">conv_bias</span><span class="p">)</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">kaiming_normal_</span><span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">conv</span>
+
+            <span class="k">assert</span> <span class="p">(</span>
+                           <span class="n">is_layer_norm</span> <span class="ow">and</span> <span class="n">is_group_norm</span>
+                   <span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;layer norm and group norm are exclusive&quot;</span>
+
+            <span class="k">if</span> <span class="n">is_layer_norm</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                    <span class="n">make_conv</span><span class="p">(),</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">dropout</span><span class="p">),</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                        <span class="n">TransposeLast</span><span class="p">(),</span>
+                        <span class="n">Fp32LayerNorm</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                        <span class="n">TransposeLast</span><span class="p">(),</span>
+                    <span class="p">),</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">(),</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">is_group_norm</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                    <span class="n">make_conv</span><span class="p">(),</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">dropout</span><span class="p">),</span>
+                    <span class="n">Fp32GroupNorm</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">affine</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">(),</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">make_conv</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">dropout</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_type</span> <span class="o">=</span> <span class="n">conv_type</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_type</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+            <span class="n">in_d</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">conv_layers</span><span class="p">):</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;invalid conv definition: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+                <span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span> <span class="o">=</span> <span class="n">cl</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">block</span><span class="p">(</span>
+                        <span class="n">in_d</span><span class="p">,</span>
+                        <span class="n">dim</span><span class="p">,</span>
+                        <span class="n">k</span><span class="p">,</span>
+                        <span class="n">stride</span><span class="p">,</span>
+                        <span class="n">is_layer_norm</span><span class="o">=</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;layer_norm&quot;</span><span class="p">,</span>
+                        <span class="n">is_group_norm</span><span class="o">=</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="n">conv_bias</span><span class="o">=</span><span class="n">conv_bias</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">in_d</span> <span class="o">=</span> <span class="n">dim</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_type</span> <span class="o">==</span> <span class="s2">&quot;conv2d&quot;</span><span class="p">:</span>
+            <span class="n">in_d</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">conv_layers</span><span class="p">):</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+                <span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span> <span class="o">=</span> <span class="n">cl</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_d</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span>
+                <span class="n">in_d</span> <span class="o">=</span> <span class="n">dim</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_type</span> <span class="o">==</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
+            <span class="n">in_d</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">idim</span> <span class="o">=</span> <span class="mi">80</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">conv_layers</span><span class="p">):</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+                <span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span> <span class="o">=</span> <span class="n">cl</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_d</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">([</span><span class="n">dim</span><span class="p">,</span> <span class="n">idim</span><span class="p">])</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span>
+                <span class="n">in_d</span> <span class="o">=</span> <span class="n">dim</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ceil_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="n">idim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">idim</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+<div class="viewcode-block" id="ConvFeatureExtractionModel.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.ConvFeatureExtractionModel.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="c1"># BxT -&gt; BxCxT</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_type</span> <span class="o">==</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">conv</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">):</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">conv</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_type</span> <span class="o">==</span> <span class="s2">&quot;conv2d&quot;</span><span class="p">:</span>
+                <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">*</span> <span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div></div>
+
+
+<div class="viewcode-block" id="TransformerEncoder"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.TransformerEncoder">[docs]</a><span class="k">class</span> <span class="nc">TransformerEncoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">encoder_embed_dim</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">conv_pos</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">conv_pos</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">groups</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">conv_pos_groups</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">dropout</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">dropout</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">conv_pos</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">))</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_conv</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="n">std</span><span class="p">)</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">constant_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_conv</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">weight_norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_conv</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_conv</span><span class="p">,</span> <span class="n">SamePad</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">conv_pos</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;relative_position_embedding&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">relative_position_embedding</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">relative_position_embedding</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_buckets</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">num_buckets</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_distance</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">max_distance</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">relative_position_embedding</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_buckets</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_distance</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">TransformerSentenceEncoderLayer</span><span class="p">(</span>
+                    <span class="n">embedding_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span>
+                    <span class="n">ffn_embedding_dim</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">encoder_ffn_embed_dim</span><span class="p">,</span>
+                    <span class="n">num_attention_heads</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">encoder_attention_heads</span><span class="p">,</span>
+                    <span class="n">dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span>
+                    <span class="n">attention_dropout</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">attention_dropout</span><span class="p">,</span>
+                    <span class="n">activation_dropout</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">activation_dropout</span><span class="p">,</span>
+                    <span class="n">activation_fn</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">activation_fn</span><span class="p">,</span>
+                    <span class="n">layer_norm_first</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">layer_norm_first</span><span class="p">,</span>
+                    <span class="n">has_relative_attention_bias</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relative_position_embedding</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span>
+                    <span class="n">num_buckets</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_buckets</span><span class="p">,</span>
+                    <span class="n">max_distance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_distance</span><span class="p">,</span>
+                    <span class="n">gru_rel_pos</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">gru_rel_pos</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">encoder_layers</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm_first</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">layer_norm_first</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm</span> <span class="o">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layerdrop</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">encoder_layerdrop</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">init_bert_params</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TransformerEncoder.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.TransformerEncoder.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">padding_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">streaming_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">layer_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_features</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">padding_mask</span><span class="p">,</span> <span class="n">streaming_mask</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm_first</span> <span class="ow">and</span> <span class="n">layer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">layer_results</span></div>
+
+<div class="viewcode-block" id="TransformerEncoder.extract_features"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.TransformerEncoder.extract_features">[docs]</a>    <span class="k">def</span> <span class="nf">extract_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">padding_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">streaming_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tgt_layer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">padding_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">padding_mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">x_conv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_conv</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">x_conv</span> <span class="o">=</span> <span class="n">x_conv</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">x_conv</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm_first</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>
+
+        <span class="c1"># B x T x C -&gt; T x B x C</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">layer_results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">tgt_layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">pos_bias</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">):</span>
+            <span class="n">dropout_probability</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="ow">or</span> <span class="p">(</span><span class="n">dropout_probability</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">layerdrop</span><span class="p">):</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">pos_bias</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">self_attn_padding_mask</span><span class="o">=</span><span class="n">padding_mask</span><span class="p">,</span> <span class="n">need_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                       <span class="n">self_attn_mask</span><span class="o">=</span><span class="n">streaming_mask</span><span class="p">,</span> <span class="n">pos_bias</span><span class="o">=</span><span class="n">pos_bias</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tgt_layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">layer_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">tgt_layer</span><span class="p">:</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">x</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">r</span>
+
+        <span class="c1"># T x B x C -&gt; B x T x C</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">layer_results</span></div></div>
+
+
+<div class="viewcode-block" id="TransformerSentenceEncoderLayer"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.TransformerSentenceEncoderLayer">[docs]</a><span class="k">class</span> <span class="nc">TransformerSentenceEncoderLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements a Transformer Encoder Layer used in BERT/XLM style pre-trained</span>
+<span class="sd">    models.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">embedding_dim</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">768</span><span class="p">,</span>
+            <span class="n">ffn_embedding_dim</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3072</span><span class="p">,</span>
+            <span class="n">num_attention_heads</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="n">dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+            <span class="n">attention_dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+            <span class="n">activation_dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+            <span class="n">activation_fn</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;relu&quot;</span><span class="p">,</span>
+            <span class="n">layer_norm_first</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">has_relative_attention_bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">num_buckets</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_distance</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">rescale_init</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">gru_rel_pos</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Initialize parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span> <span class="o">=</span> <span class="n">embedding_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_dropout</span> <span class="o">=</span> <span class="n">activation_dropout</span>
+
+        <span class="c1"># Initialize blocks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_name</span> <span class="o">=</span> <span class="n">activation_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_fn</span> <span class="o">=</span> <span class="n">get_activation_fn</span><span class="p">(</span><span class="n">activation_fn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">self_attn</span> <span class="o">=</span> <span class="n">MultiheadAttention</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span>
+            <span class="n">num_attention_heads</span><span class="p">,</span>
+            <span class="n">dropout</span><span class="o">=</span><span class="n">attention_dropout</span><span class="p">,</span>
+            <span class="n">self_attention</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">has_relative_attention_bias</span><span class="o">=</span><span class="n">has_relative_attention_bias</span><span class="p">,</span>
+            <span class="n">num_buckets</span><span class="o">=</span><span class="n">num_buckets</span><span class="p">,</span>
+            <span class="n">max_distance</span><span class="o">=</span><span class="n">max_distance</span><span class="p">,</span>
+            <span class="n">rescale_init</span><span class="o">=</span><span class="n">rescale_init</span><span class="p">,</span>
+            <span class="n">gru_rel_pos</span><span class="o">=</span><span class="n">gru_rel_pos</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activation_dropout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm_first</span> <span class="o">=</span> <span class="n">layer_norm_first</span>
+
+        <span class="c1"># layer norm associated with the self attention layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">self_attn_layer_norm</span> <span class="o">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_name</span> <span class="o">==</span> <span class="s2">&quot;glu&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">GLU_Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span> <span class="n">ffn_embedding_dim</span><span class="p">,</span> <span class="s2">&quot;swish&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span> <span class="n">ffn_embedding_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">ffn_embedding_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">)</span>
+
+        <span class="c1"># layer norm associated with the position wise feed-forward NN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_layer_norm</span> <span class="o">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TransformerSentenceEncoderLayer.forward"><a class="viewcode-back" href="../../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.WavLM.TransformerSentenceEncoderLayer.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+            <span class="n">self_attn_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">self_attn_padding_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">need_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">pos_bias</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        LayerNorm is applied either before or after the self-attention/ffn</span>
+<span class="sd">        modules similar to the original Transformer imlementation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">residual</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_norm_first</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_attn_layer_norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">attn</span><span class="p">,</span> <span class="n">pos_bias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_attn</span><span class="p">(</span>
+                <span class="n">query</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">key_padding_mask</span><span class="o">=</span><span class="n">self_attn_padding_mask</span><span class="p">,</span>
+                <span class="n">need_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">attn_mask</span><span class="o">=</span><span class="n">self_attn_mask</span><span class="p">,</span>
+                <span class="n">position_bias</span><span class="o">=</span><span class="n">pos_bias</span>
+            <span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">residual</span> <span class="o">+</span> <span class="n">x</span>
+
+            <span class="n">residual</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_layer_norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_name</span> <span class="o">==</span> <span class="s2">&quot;glu&quot;</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">residual</span> <span class="o">+</span> <span class="n">x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">attn</span><span class="p">,</span> <span class="n">pos_bias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_attn</span><span class="p">(</span>
+                <span class="n">query</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">key_padding_mask</span><span class="o">=</span><span class="n">self_attn_padding_mask</span><span class="p">,</span>
+                <span class="n">need_weights</span><span class="o">=</span><span class="n">need_weights</span><span class="p">,</span>
+                <span class="n">attn_mask</span><span class="o">=</span><span class="n">self_attn_mask</span><span class="p">,</span>
+                <span class="n">position_bias</span><span class="o">=</span><span class="n">pos_bias</span>
+            <span class="p">)</span>
+
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">residual</span> <span class="o">+</span> <span class="n">x</span>
+
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_attn_layer_norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+            <span class="n">residual</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_name</span> <span class="o">==</span> <span class="s2">&quot;glu&quot;</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">residual</span> <span class="o">+</span> <span class="n">x</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_layer_norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">attn</span><span class="p">,</span> <span class="n">pos_bias</span></div></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017, Shinji Watanabe.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
