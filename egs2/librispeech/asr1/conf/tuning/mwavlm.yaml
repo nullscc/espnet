@@ -1,0 +1,47 @@
+# batch_type: numel
+# # batch_bins: 15000000
+# batch_bins: 8000000
+batch_type: unsorted
+batch_size: 8
+accum_grad: 3
+max_epoch: 100
+patience: none
+# The initialization method for model parameters
+init: xavier_uniform
+# init: none
+best_model_criterion:
+-   - valid
+    - acc
+    - max
+keep_nbest_models: 10
+
+freeze_param: [
+    "encoder.encoders"
+]
+
+input_size: 2048
+encoder: mwavlm
+encoder_conf:
+    output_size: 1024
+    freeze_finetune_updates: 100000
+    wavlm_model_file: /ssdhome/lgx521/pkg/pre-training/pre_trained_model/wavlm/WavLM-Large.pt
+
+model_conf:
+    ctc_weight: 1.0
+    lsm_weight: 0.1
+    length_normalized_loss: false
+    extract_feats_in_collect_stats: false
+
+optim: adam
+optim_conf:
+    lr: 0.0025
+scheduler: warmuplr
+scheduler_conf:
+    warmup_steps: 40000
+
+unused_parameters: true
+
+frontend: null
+
+
+specaug: null
