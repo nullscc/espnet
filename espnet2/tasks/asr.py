@@ -10,6 +10,7 @@ from espnet2.asr.ctc import CTC
 from espnet2.asr.decoder.abs_decoder import AbsDecoder
 from espnet2.asr.decoder.mlm_decoder import MLMDecoder
 from espnet2.asr.decoder.rnn_decoder import RNNDecoder
+from espnet2.asr.decoder.identity_decoder import IdentityDecoder
 from espnet2.asr.decoder.transformer_decoder import (
     DynamicConvolution2DTransformerDecoder,
     DynamicConvolutionTransformerDecoder,
@@ -35,6 +36,7 @@ from espnet2.asr.encoder.mwavlm_encoder import MWavLMEncoder
 from espnet2.asr.encoder.longformer_encoder import LongformerEncoder
 from espnet2.asr.encoder.rnn_encoder import RNNEncoder
 from espnet2.asr.encoder.transformer_encoder import TransformerEncoder
+from espnet2.asr.encoder.ds2_encoder import DS2Encoder
 from espnet2.asr.encoder.vgg_rnn_encoder import VGGRNNEncoder
 from espnet2.asr.encoder.wav2vec2_encoder import FairSeqWav2Vec2Encoder
 from espnet2.asr.espnet_model import ESPnetASRModel
@@ -143,6 +145,7 @@ encoder_choices = ClassChoices(
         wavlm=TransFormersWavLMEncoder,
         mwavlm=MWavLMEncoder,
         s3prl=S3prlEncoder,
+        ds2=DS2Encoder,
     ),
     type_check=AbsEncoder,
     default="rnn",
@@ -167,6 +170,7 @@ decoder_choices = ClassChoices(
         rnn=RNNDecoder,
         transducer=TransducerDecoder,
         mlm=MLMDecoder,
+        identity=IdentityDecoder,
     ),
     type_check=AbsDecoder,
     default="rnn",
