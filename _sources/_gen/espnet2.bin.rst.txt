@@ -92,6 +92,17 @@ espnet2.bin.diar_train
     :show-inheritance:
 
 
+.. _espnet2.bin.asr_inference_ds2:
+
+espnet2.bin.asr_inference_ds2
+-----------------------------
+
+.. automodule:: espnet2.bin.asr_inference_ds2
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 .. _espnet2.bin.asr_inference_maskctc:
 
 espnet2.bin.asr_inference_maskctc
