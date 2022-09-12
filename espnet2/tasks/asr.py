@@ -40,11 +40,13 @@ from espnet2.asr.encoder.ds2_encoder import DS2Encoder
 from espnet2.asr.encoder.vgg_rnn_encoder import VGGRNNEncoder
 from espnet2.asr.encoder.wav2vec2_encoder import FairSeqWav2Vec2Encoder
 from espnet2.asr.espnet_model import ESPnetASRModel
+from espnet2.asr.espnet_model_ds2 import ESPnetASRModelDS2
 from espnet2.asr.espnet_model_wavlm_0_1_2 import ESPnetASRModelWavLM_0_1_2
 from espnet2.asr.espnet_model_wavlm_0_1_2_noise import ESPnetASRModelWavLM_0_1_2_noise
 from espnet2.asr.espnet_model_wavlm_0_1_2_clean_noise import ESPnetASRModelWavLM_0_1_2_clean_noise
 from espnet2.asr.frontend.abs_frontend import AbsFrontend
 from espnet2.asr.frontend.default import DefaultFrontend
+from espnet2.asr.frontend.ds2 import DS2Frontend
 from espnet2.asr.frontend.fused import FusedFrontends
 from espnet2.asr.frontend.s3prl import S3prlFrontend
 from espnet2.asr.frontend.s3prl_0_1_2 import S3prlFrontend_0_1_2
@@ -84,6 +86,7 @@ frontend_choices = ClassChoices(
         s3prl=S3prlFrontend,
         s3prl_0_1_2=S3prlFrontend_0_1_2,
         fused=FusedFrontends,
+        ds2=DS2Frontend,
     ),
     type_check=AbsFrontend,
     default="default",
@@ -111,6 +114,7 @@ model_choices = ClassChoices(
     "model",
     classes=dict(
         espnet=ESPnetASRModel,
+        espnet_ds2=ESPnetASRModelDS2,
         espnet_wavlm_0_1_2=ESPnetASRModelWavLM_0_1_2,
         espnet_wavlm_0_1_2_noise=ESPnetASRModelWavLM_0_1_2_noise,
         espnet_wavlm_0_1_2_clean_noise=ESPnetASRModelWavLM_0_1_2_clean_noise,
@@ -402,7 +406,7 @@ class ASRTask(AbsTask):
 
     @classmethod
     def build_model(cls, args: argparse.Namespace) -> Union[ESPnetASRModel, ESPnetASRModelWavLM_0_1_2,
-            ESPnetASRModelWavLM_0_1_2_noise, ESPnetASRModelWavLM_0_1_2_clean_noise]:
+            ESPnetASRModelWavLM_0_1_2_noise, ESPnetASRModelWavLM_0_1_2_clean_noise, ESPnetASRModelDS2]:
         assert check_argument_types()
         if isinstance(args.token_list, str):
             with open(args.token_list, encoding="utf-8") as f:

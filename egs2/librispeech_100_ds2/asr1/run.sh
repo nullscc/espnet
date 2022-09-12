@@ -5,35 +5,35 @@ set -e
 set -u
 set -o pipefail
 
-train_set="train100"
-valid_set="dev"
-test_sets="test_0db"
+train_set="train_clean_100"
+valid_set="dev_clean"
+# test_sets="test_clean test_other dev_clean dev_other"
+test_sets="test_clean"
 
-asr_tag=0db_ds2
-asr_stats_dir=asr_stats_raw_en_bpe5000_0db
-dumpdir=dump0dB
+asr_tag=ds2
 asr_config=conf/tuning/train_asr_ds2.yaml
 inference_config=conf/decode_asr_ds2.yaml
 
+#--speed_perturb_factors "0.9 1.0 1.1" \
 ./asr.sh \
     --skip_data_prep false \
     --skip_train false \
     --skip_eval false \
     --lang en \
-    --ngpu 2 \
+    --ngpu 4 \
     --nj 32 \
-    --inference_nj 32 \
+    --inference_nj 1 \
     --nbpe 5000 \
     --max_wav_duration 30 \
     --audio_format "wav" \
     --feats_type raw \
+	--feats_normalize utt_mvn \
     --use_lm false \
     --asr_tag "${asr_tag}" \
-	--asr_stats_dir "${asr_stats_dir}" \
-	--dumpdir "${dumpdir}" \
     --asr_config "${asr_config}" \
+	--inference_asr_model "20epoch.pth" \
+    --gpu_inference true \
     --inference_config "${inference_config}" \
-	--feats_normalize utt_mvn \
     --train_set "${train_set}" \
     --valid_set "${valid_set}" \
     --test_sets "${test_sets}" \
