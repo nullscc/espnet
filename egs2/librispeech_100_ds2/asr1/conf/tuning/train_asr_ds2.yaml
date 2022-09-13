@@ -24,13 +24,14 @@ model_conf:
     length_normalized_loss: false
     extract_feats_in_collect_stats: false
 
-frontend: ds2
-frontend_conf:
-    n_fft: 320
-    win_length: 320
-    hop_length: 160
-    window: hamming
-    normalized: true
+input_size: 161
+frontend: none
+# frontend_conf:
+#     n_fft: 320
+#     win_length: 320
+#     hop_length: 160
+#     window: hamming
+#     normalized: true
 
 seed: 2022
 log_interval: 400   

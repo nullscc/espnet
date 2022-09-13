@@ -959,6 +959,7 @@ class AbsTask(ABC):
     ) -> None:
         """Check if the dataset satisfy the requirement of current Task"""
         assert check_argument_types()
+        if allow_variable_data_keys: return
         mes = (
             f"If you intend to use an additional input, modify "
             f'"{cls.__name__}.required_data_names()" or '

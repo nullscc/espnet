@@ -15,14 +15,15 @@ asr_config=conf/tuning/train_asr_ds2.yaml
 inference_config=conf/decode_asr_ds2.yaml
 
 #--speed_perturb_factors "0.9 1.0 1.1" \
-./asr.sh \
+./asr_ds2.sh \
     --skip_data_prep false \
     --skip_train false \
     --skip_eval false \
     --lang en \
-    --ngpu 4 \
+    --ngpu 1 \
     --nj 32 \
     --inference_nj 1 \
+    --token_type char \
     --nbpe 5000 \
     --max_wav_duration 30 \
     --audio_format "wav" \
@@ -31,7 +32,7 @@ inference_config=conf/decode_asr_ds2.yaml
     --use_lm false \
     --asr_tag "${asr_tag}" \
     --asr_config "${asr_config}" \
-	--inference_asr_model "20epoch.pth" \
+	--inference_asr_model "valid.cer_ctc.ave.pth" \
     --gpu_inference true \
     --inference_config "${inference_config}" \
     --train_set "${train_set}" \

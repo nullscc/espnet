@@ -24,6 +24,7 @@ from espnet2.fileio.read_text import load_num_sequence_text, read_2column_text
 from espnet2.fileio.rttm import RttmReader
 from espnet2.fileio.sound_scp import SoundScpReader
 from espnet2.utils.sized_dict import SizedDict
+from espnet2.utils.wav2stftspec import wav2stftspec
 
 
 class AdapterForSoundScpReader(collections.abc.Mapping):
@@ -413,7 +414,11 @@ class ESPnetDataset(AbsDataset):
                 value = value.numpy()
             elif isinstance(value, numbers.Number):
                 value = np.array([value])
-            data[name] = value
+            if name == "speech_ds2":
+                data[name] = wav2stftspec(value.squeeze()).T
+                # get D * T
+            else:
+                data[name] = value
 
         # 2. [Option] Apply preprocessing
         #   e.g. espnet2.train.preprocessor:CommonPreprocessor

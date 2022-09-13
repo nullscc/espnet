@@ -153,8 +153,8 @@ class ESPnetASRModelDS2(AbsESPnetModel):
 
     def forward(
         self,
-        speech: torch.Tensor,
-        speech_lengths: torch.Tensor,
+        speech_ds2: torch.Tensor,
+        speech_ds2_lengths: torch.Tensor,
         text: torch.Tensor,
         text_lengths: torch.Tensor,
         **kwargs,
@@ -168,6 +168,8 @@ class ESPnetASRModelDS2(AbsESPnetModel):
             text_lengths: (Batch,)
             kwargs: "utt_id" is among the input.
         """
+        speech = speech_ds2
+        speech_lengths = speech_ds2_lengths
         assert text_lengths.dim() == 1, text_lengths.shape
         # Check that batch_size is unified
         assert (
@@ -311,15 +313,15 @@ class ESPnetASRModelDS2(AbsESPnetModel):
         with autocast(False):
             # 1. Extract feats
             feats, feats_lengths = self._extract_feats(speech, speech_lengths)
-            feats = feats.transpose(2, 3)
+            # feats = feats.transpose(2, 3)
 
             # 2. Data augmentation
             if self.specaug is not None and self.training:
                 feats, feats_lengths = self.specaug(feats, feats_lengths)
 
             # 3. Normalization for feature: e.g. Global-CMVN, Utterance-CMVN
-            if self.normalize is not None:
-                feats, feats_lengths = self.normalize(feats, feats_lengths)
+            # if self.normalize is not None:
+            #     feats, feats_lengths = self.normalize(feats, feats_lengths)
 
         # Pre-encoder, e.g. used for raw input data
         if self.preencoder is not None:
@@ -333,6 +335,7 @@ class ESPnetASRModelDS2(AbsESPnetModel):
                 feats, feats_lengths, ctc=self.ctc
             )
         else:
+            feats = feats.unsqueeze(1).transpose(2, 3)
             encoder_out, encoder_out_lens, _ = self.encoder(feats, feats_lengths)
         intermediate_outs = None
         if isinstance(encoder_out, tuple):
