@@ -1112,6 +1112,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Check if the dataset satisfy the requirement of current Task&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">check_argument_types</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">allow_variable_data_keys</span><span class="p">:</span> <span class="k">return</span>
         <span class="n">mes</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;If you intend to use an additional input, modify &quot;</span>
             <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">.required_data_names()&quot; or &#39;</span>

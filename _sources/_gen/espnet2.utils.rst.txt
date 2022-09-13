@@ -81,6 +81,17 @@ espnet2.utils.__init__
     :show-inheritance:
 
 
+.. _espnet2.utils.wav2stftspec:
+
+espnet2.utils.wav2stftspec
+--------------------------
+
+.. automodule:: espnet2.utils.wav2stftspec
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 .. _espnet2.utils.config_argparse:
 
 espnet2.utils.config_argparse

@@ -37,6 +37,17 @@ espnet2.asr.espnet_model_wavlm_0_1_2_noise
     :show-inheritance:
 
 
+.. _espnet2.asr.espnet_model_ds2:
+
+espnet2.asr.espnet_model_ds2
+----------------------------
+
+.. automodule:: espnet2.asr.espnet_model_ds2
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 .. _espnet2.asr.espnet_model_wavlm_0_1_2:
 
 espnet2.asr.espnet_model_wavlm_0_1_2
@@ -87,6 +98,17 @@ espnet2.asr.frontend.abs_frontend
 ---------------------------------
 
 .. automodule:: espnet2.asr.frontend.abs_frontend
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. _espnet2.asr.frontend.ds2:
+
+espnet2.asr.frontend.ds2
+------------------------
+
+.. automodule:: espnet2.asr.frontend.ds2
     :members:
     :undoc-members:
     :show-inheritance:
