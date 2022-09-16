@@ -164,6 +164,12 @@ class DS2Encoder(AbsEncoder):
             Lookahead(rnn_hidden_size, context=context),
             nn.Hardtanh(0, 20, inplace=True)
         ) if not bidirectional else None
+        fully_connected = nn.Sequential(
+            nn.BatchNorm1d(rnn_hidden_size),
+        )
+        self.fc = nn.Sequential(
+            SequenceWise(fully_connected),
+        )
 
     def forward(self, x, lengths, rnn_split=2):
         lengths = lengths.cpu().int()
@@ -185,6 +191,8 @@ class DS2Encoder(AbsEncoder):
             rnn_count = rnn_count + 1
         if not self.bidirectional:  # no need for lookahead layer in bidirectional
             x = self.lookahead(x)
+        x = self.fc(x)
+        x = x.transpose(0, 1)
         return x, output_lengths, y
 
     def get_seq_lens(self, input_length):

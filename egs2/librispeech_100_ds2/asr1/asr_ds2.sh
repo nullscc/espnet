@@ -1104,7 +1104,7 @@ if ! "${skip_train}"; then
                 --non_linguistic_symbols "${nlsyms_txt}" \
                 --cleaner "${cleaner}" \
                 --g2p "${g2p}" \
-                --valid_data_path_and_name_and_type "${_asr_valid_dir}/${_scp},speech,${_type}" \
+                --valid_data_path_and_name_and_type "${_asr_valid_dir}/${_scp},speech_ds,${_type}" \
                 --valid_data_path_and_name_and_type "${_asr_valid_dir}/text,text,text" \
                 --valid_shape_file "${asr_stats_dir}/valid/speech_shape" \
                 --valid_shape_file "${asr_stats_dir}/valid/text_shape.${token_type}" \

@@ -320,8 +320,8 @@ class ESPnetASRModelDS2(AbsESPnetModel):
                 feats, feats_lengths = self.specaug(feats, feats_lengths)
 
             # 3. Normalization for feature: e.g. Global-CMVN, Utterance-CMVN
-            # if self.normalize is not None:
-            #     feats, feats_lengths = self.normalize(feats, feats_lengths)
+            if self.normalize is not None:
+                feats, feats_lengths = self.normalize(feats, feats_lengths)
 
         # Pre-encoder, e.g. used for raw input data
         if self.preencoder is not None:
@@ -348,7 +348,7 @@ class ESPnetASRModelDS2(AbsESPnetModel):
                 encoder_out, encoder_out_lens
             )
 
-        encoder_out = encoder_out.transpose(0, 1)
+        # encoder_out = encoder_out.transpose(0, 1)
         assert encoder_out.size(0) == speech.size(0), (
             encoder_out.size(),
             speech.size(0),
