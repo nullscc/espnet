@@ -317,6 +317,12 @@
             <span class="n">Lookahead</span><span class="p">(</span><span class="n">rnn_hidden_size</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">),</span>
             <span class="n">nn</span><span class="o">.</span><span class="n">Hardtanh</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">bidirectional</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">fully_connected</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">(</span><span class="n">rnn_hidden_size</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">SequenceWise</span><span class="p">(</span><span class="n">fully_connected</span><span class="p">),</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="DS2Encoder.forward"><a class="viewcode-back" href="../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.ds2_encoder.DS2Encoder.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lengths</span><span class="p">,</span> <span class="n">rnn_split</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
         <span class="n">lengths</span> <span class="o">=</span> <span class="n">lengths</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">int</span><span class="p">()</span>
@@ -338,6 +344,8 @@
             <span class="n">rnn_count</span> <span class="o">=</span> <span class="n">rnn_count</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">bidirectional</span><span class="p">:</span>  <span class="c1"># no need for lookahead layer in bidirectional</span>
             <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookahead</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">output_lengths</span><span class="p">,</span> <span class="n">y</span></div>
 
 <div class="viewcode-block" id="DS2Encoder.get_seq_lens"><a class="viewcode-back" href="../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.ds2_encoder.DS2Encoder.get_seq_lens">[docs]</a>    <span class="k">def</span> <span class="nf">get_seq_lens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_length</span><span class="p">):</span>
