@@ -26,6 +26,17 @@ espnet2.asr.espnet_model
     :show-inheritance:
 
 
+.. _espnet2.asr.espnet_model_ds2avt:
+
+espnet2.asr.espnet_model_ds2avt
+-------------------------------
+
+.. automodule:: espnet2.asr.espnet_model_ds2avt
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 .. _espnet2.asr.espnet_model_wavlm_0_1_2_noise:
 
 espnet2.asr.espnet_model_wavlm_0_1_2_noise

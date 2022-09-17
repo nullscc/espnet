@@ -15,6 +15,17 @@ espnet2.layers.abs_normalize
     :show-inheritance:
 
 
+.. _espnet2.layers.ds2:
+
+espnet2.layers.ds2
+------------------
+
+.. automodule:: espnet2.layers.ds2
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 .. _espnet2.layers.utterance_mvn:
 
 espnet2.layers.utterance_mvn

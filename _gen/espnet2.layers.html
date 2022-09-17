@@ -114,6 +114,7 @@
 <li class="toctree-l1"><a class="reference internal" href="espnet2.iterators.html">espnet2.iterators package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">espnet2.layers package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#espnet2-layers-abs-normalize">espnet2.layers.abs_normalize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#espnet2-layers-ds2">espnet2.layers.ds2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#espnet2-layers-utterance-mvn">espnet2.layers.utterance_mvn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#espnet2-layers-log-mel">espnet2.layers.log_mel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#espnet2-layers-time-warp">espnet2.layers.time_warp</a></li>
@@ -217,8 +218,59 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 </section>
+<section id="espnet2-layers-ds2">
+<span id="id2"></span><h2>espnet2.layers.ds2<a class="headerlink" href="#espnet2-layers-ds2" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-espnet2.layers.ds2"></span><dl class="class">
+<dt id="espnet2.layers.ds2.BatchRNN">
+<em class="property">class </em><code class="sig-prename descclassname">espnet2.layers.ds2.</code><code class="sig-name descname">BatchRNN</code><span class="sig-paren">(</span><em class="sig-param">input_size</em>, <em class="sig-param">hidden_size</em>, <em class="sig-param">rnn_type=&lt;class 'torch.nn.modules.rnn.LSTM'&gt;</em>, <em class="sig-param">bidirectional=False</em>, <em class="sig-param">batch_norm=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/ds2.html#BatchRNN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.ds2.BatchRNN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="espnet2.layers.ds2.BatchRNN.flatten_parameters">
+<code class="sig-name descname">flatten_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/ds2.html#BatchRNN.flatten_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.ds2.BatchRNN.flatten_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="espnet2.layers.ds2.BatchRNN.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">output_lengths</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/ds2.html#BatchRNN.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.ds2.BatchRNN.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="espnet2.layers.ds2.SequenceWise">
+<em class="property">class </em><code class="sig-prename descclassname">espnet2.layers.ds2.</code><code class="sig-name descname">SequenceWise</code><span class="sig-paren">(</span><em class="sig-param">module</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/ds2.html#SequenceWise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.ds2.SequenceWise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Collapses input of dim T*N*H to (T*N)*H, and applies to a module.
+Allows handling of variable sequence lengths and minibatch sizes.
+:param module: Module to apply input to.</p>
+<dl class="method">
+<dt id="espnet2.layers.ds2.SequenceWise.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/ds2.html#SequenceWise.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.ds2.SequenceWise.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="espnet2-layers-utterance-mvn">
-<span id="id2"></span><h2>espnet2.layers.utterance_mvn<a class="headerlink" href="#espnet2-layers-utterance-mvn" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2>espnet2.layers.utterance_mvn<a class="headerlink" href="#espnet2-layers-utterance-mvn" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.layers.utterance_mvn"></span><dl class="class">
 <dt id="espnet2.layers.utterance_mvn.UtteranceMVN">
 <em class="property">class </em><code class="sig-prename descclassname">espnet2.layers.utterance_mvn.</code><code class="sig-name descname">UtteranceMVN</code><span class="sig-paren">(</span><em class="sig-param">norm_means: bool = True</em>, <em class="sig-param">norm_vars: bool = False</em>, <em class="sig-param">eps: float = 1e-20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/utterance_mvn.html#UtteranceMVN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.utterance_mvn.UtteranceMVN" title="Permalink to this definition">¶</a></dt>
@@ -267,7 +319,7 @@ strings are acceptable.</p>
 
 </section>
 <section id="espnet2-layers-log-mel">
-<span id="id3"></span><h2>espnet2.layers.log_mel<a class="headerlink" href="#espnet2-layers-log-mel" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2>espnet2.layers.log_mel<a class="headerlink" href="#espnet2-layers-log-mel" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.layers.log_mel"></span><dl class="class">
 <dt id="espnet2.layers.log_mel.LogMel">
 <em class="property">class </em><code class="sig-prename descclassname">espnet2.layers.log_mel.</code><code class="sig-name descname">LogMel</code><span class="sig-paren">(</span><em class="sig-param">fs: int = 16000</em>, <em class="sig-param">n_fft: int = 512</em>, <em class="sig-param">n_mels: int = 80</em>, <em class="sig-param">fmin: float = None</em>, <em class="sig-param">fmax: float = None</em>, <em class="sig-param">htk: bool = False</em>, <em class="sig-param">log_base: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/log_mel.html#LogMel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.log_mel.LogMel" title="Permalink to this definition">¶</a></dt>
@@ -314,7 +366,7 @@ registered hooks while the latter silently ignores them.</p>
 
 </section>
 <section id="espnet2-layers-time-warp">
-<span id="id4"></span><h2>espnet2.layers.time_warp<a class="headerlink" href="#espnet2-layers-time-warp" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2>espnet2.layers.time_warp<a class="headerlink" href="#espnet2-layers-time-warp" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.layers.time_warp"></span><p>Time warp module.</p>
 <dl class="class">
 <dt id="espnet2.layers.time_warp.TimeWarp">
@@ -371,7 +423,7 @@ strings are acceptable.</p>
 
 </section>
 <section id="espnet2-layers-mask-along-axis">
-<span id="id5"></span><h2>espnet2.layers.mask_along_axis<a class="headerlink" href="#espnet2-layers-mask-along-axis" title="Permalink to this headline">¶</a></h2>
+<span id="id6"></span><h2>espnet2.layers.mask_along_axis<a class="headerlink" href="#espnet2-layers-mask-along-axis" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.layers.mask_along_axis"></span><dl class="class">
 <dt id="espnet2.layers.mask_along_axis.MaskAlongAxis">
 <em class="property">class </em><code class="sig-prename descclassname">espnet2.layers.mask_along_axis.</code><code class="sig-name descname">MaskAlongAxis</code><span class="sig-paren">(</span><em class="sig-param">mask_width_range: Union[int</em>, <em class="sig-param">Sequence[int]] = (0</em>, <em class="sig-param">30)</em>, <em class="sig-param">num_mask: int = 2</em>, <em class="sig-param">dim: Union[int</em>, <em class="sig-param">str] = 'time'</em>, <em class="sig-param">replace_with_zero: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/mask_along_axis.html#MaskAlongAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.mask_along_axis.MaskAlongAxis" title="Permalink to this definition">¶</a></dt>
@@ -446,7 +498,7 @@ strings are acceptable.</p>
 
 </section>
 <section id="espnet2-layers-stft">
-<span id="id6"></span><h2>espnet2.layers.stft<a class="headerlink" href="#espnet2-layers-stft" title="Permalink to this headline">¶</a></h2>
+<span id="id7"></span><h2>espnet2.layers.stft<a class="headerlink" href="#espnet2-layers-stft" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.layers.stft"></span><dl class="class">
 <dt id="espnet2.layers.stft.Stft">
 <em class="property">class </em><code class="sig-prename descclassname">espnet2.layers.stft.</code><code class="sig-name descname">Stft</code><span class="sig-paren">(</span><em class="sig-param">n_fft: int = 512</em>, <em class="sig-param">win_length: int = None</em>, <em class="sig-param">hop_length: int = 128</em>, <em class="sig-param">window: Optional[str] = 'hann'</em>, <em class="sig-param">center: bool = True</em>, <em class="sig-param">normalized: bool = False</em>, <em class="sig-param">onesided: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/stft.html#Stft"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.stft.Stft" title="Permalink to this definition">¶</a></dt>
@@ -505,7 +557,7 @@ ilens: (batch,)</p>
 
 </section>
 <section id="espnet2-layers-style-loss">
-<span id="id7"></span><h2>espnet2.layers.style_loss<a class="headerlink" href="#espnet2-layers-style-loss" title="Permalink to this headline">¶</a></h2>
+<span id="id8"></span><h2>espnet2.layers.style_loss<a class="headerlink" href="#espnet2-layers-style-loss" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.layers.style_loss"></span><dl class="class">
 <dt id="espnet2.layers.style_loss.StyleLoss">
 <em class="property">class </em><code class="sig-prename descclassname">espnet2.layers.style_loss.</code><code class="sig-name descname">StyleLoss</code><span class="sig-paren">(</span><em class="sig-param">on_channel=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/style_loss.html#StyleLoss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.style_loss.StyleLoss" title="Permalink to this definition">¶</a></dt>
@@ -543,10 +595,10 @@ registered hooks while the latter silently ignores them.</p>
 
 </section>
 <section id="espnet2-layers-init">
-<span id="id8"></span><h2>espnet2.layers.__init__<a class="headerlink" href="#espnet2-layers-init" title="Permalink to this headline">¶</a></h2>
+<span id="id9"></span><h2>espnet2.layers.__init__<a class="headerlink" href="#espnet2-layers-init" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.layers.__init__"></span></section>
 <section id="espnet2-layers-global-mvn">
-<span id="id9"></span><h2>espnet2.layers.global_mvn<a class="headerlink" href="#espnet2-layers-global-mvn" title="Permalink to this headline">¶</a></h2>
+<span id="id10"></span><h2>espnet2.layers.global_mvn<a class="headerlink" href="#espnet2-layers-global-mvn" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.layers.global_mvn"></span><dl class="class">
 <dt id="espnet2.layers.global_mvn.GlobalMVN">
 <em class="property">class </em><code class="sig-prename descclassname">espnet2.layers.global_mvn.</code><code class="sig-name descname">GlobalMVN</code><span class="sig-paren">(</span><em class="sig-param">stats_file: Union[pathlib.Path, str], norm_means: bool = True, norm_vars: bool = True, eps: float = 1e-20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/global_mvn.html#GlobalMVN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.global_mvn.GlobalMVN" title="Permalink to this definition">¶</a></dt>
@@ -595,7 +647,7 @@ strings are acceptable.</p>
 
 </section>
 <section id="espnet2-layers-label-aggregation">
-<span id="id10"></span><h2>espnet2.layers.label_aggregation<a class="headerlink" href="#espnet2-layers-label-aggregation" title="Permalink to this headline">¶</a></h2>
+<span id="id11"></span><h2>espnet2.layers.label_aggregation<a class="headerlink" href="#espnet2-layers-label-aggregation" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.layers.label_aggregation"></span><dl class="class">
 <dt id="espnet2.layers.label_aggregation.LabelAggregate">
 <em class="property">class </em><code class="sig-prename descclassname">espnet2.layers.label_aggregation.</code><code class="sig-name descname">LabelAggregate</code><span class="sig-paren">(</span><em class="sig-param">win_length: int = 512</em>, <em class="sig-param">hop_length: int = 128</em>, <em class="sig-param">center: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/layers/label_aggregation.html#LabelAggregate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.label_aggregation.LabelAggregate" title="Permalink to this definition">¶</a></dt>
@@ -633,7 +685,7 @@ strings are acceptable.</p>
 
 </section>
 <section id="espnet2-layers-inversible-interface">
-<span id="id11"></span><h2>espnet2.layers.inversible_interface<a class="headerlink" href="#espnet2-layers-inversible-interface" title="Permalink to this headline">¶</a></h2>
+<span id="id12"></span><h2>espnet2.layers.inversible_interface<a class="headerlink" href="#espnet2-layers-inversible-interface" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.layers.inversible_interface"></span><dl class="class">
 <dt id="espnet2.layers.inversible_interface.InversibleInterface">
 <em class="property">class </em><code class="sig-prename descclassname">espnet2.layers.inversible_interface.</code><code class="sig-name descname">InversibleInterface</code><a class="reference internal" href="../_modules/espnet2/layers/inversible_interface.html#InversibleInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.layers.inversible_interface.InversibleInterface" title="Permalink to this definition">¶</a></dt>
@@ -647,7 +699,7 @@ strings are acceptable.</p>
 
 </section>
 <section id="espnet2-layers-sinc-conv">
-<span id="id12"></span><h2>espnet2.layers.sinc_conv<a class="headerlink" href="#espnet2-layers-sinc-conv" title="Permalink to this headline">¶</a></h2>
+<span id="id13"></span><h2>espnet2.layers.sinc_conv<a class="headerlink" href="#espnet2-layers-sinc-conv" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.layers.sinc_conv"></span><p>Sinc convolutions.</p>
 <dl class="class">
 <dt id="espnet2.layers.sinc_conv.BarkScale">
