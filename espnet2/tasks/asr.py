@@ -72,11 +72,21 @@ from espnet2.torch_utils.initialize import initialize
 from espnet2.train.abs_espnet_model import AbsESPnetModel
 from espnet2.train.class_choices import ClassChoices
 from espnet2.train.collate_fn import CommonCollateFn
-from espnet2.train.preprocessor import CommonPreprocessor
+from espnet2.train.preprocessor import CommonPreprocessor, DS2Preprocessor
 from espnet2.train.trainer import Trainer
 from espnet2.utils.get_default_kwargs import get_default_kwargs
 from espnet2.utils.nested_dict_action import NestedDictAction
 from espnet2.utils.types import float_or_none, int_or_none, str2bool, str_or_none
+
+preprocessor_choices = ClassChoices(
+    name="preprocessor",
+    classes=dict(
+        default=CommonPreprocessor,
+        ds2=DS2Preprocessor,
+    ),
+    type_check=AbsPreprocessor,
+    default="default",
+)
 
 frontend_choices = ClassChoices(
     name="frontend",
@@ -187,6 +197,8 @@ class ASRTask(AbsTask):
 
     # Add variable objects configurations
     class_choices_list = [
+        # --preprocessor and --preprocessor_conf
+        preprocessor_choices,
         # --frontend and --frontend_conf
         frontend_choices,
         # --specaug and --specaug_conf
@@ -356,7 +368,8 @@ class ASRTask(AbsTask):
     ) -> Optional[Callable[[str, Dict[str, np.array]], Dict[str, np.ndarray]]]:
         assert check_argument_types()
         if args.use_preprocessor:
-            retval = CommonPreprocessor(
+            preprocessor_class = preprocessor_choices.get_class(args.preprocessor)
+            retval = preprocessor_class(
                 train=train,
                 token_type=args.token_type,
                 token_list=args.token_list,

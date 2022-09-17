@@ -207,7 +207,7 @@ class ESPnetASRModelDS2(AbsESPnetModel):
 						   nb_layers=1, 
 						   rnn_type=encoder.rnn_type,
 						   bidirectional=encoder.bidirectional,nclasses=2)
-
+        self.classifier_criterion = torch.nn.CrossEntropyLoss()
         self.extract_feats_in_collect_stats = extract_feats_in_collect_stats
 
     def forward(
@@ -242,6 +242,9 @@ class ESPnetASRModelDS2(AbsESPnetModel):
 
         # 1. Encoder
         encoder_out, encoder_out_lens, extractor_out = self.encode(speech, speech_lengths)
+        noise_out = self.noise_model(extractor_out, encoder_out_lens)
+        isclean_target = [item[0] for item in kwargs['isclean']]
+        classifier_loss = self.classifier_criterion(noise_out, isclean_target)
         intermediate_outs = None
         if isinstance(encoder_out, tuple):
             intermediate_outs = encoder_out[1]
@@ -332,7 +335,8 @@ class ESPnetASRModelDS2(AbsESPnetModel):
             stats["wer"] = wer_att
 
         # Collect total loss stats
-        stats["loss"] = loss.detach()
+        stats["classifier_loss"] = classifier_loss.detach()
+        stats["loss"] = loss.detach() + classifier_loss.detach()
 
         # force_gatherable: to-device and to-tensor if scalar for DataParallel
         loss, stats, weight = force_gatherable((loss, stats, batch_size), loss.device)

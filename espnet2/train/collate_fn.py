@@ -92,7 +92,6 @@ def common_collate_fn(
             if key not in not_sequence:
                 lens = torch.tensor([d[key][0].shape[0] for d in data], dtype=torch.long)
                 output[key + "_lengths"] = lens
-
             continue
 
         array_list = [d[key] for d in data]
