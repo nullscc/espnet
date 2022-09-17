@@ -32,7 +32,7 @@ inference_config=conf/decode_asr_ds2.yaml
     --use_lm false \
     --asr_tag "${asr_tag}" \
     --asr_config "${asr_config}" \
-	--inference_asr_model "valid.cer_ctc.ave.pth" \
+	--inference_asr_model "valid.cer_ctc.best.pth" \
     --gpu_inference true \
     --inference_config "${inference_config}" \
     --train_set "${train_set}" \

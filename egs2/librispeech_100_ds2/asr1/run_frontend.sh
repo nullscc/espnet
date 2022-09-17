@@ -10,7 +10,7 @@ valid_set="dev_clean"
 # test_sets="test_clean test_other dev_clean dev_other"
 test_sets="test_clean"
 
-asr_tag=ds2
+asr_tag=ds2_frontend
 asr_config=conf/tuning/train_asr_ds2_frontend.yaml
 inference_config=conf/decode_asr_ds2.yaml
 

@@ -77,7 +77,7 @@ class DS2Frontend(AbsFrontend):
         self.frontend_type = "default"
 
     def output_size(self) -> int:
-        return self.n_mels
+        return 161
 
     def forward(
         self, input: torch.Tensor, input_lengths: torch.Tensor
