@@ -1,0 +1,64 @@
+batch_type: numel
+batch_bins: 8000000
+# batch_bins: 32000000
+# batch_type: unsorted
+# batch_size: 2
+
+accum_grad: 4
+max_epoch: 30
+
+encoder: ds2
+encoder_conf:
+    rnn_type: lstm
+    rnn_hidden_size: 1024
+    bidirectional: True
+
+decoder: identity
+decoder_conf:
+    hello: world
+
+model: espnet
+model_conf:
+    ctc_weight: 1.0
+    lsm_weight: 0.1
+    length_normalized_loss: false
+    extract_feats_in_collect_stats: false
+
+frontend: ds2
+frontend_conf:
+    n_fft: 320
+    win_length: 320
+    hop_length: 160
+    window: hamming
+    normalized: true
+
+seed: 2022
+log_interval: 400   
+num_att_plot: 0     
+num_workers: 8      
+sort_in_batch: descending       # how to sort data in making batch
+sort_batch: descending          # how to sort created batches
+patience: none
+init: none
+best_model_criterion:
+-   - valid
+    - cer_ctc
+    - min
+keep_nbest_models: 10
+
+use_amp: true      
+cudnn_deterministic: false  
+cudnn_benchmark: false      
+
+optim: adam
+optim_conf:
+    lr: 0.0006
+    weight_decay: 0.000001
+scheduler: warmuplr
+scheduler_conf:
+    warmup_steps: 15000
+
+ctc_conf:
+    ignore_nan_grad: true
+
+specaug: none
