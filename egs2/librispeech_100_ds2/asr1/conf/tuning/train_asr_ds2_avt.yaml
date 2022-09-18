@@ -7,17 +7,23 @@ batch_bins: 8000000
 accum_grad: 4
 max_epoch: 30
 
+preprocessor: ds2
+noise_apply_prob: 0.875
+noise_scp: /ssdhome/xiezhiwei/espnet_ds2/egs2/librispeech_100_ds2/asr1/noise.scp
+noise_db_range: "0_25"
+
 encoder: ds2
 encoder_conf:
     rnn_type: lstm
     rnn_hidden_size: 1024
     bidirectional: True
+    pretrained_model: "/ssdhome/xiezhiwei/espnet_ds2/egs2/librispeech_100_ds2/asr1/30epoch.pth"
 
 decoder: identity
 decoder_conf:
     hello: world
 
-model: espnet
+model: espnet_ds2_avt
 model_conf:
     ctc_weight: 1.0
     lsm_weight: 0.1
@@ -52,7 +58,7 @@ cudnn_benchmark: false
 
 optim: adam
 optim_conf:
-    lr: 0.0006
+    lr: 0.0003
     weight_decay: 0.000001
 scheduler: warmuplr
 scheduler_conf:

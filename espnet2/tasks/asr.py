@@ -41,6 +41,7 @@ from espnet2.asr.encoder.vgg_rnn_encoder import VGGRNNEncoder
 from espnet2.asr.encoder.wav2vec2_encoder import FairSeqWav2Vec2Encoder
 from espnet2.asr.espnet_model import ESPnetASRModel
 from espnet2.asr.espnet_model_ds2 import ESPnetASRModelDS2
+from espnet2.asr.espnet_model_ds2avt import ESPnetASRModelDS2AVT
 from espnet2.asr.espnet_model_wavlm_0_1_2 import ESPnetASRModelWavLM_0_1_2
 from espnet2.asr.espnet_model_wavlm_0_1_2_noise import ESPnetASRModelWavLM_0_1_2_noise
 from espnet2.asr.espnet_model_wavlm_0_1_2_clean_noise import ESPnetASRModelWavLM_0_1_2_clean_noise
@@ -72,7 +73,7 @@ from espnet2.torch_utils.initialize import initialize
 from espnet2.train.abs_espnet_model import AbsESPnetModel
 from espnet2.train.class_choices import ClassChoices
 from espnet2.train.collate_fn import CommonCollateFn
-from espnet2.train.preprocessor import CommonPreprocessor, DS2Preprocessor
+from espnet2.train.preprocessor import AbsPreprocessor, CommonPreprocessor, DS2Preprocessor
 from espnet2.train.trainer import Trainer
 from espnet2.utils.get_default_kwargs import get_default_kwargs
 from espnet2.utils.nested_dict_action import NestedDictAction
@@ -125,6 +126,7 @@ model_choices = ClassChoices(
     classes=dict(
         espnet=ESPnetASRModel,
         espnet_ds2=ESPnetASRModelDS2,
+        espnet_ds2_avt=ESPnetASRModelDS2AVT,
         espnet_wavlm_0_1_2=ESPnetASRModelWavLM_0_1_2,
         espnet_wavlm_0_1_2_noise=ESPnetASRModelWavLM_0_1_2_noise,
         espnet_wavlm_0_1_2_clean_noise=ESPnetASRModelWavLM_0_1_2_clean_noise,
@@ -419,7 +421,8 @@ class ASRTask(AbsTask):
 
     @classmethod
     def build_model(cls, args: argparse.Namespace) -> Union[ESPnetASRModel, ESPnetASRModelWavLM_0_1_2,
-            ESPnetASRModelWavLM_0_1_2_noise, ESPnetASRModelWavLM_0_1_2_clean_noise, ESPnetASRModelDS2]:
+            ESPnetASRModelWavLM_0_1_2_noise, ESPnetASRModelWavLM_0_1_2_clean_noise, ESPnetASRModelDS2,
+            ESPnetASRModelDS2AVT]:
         assert check_argument_types()
         if isinstance(args.token_list, str):
             with open(args.token_list, encoding="utf-8") as f:

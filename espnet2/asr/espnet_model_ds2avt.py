@@ -5,6 +5,7 @@ from typing import Dict, List, Optional, Tuple, Union
 import torch
 from packaging.version import parse as V
 from typeguard import check_argument_types
+from collections import OrderedDict
 
 from espnet2.asr.ctc import CTC
 from espnet2.asr.decoder.abs_decoder import AbsDecoder
@@ -35,61 +36,62 @@ else:
         yield
 
 class GradientReversalLayer(torch.autograd.Function):
-	"""
-	Implement the gradient reversal layer for the convenience of domain adaptation neural network.
-	The forward part is the identity function while the backward part is the negative function."""
-	@staticmethod
-	def forward(self, inputs):
-		return inputs
-	@staticmethod
-	def backward(self, grad_output):
-		grad_input = grad_output.clone()
-		grad_input = -0.5 * grad_input
-		return grad_input
+    """
+    Implement the gradient reversal layer for the convenience of domain adaptation neural network.
+    The forward part is the identity function while the backward part is the negative function."""
+    @staticmethod
+    def forward(self, inputs):
+        return inputs
+    @staticmethod
+    def backward(self, grad_output):
+        grad_input = grad_output.clone()
+        grad_input = -0.5 * grad_input
+        return grad_input
 
 def grad_reverse(x):
-	return GradientReversalLayer.apply(x)
+    return GradientReversalLayer.apply(x)
 
 class NoiseClassifier(torch.nn.Module):
-	def __init__(self, rnn_type=torch.nn.LSTM, rnn_hidden_size=768, nb_layers=1, bidirectional=True, nclasses = 8):
-		super(NoiseClassifier, self).__init__()
-		
-		self.rnn_type = rnn_type
-		self.rnn_hidden_size = rnn_hidden_size
-		self.nb_layers = nb_layers
-		self.bidirectional = bidirectional
-		self.fc_hidden_size = 128
-		self.num_classes = nclasses
-#		pdb.set_trace()
-#		# rnns
-		rnns = []
-		for x in range(self.nb_layers):
-			rnn = BatchRNN(input_size=rnn_hidden_size, hidden_size=rnn_hidden_size, rnn_type=rnn_type,
+    def __init__(self, rnn_type=torch.nn.LSTM, rnn_hidden_size=768, nb_layers=1, bidirectional=True, nclasses = 8):
+        super(NoiseClassifier, self).__init__()
+        
+        self.rnn_type = rnn_type
+        self.rnn_hidden_size = rnn_hidden_size
+        self.nb_layers = nb_layers
+        self.bidirectional = bidirectional
+        self.fc_hidden_size = 128
+        self.num_classes = nclasses
+#       pdb.set_trace()
+#       # rnns
+        rnns = []
+        for x in range(self.nb_layers):
+            rnn = BatchRNN(input_size=rnn_hidden_size, hidden_size=rnn_hidden_size, rnn_type=rnn_type,
                                                    bidirectional=bidirectional, batch_norm=False)
-			rnns.append(('%d' % (x), rnn))
-		self.noise_rnns = torch.nn.Sequential(OrderedDict(rnns))
-		# fc layers
-		self.noise_fc = torch.nn.Sequential(
+            rnns.append(('%d' % (x), rnn))
+        self.noise_rnns = torch.nn.Sequential(OrderedDict(rnns))
+        # fc layers
+        self.noise_fc = torch.nn.Sequential(
                         torch.nn.BatchNorm1d(rnn_hidden_size),
                         torch.nn.Linear(rnn_hidden_size, self.fc_hidden_size),
-			torch.nn.ReLU(),
-			torch.nn.BatchNorm1d(self.fc_hidden_size),
+            torch.nn.ReLU(),
+            torch.nn.BatchNorm1d(self.fc_hidden_size),
                         torch.nn.Linear(self.fc_hidden_size, self.num_classes )
                         
                 )
 
-	def forward(self, x, output_lengths):
-		x = grad_reverse(x)
-		for rnn in self.noise_rnns:
-			x = rnn(x, output_lengths)
-		x = x.transpose(0,1)
-		x = x.sum(dim=1)/output_lengths.view(-1,1)		
-		x = self.noise_fc(x)
-		
-		return x
+    def forward(self, x, output_lengths):
+        x = grad_reverse(x)
+        for rnn in self.noise_rnns:
+            x = rnn(x, output_lengths)
+        x = x.transpose(0,1)
+        output_lengths = output_lengths.to(x.device)
+        x = x.sum(dim=1)/output_lengths.view(-1,1)      
+        x = self.noise_fc(x)
+        
+        return x
 
 
-class ESPnetASRModelDS2(AbsESPnetModel):
+class ESPnetASRModelDS2AVT(AbsESPnetModel):
     """CTC-attention hybrid Encoder-Decoder model"""
 
     def __init__(
@@ -203,10 +205,10 @@ class ESPnetASRModelDS2(AbsESPnetModel):
             self.ctc = None
         else:
             self.ctc = ctc
-		noise_model = NoiseClassifier(rnn_hidden_size=encoder.hidden_size,
-						   nb_layers=1, 
-						   rnn_type=encoder.rnn_type,
-						   bidirectional=encoder.bidirectional,nclasses=2)
+        self.noise_model = NoiseClassifier(rnn_hidden_size=encoder.hidden_size,
+                           nb_layers=1, 
+                           rnn_type=encoder.rnn_type,
+                           bidirectional=encoder.bidirectional,nclasses=2)
         self.classifier_criterion = torch.nn.CrossEntropyLoss()
         self.extract_feats_in_collect_stats = extract_feats_in_collect_stats
 
@@ -243,7 +245,7 @@ class ESPnetASRModelDS2(AbsESPnetModel):
         # 1. Encoder
         encoder_out, encoder_out_lens, extractor_out = self.encode(speech, speech_lengths)
         noise_out = self.noise_model(extractor_out, encoder_out_lens)
-        isclean_target = [item[0] for item in kwargs['isclean']]
+        isclean_target = torch.IntTensor([item[0] for item in kwargs['isclean']]).to(noise_out.device).long()
         classifier_loss = self.classifier_criterion(noise_out, isclean_target)
         intermediate_outs = None
         if isinstance(encoder_out, tuple):

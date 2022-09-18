@@ -84,8 +84,15 @@ class Lookahead(nn.Module):
 
 
 class DS2Encoder(AbsEncoder):
-    def __init__(self, input_size, rnn_type="lstm", rnn_hidden_size=768, nb_layers=5, bidirectional=True, context=20):
+    def __init__(self, input_size, rnn_type="lstm", rnn_hidden_size=768, nb_layers=5, bidirectional=True, context=20,
+            pretrained_model=""):
         super(DS2Encoder, self).__init__()
+        stat_dict = OrderedDict()
+        if pretrained_model:
+            old_sd = torch.load(pretrained_model)
+            for k in old_sd.keys():
+                if k.startswith("encoder."):
+                    stat_dict[k[8:]] = old_sd[k]
 
         # model metadata needed for serialization/deserialization
         self.hidden_size = rnn_hidden_size
@@ -169,3 +176,9 @@ class DS2Encoder(AbsEncoder):
 
     def output_size(self) -> int:
         return 1024
+
+    def reload_pretrained_parameters(self):
+        # TODO: clear how this method is called
+        self.encoders.load_state_dict(self.stat_dict)
+        logging.info("Pretrained DS2 encoder model parameters reloaded!")
+
