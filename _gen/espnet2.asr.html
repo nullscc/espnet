@@ -401,6 +401,149 @@ GPU memory usage</p>
 </section>
 <section id="espnet2-asr-espnet-model-ds2avt">
 <span id="id3"></span><h2>espnet2.asr.espnet_model_ds2avt<a class="headerlink" href="#espnet2-asr-espnet-model-ds2avt" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-espnet2.asr.espnet_model_ds2avt"></span><dl class="class">
+<dt id="espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT">
+<em class="property">class </em><code class="sig-prename descclassname">espnet2.asr.espnet_model_ds2avt.</code><code class="sig-name descname">ESPnetASRModelDS2AVT</code><span class="sig-paren">(</span><em class="sig-param">vocab_size: int, token_list: Union[Tuple[str, ...], List[str]], frontend: Optional[espnet2.asr.frontend.abs_frontend.AbsFrontend], specaug: Optional[espnet2.asr.specaug.abs_specaug.AbsSpecAug], normalize: Optional[espnet2.layers.abs_normalize.AbsNormalize], preencoder: Optional[espnet2.asr.preencoder.abs_preencoder.AbsPreEncoder], encoder: espnet2.asr.encoder.abs_encoder.AbsEncoder, postencoder: Optional[espnet2.asr.postencoder.abs_postencoder.AbsPostEncoder], decoder: espnet2.asr.decoder.abs_decoder.AbsDecoder, ctc: espnet2.asr.ctc.CTC, joint_network: Optional[torch.nn.modules.module.Module], ctc_weight: float = 0.5, interctc_weight: float = 0.0, ignore_id: int = -1, lsm_weight: float = 0.0, length_normalized_loss: bool = False, report_cer: bool = True, report_wer: bool = True, sym_space: str = '&lt;space&gt;', sym_blank: str = '&lt;blank&gt;', extract_feats_in_collect_stats: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#ESPnetASRModelDS2AVT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="espnet2.train.html#espnet2.train.abs_espnet_model.AbsESPnetModel" title="espnet2.train.abs_espnet_model.AbsESPnetModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">espnet2.train.abs_espnet_model.AbsESPnetModel</span></code></a></p>
+<p>CTC-attention hybrid Encoder-Decoder model</p>
+<dl class="method">
+<dt id="espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT.batchify_nll">
+<code class="sig-name descname">batchify_nll</code><span class="sig-paren">(</span><em class="sig-param">encoder_out: torch.Tensor</em>, <em class="sig-param">encoder_out_lens: torch.Tensor</em>, <em class="sig-param">ys_pad: torch.Tensor</em>, <em class="sig-param">ys_pad_lens: torch.Tensor</em>, <em class="sig-param">batch_size: int = 100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#ESPnetASRModelDS2AVT.batchify_nll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT.batchify_nll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute negative log likelihood(nll) from transformer-decoder</p>
+<p>To avoid OOM, this fuction seperate the input into batches.
+Then call nll for each batch and combine and return results.
+:param encoder_out: (Batch, Length, Dim)
+:param encoder_out_lens: (Batch,)
+:param ys_pad: (Batch, Length)
+:param ys_pad_lens: (Batch,)
+:param batch_size: int, samples each batch contain when computing nll,</p>
+<blockquote>
+<div><p>you may change this to avoid OOM or increase
+GPU memory usage</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT.collect_feats">
+<code class="sig-name descname">collect_feats</code><span class="sig-paren">(</span><em class="sig-param">speech: torch.Tensor</em>, <em class="sig-param">speech_lengths: torch.Tensor</em>, <em class="sig-param">text: torch.Tensor</em>, <em class="sig-param">text_lengths: torch.Tensor</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; Dict[str, torch.Tensor]<a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#ESPnetASRModelDS2AVT.collect_feats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT.collect_feats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT.encode">
+<code class="sig-name descname">encode</code><span class="sig-paren">(</span><em class="sig-param">speech: torch.Tensor</em>, <em class="sig-param">speech_lengths: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; Tuple[torch.Tensor, torch.Tensor]<a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#ESPnetASRModelDS2AVT.encode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frontend + Encoder. Note that this method is used by asr_inference.py</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>speech</strong> – (Batch, Length, …)</p></li>
+<li><p><strong>speech_lengths</strong> – (Batch, )</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">speech: torch.Tensor</em>, <em class="sig-param">speech_lengths: torch.Tensor</em>, <em class="sig-param">text: torch.Tensor</em>, <em class="sig-param">text_lengths: torch.Tensor</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; Tuple[torch.Tensor, Dict[str, torch.Tensor], torch.Tensor]<a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#ESPnetASRModelDS2AVT.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frontend + Encoder + Decoder + Calc loss</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>speech</strong> – (Batch, Length, …)</p></li>
+<li><p><strong>speech_lengths</strong> – (Batch, )</p></li>
+<li><p><strong>text</strong> – (Batch, Length)</p></li>
+<li><p><strong>text_lengths</strong> – (Batch,)</p></li>
+<li><p><strong>kwargs</strong> – “utt_id” is among the input.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT.nll">
+<code class="sig-name descname">nll</code><span class="sig-paren">(</span><em class="sig-param">encoder_out: torch.Tensor</em>, <em class="sig-param">encoder_out_lens: torch.Tensor</em>, <em class="sig-param">ys_pad: torch.Tensor</em>, <em class="sig-param">ys_pad_lens: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#ESPnetASRModelDS2AVT.nll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.ESPnetASRModelDS2AVT.nll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute negative log likelihood(nll) from transformer-decoder</p>
+<p>Normally, this function is called in batchify_nll.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoder_out</strong> – (Batch, Length, Dim)</p></li>
+<li><p><strong>encoder_out_lens</strong> – (Batch,)</p></li>
+<li><p><strong>ys_pad</strong> – (Batch, Length)</p></li>
+<li><p><strong>ys_pad_lens</strong> – (Batch,)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="espnet2.asr.espnet_model_ds2avt.GradientReversalLayer">
+<em class="property">class </em><code class="sig-prename descclassname">espnet2.asr.espnet_model_ds2avt.</code><code class="sig-name descname">GradientReversalLayer</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#GradientReversalLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.GradientReversalLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.autograd.function.Function</span></code></p>
+<p>Implement the gradient reversal layer for the convenience of domain adaptation neural network.
+The forward part is the identity function while the backward part is the negative function.</p>
+<dl class="method">
+<dt id="espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.backward">
+<em class="property">static </em><code class="sig-name descname">backward</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">grad_output</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#GradientReversalLayer.backward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.backward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a formula for differentiating the operation with backward mode
+automatic differentiation.</p>
+<p>This function is to be overridden by all subclasses.</p>
+<p>It must accept a context <code class="xref py py-attr docutils literal notranslate"><span class="pre">ctx</span></code> as the first argument, followed by
+as many outputs as the <a class="reference internal" href="#espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.forward" title="espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a> returned (None will be passed in
+for non tensor outputs of the forward function),
+and it should return as many tensors, as there were inputs to
+<a class="reference internal" href="#espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.forward" title="espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a>. Each argument is the gradient w.r.t the given output,
+and each returned value should be the gradient w.r.t. the
+corresponding input. If an input is not a Tensor or is a Tensor not
+requiring grads, you can just pass None as a gradient for that input.</p>
+<p>The context can be used to retrieve tensors saved during the forward
+pass. It also has an attribute <code class="xref py py-attr docutils literal notranslate"><span class="pre">ctx.needs_input_grad</span></code> as a tuple
+of booleans representing whether each input needs gradient. E.g.,
+<a class="reference internal" href="#espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.backward" title="espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.backward"><code class="xref py py-func docutils literal notranslate"><span class="pre">backward()</span></code></a> will have <code class="docutils literal notranslate"><span class="pre">ctx.needs_input_grad[0]</span> <span class="pre">=</span> <span class="pre">True</span></code> if the
+first input to <a class="reference internal" href="#espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.forward" title="espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a> needs gradient computated w.r.t. the
+output.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.forward">
+<em class="property">static </em><code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#GradientReversalLayer.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.GradientReversalLayer.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the operation.</p>
+<p>This function is to be overridden by all subclasses.</p>
+<p>It must accept a context ctx as the first argument, followed by any
+number of arguments (tensors or other types).</p>
+<p>The context can be used to store arbitrary data that can be then
+retrieved during the backward pass.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="espnet2.asr.espnet_model_ds2avt.NoiseClassifier">
+<em class="property">class </em><code class="sig-prename descclassname">espnet2.asr.espnet_model_ds2avt.</code><code class="sig-name descname">NoiseClassifier</code><span class="sig-paren">(</span><em class="sig-param">rnn_type=&lt;class 'torch.nn.modules.rnn.LSTM'&gt;</em>, <em class="sig-param">rnn_hidden_size=768</em>, <em class="sig-param">nb_layers=1</em>, <em class="sig-param">bidirectional=True</em>, <em class="sig-param">nclasses=8</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#NoiseClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.NoiseClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="espnet2.asr.espnet_model_ds2avt.NoiseClassifier.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">output_lengths</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#NoiseClassifier.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.NoiseClassifier.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="espnet2.asr.espnet_model_ds2avt.grad_reverse">
+<code class="sig-prename descclassname">espnet2.asr.espnet_model_ds2avt.</code><code class="sig-name descname">grad_reverse</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/asr/espnet_model_ds2avt.html#grad_reverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.espnet_model_ds2avt.grad_reverse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="espnet2-asr-espnet-model-wavlm-0-1-2-noise">
 <span id="id4"></span><h2>espnet2.asr.espnet_model_wavlm_0_1_2_noise<a class="headerlink" href="#espnet2-asr-espnet-model-wavlm-0-1-2-noise" title="Permalink to this headline">¶</a></h2>
@@ -2018,7 +2161,7 @@ registered hooks while the latter silently ignores them.</p>
 <span id="id35"></span><h2>espnet2.asr.encoder.ds2_encoder<a class="headerlink" href="#espnet2-asr-encoder-ds2-encoder" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.asr.encoder.ds2_encoder"></span><dl class="class">
 <dt id="espnet2.asr.encoder.ds2_encoder.DS2Encoder">
-<em class="property">class </em><code class="sig-prename descclassname">espnet2.asr.encoder.ds2_encoder.</code><code class="sig-name descname">DS2Encoder</code><span class="sig-paren">(</span><em class="sig-param">input_size</em>, <em class="sig-param">rnn_type='lstm'</em>, <em class="sig-param">rnn_hidden_size=768</em>, <em class="sig-param">nb_layers=5</em>, <em class="sig-param">bidirectional=True</em>, <em class="sig-param">context=20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/asr/encoder/ds2_encoder.html#DS2Encoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.encoder.ds2_encoder.DS2Encoder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">espnet2.asr.encoder.ds2_encoder.</code><code class="sig-name descname">DS2Encoder</code><span class="sig-paren">(</span><em class="sig-param">input_size</em>, <em class="sig-param">rnn_type='lstm'</em>, <em class="sig-param">rnn_hidden_size=768</em>, <em class="sig-param">nb_layers=5</em>, <em class="sig-param">bidirectional=True</em>, <em class="sig-param">context=20</em>, <em class="sig-param">pretrained_model=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/asr/encoder/ds2_encoder.html#DS2Encoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.encoder.ds2_encoder.DS2Encoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#espnet2.asr.encoder.abs_encoder.AbsEncoder" title="espnet2.asr.encoder.abs_encoder.AbsEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">espnet2.asr.encoder.abs_encoder.AbsEncoder</span></code></a></p>
 <dl class="method">
 <dt id="espnet2.asr.encoder.ds2_encoder.DS2Encoder.forward">
@@ -2046,6 +2189,11 @@ containing the size sequences that will be output by the network.
 <dl class="method">
 <dt id="espnet2.asr.encoder.ds2_encoder.DS2Encoder.output_size">
 <code class="sig-name descname">output_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../_modules/espnet2/asr/encoder/ds2_encoder.html#DS2Encoder.output_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.encoder.ds2_encoder.DS2Encoder.output_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="espnet2.asr.encoder.ds2_encoder.DS2Encoder.reload_pretrained_parameters">
+<code class="sig-name descname">reload_pretrained_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/asr/encoder/ds2_encoder.html#DS2Encoder.reload_pretrained_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.asr.encoder.ds2_encoder.DS2Encoder.reload_pretrained_parameters" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

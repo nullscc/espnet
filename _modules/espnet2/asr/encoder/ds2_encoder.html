@@ -237,8 +237,15 @@
 
 
 <div class="viewcode-block" id="DS2Encoder"><a class="viewcode-back" href="../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.ds2_encoder.DS2Encoder">[docs]</a><span class="k">class</span> <span class="nc">DS2Encoder</span><span class="p">(</span><span class="n">AbsEncoder</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">rnn_type</span><span class="o">=</span><span class="s2">&quot;lstm&quot;</span><span class="p">,</span> <span class="n">rnn_hidden_size</span><span class="o">=</span><span class="mi">768</span><span class="p">,</span> <span class="n">nb_layers</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">bidirectional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">rnn_type</span><span class="o">=</span><span class="s2">&quot;lstm&quot;</span><span class="p">,</span> <span class="n">rnn_hidden_size</span><span class="o">=</span><span class="mi">768</span><span class="p">,</span> <span class="n">nb_layers</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">bidirectional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+            <span class="n">pretrained_model</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DS2Encoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">stat_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">pretrained_model</span><span class="p">:</span>
+            <span class="n">old_sd</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">pretrained_model</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">old_sd</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;encoder.&quot;</span><span class="p">):</span>
+                    <span class="n">stat_dict</span><span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="mi">8</span><span class="p">:]]</span> <span class="o">=</span> <span class="n">old_sd</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
 
         <span class="c1"># model metadata needed for serialization/deserialization</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">rnn_hidden_size</span>
@@ -321,7 +328,13 @@
         <span class="k">return</span> <span class="n">seq_len</span><span class="o">.</span><span class="n">int</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="DS2Encoder.output_size"><a class="viewcode-back" href="../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.ds2_encoder.DS2Encoder.output_size">[docs]</a>    <span class="k">def</span> <span class="nf">output_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">1024</span></div></div>
+        <span class="k">return</span> <span class="mi">1024</span></div>
+
+<div class="viewcode-block" id="DS2Encoder.reload_pretrained_parameters"><a class="viewcode-back" href="../../../../_gen/espnet2.asr.html#espnet2.asr.encoder.ds2_encoder.DS2Encoder.reload_pretrained_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reload_pretrained_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># TODO: clear how this method is called</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoders</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stat_dict</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Pretrained DS2 encoder model parameters reloaded!&quot;</span><span class="p">)</span></div></div>
+
 </pre></div>
 
            </div>
