@@ -12,7 +12,7 @@ noise_apply_prob: 0.875
 noise_scp: /ssdhome/xiezhiwei/espnet_ds2/egs2/librispeech_100_ds2/asr1/noise.scp
 noise_db_range: "0_25"
 freeze_param: [
-"frontend"
+"frontend.upstream"
 ]
 model: espnet
 model_conf:

@@ -496,7 +496,7 @@ class DS2Preprocessor(CommonPreprocessor):
         assert check_return_type(data)
         return data
 
-class NoiseDevPreprocessor(AbsPreprocessor):
+class NoiseDevPreprocessor(CommonPreprocessor):
     def __init__(
         self,
         train: bool,
