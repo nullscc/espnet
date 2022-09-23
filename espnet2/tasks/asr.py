@@ -73,7 +73,7 @@ from espnet2.torch_utils.initialize import initialize
 from espnet2.train.abs_espnet_model import AbsESPnetModel
 from espnet2.train.class_choices import ClassChoices
 from espnet2.train.collate_fn import CommonCollateFn
-from espnet2.train.preprocessor import AbsPreprocessor, CommonPreprocessor, DS2Preprocessor
+from espnet2.train.preprocessor import AbsPreprocessor, CommonPreprocessor, DS2Preprocessor, CategoryPreprocessor
 from espnet2.train.trainer import Trainer
 from espnet2.utils.get_default_kwargs import get_default_kwargs
 from espnet2.utils.nested_dict_action import NestedDictAction
@@ -84,6 +84,7 @@ preprocessor_choices = ClassChoices(
     classes=dict(
         default=CommonPreprocessor,
         ds2=DS2Preprocessor,
+        category=CategoryPreprocessor,
     ),
     type_check=AbsPreprocessor,
     default="default",

@@ -1,0 +1,55 @@
+batch_type: numel
+batch_bins: 2000000
+# batch_bins: 32000000
+# batch_type: unsorted
+# batch_size: 2
+
+accum_grad: 4
+max_epoch: 100
+
+preprocessor: category
+noise_apply_prob: 0.875
+noise_scp: /ssdhome/xiezhiwei/espnet_ds2/egs2/librispeech_100_ds2/asr1/noise.scp
+noise_db_range: "0_25"
+freeze_param: [
+"frontend"
+]
+model: espnet
+model_conf:
+    extract_feats_in_collect_stats: false
+
+frontend: s3prl
+frontend_conf:
+    frontend_conf:
+        upstream: wavlm_local    # Note: If the upstream is changed, please change the input_size in the preencoder.
+        upstream_ckpt: /student/temp/xiezhiwei/WavLM-Large.pt
+    download_dir: ./hub
+    multilayer_feature: True
+
+seed: 2022
+log_interval: 400   
+num_att_plot: 0     
+num_workers: 8      
+sort_in_batch: descending       # how to sort data in making batch
+sort_batch: descending          # how to sort created batches
+patience: none
+init: none
+best_model_criterion:
+-   - valid
+    - acc
+    - max
+keep_nbest_models: 10
+
+use_amp: true      
+cudnn_deterministic: false  
+cudnn_benchmark: false      
+
+optim: adam
+optim_conf:
+    lr: 0.0003
+    weight_decay: 0.000001
+scheduler: warmuplr
+scheduler_conf:
+    warmup_steps: 15000
+
+specaug: none
