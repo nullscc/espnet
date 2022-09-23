@@ -37,6 +37,17 @@ espnet2.tasks.lm
     :show-inheritance:
 
 
+.. _espnet2.tasks.category:
+
+espnet2.tasks.category
+----------------------
+
+.. automodule:: espnet2.tasks.category
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 .. _espnet2.tasks.abs_task:
 
 espnet2.tasks.abs_task

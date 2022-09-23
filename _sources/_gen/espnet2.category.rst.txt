@@ -1,0 +1,126 @@
+
+espnet2.category package
+========================
+
+
+
+.. _espnet2.category.espnet_model:
+
+espnet2.category.espnet_model
+-----------------------------
+
+.. automodule:: espnet2.category.espnet_model
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. _espnet2.category.__init__:
+
+espnet2.category.__init__
+-------------------------
+
+.. automodule:: espnet2.category.__init__
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. _espnet2.category.frontend.abs_frontend:
+
+espnet2.category.frontend.abs_frontend
+--------------------------------------
+
+.. automodule:: espnet2.category.frontend.abs_frontend
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. _espnet2.category.frontend.windowing:
+
+espnet2.category.frontend.windowing
+-----------------------------------
+
+.. automodule:: espnet2.category.frontend.windowing
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. _espnet2.category.frontend.default:
+
+espnet2.category.frontend.default
+---------------------------------
+
+.. automodule:: espnet2.category.frontend.default
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. _espnet2.category.frontend.fused:
+
+espnet2.category.frontend.fused
+-------------------------------
+
+.. automodule:: espnet2.category.frontend.fused
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. _espnet2.category.frontend.__init__:
+
+espnet2.category.frontend.__init__
+----------------------------------
+
+.. automodule:: espnet2.category.frontend.__init__
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. _espnet2.category.frontend.s3prl:
+
+espnet2.category.frontend.s3prl
+-------------------------------
+
+.. automodule:: espnet2.category.frontend.s3prl
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. _espnet2.category.specaug.abs_specaug:
+
+espnet2.category.specaug.abs_specaug
+------------------------------------
+
+.. automodule:: espnet2.category.specaug.abs_specaug
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. _espnet2.category.specaug.specaug:
+
+espnet2.category.specaug.specaug
+--------------------------------
+
+.. automodule:: espnet2.category.specaug.specaug
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+.. _espnet2.category.specaug.__init__:
+
+espnet2.category.specaug.__init__
+---------------------------------
+
+.. automodule:: espnet2.category.specaug.__init__
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

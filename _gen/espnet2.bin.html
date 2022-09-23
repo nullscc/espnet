@@ -117,6 +117,7 @@
 <li class="toctree-l1"><a class="reference internal" href="espnet2.optimizers.html">espnet2.optimizers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="espnet2.st.html">espnet2.st package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="espnet2.tasks.html">espnet2.tasks package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="espnet2.category.html">espnet2.category package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="espnet2.mt.html">espnet2.mt package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">espnet2.bin package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#espnet2-bin-hubert-train">espnet2.bin.hubert_train</a></li>
@@ -143,6 +144,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#espnet2-bin-launch">espnet2.bin.launch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#espnet2-bin-lm-train">espnet2.bin.lm_train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#espnet2-bin-st-inference-streaming">espnet2.bin.st_inference_streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#espnet2-bin-category-train">espnet2.bin.category_train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#espnet2-bin-diar-inference">espnet2.bin.diar_inference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#espnet2-bin-mt-train">espnet2.bin.mt_train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#espnet2-bin-init">espnet2.bin.__init__</a></li>
@@ -1420,8 +1422,28 @@ Currently, the tags of espnet_model_zoo are supported.</p>
 <dd></dd></dl>
 
 </section>
+<section id="espnet2-bin-category-train">
+<span id="id25"></span><h2>espnet2.bin.category_train<a class="headerlink" href="#espnet2-bin-category-train" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-espnet2.bin.category_train"></span><dl class="function">
+<dt id="espnet2.bin.category_train.get_parser">
+<code class="sig-prename descclassname">espnet2.bin.category_train.</code><code class="sig-name descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/bin/category_train.html#get_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.bin.category_train.get_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="espnet2.bin.category_train.main">
+<code class="sig-prename descclassname">espnet2.bin.category_train.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param">cmd=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/bin/category_train.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.bin.category_train.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>ASR training.</p>
+<p class="rubric">Example</p>
+<dl class="simple">
+<dt>% python asr_train.py asr –print_config –optim adadelta </dt><dd><p>&gt; conf/train_asr.yaml</p>
+</dd>
+</dl>
+<p>% python asr_train.py –config conf/train_asr.yaml</p>
+</dd></dl>
+
+</section>
 <section id="espnet2-bin-diar-inference">
-<span id="id25"></span><h2>espnet2.bin.diar_inference<a class="headerlink" href="#espnet2-bin-diar-inference" title="Permalink to this headline">¶</a></h2>
+<span id="id26"></span><h2>espnet2.bin.diar_inference<a class="headerlink" href="#espnet2-bin-diar-inference" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.bin.diar_inference"></span><dl class="class">
 <dt id="espnet2.bin.diar_inference.DiarizeSpeech">
 <em class="property">class </em><code class="sig-prename descclassname">espnet2.bin.diar_inference.</code><code class="sig-name descname">DiarizeSpeech</code><span class="sig-paren">(</span><em class="sig-param">train_config: Union[pathlib.Path</em>, <em class="sig-param">str] = None</em>, <em class="sig-param">model_file: Union[pathlib.Path</em>, <em class="sig-param">str] = None</em>, <em class="sig-param">segment_size: Optional[float] = None</em>, <em class="sig-param">normalize_segment_scale: bool = False</em>, <em class="sig-param">show_progressbar: bool = False</em>, <em class="sig-param">num_spk: Optional[int] = None</em>, <em class="sig-param">device: str = 'cpu'</em>, <em class="sig-param">dtype: str = 'float32'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/bin/diar_inference.html#DiarizeSpeech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.bin.diar_inference.DiarizeSpeech" title="Permalink to this definition">¶</a></dt>
@@ -1472,7 +1494,7 @@ Currently, the tags of espnet_model_zoo are supported.</p>
 
 </section>
 <section id="espnet2-bin-mt-train">
-<span id="id26"></span><h2>espnet2.bin.mt_train<a class="headerlink" href="#espnet2-bin-mt-train" title="Permalink to this headline">¶</a></h2>
+<span id="id27"></span><h2>espnet2.bin.mt_train<a class="headerlink" href="#espnet2-bin-mt-train" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.bin.mt_train"></span><dl class="function">
 <dt id="espnet2.bin.mt_train.get_parser">
 <code class="sig-prename descclassname">espnet2.bin.mt_train.</code><code class="sig-name descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/bin/mt_train.html#get_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.bin.mt_train.get_parser" title="Permalink to this definition">¶</a></dt>
@@ -1492,10 +1514,10 @@ Currently, the tags of espnet_model_zoo are supported.</p>
 
 </section>
 <section id="espnet2-bin-init">
-<span id="id27"></span><h2>espnet2.bin.__init__<a class="headerlink" href="#espnet2-bin-init" title="Permalink to this headline">¶</a></h2>
+<span id="id28"></span><h2>espnet2.bin.__init__<a class="headerlink" href="#espnet2-bin-init" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.bin.__init__"></span></section>
 <section id="espnet2-bin-split-scps">
-<span id="id28"></span><h2>espnet2.bin.split_scps<a class="headerlink" href="#espnet2-bin-split-scps" title="Permalink to this headline">¶</a></h2>
+<span id="id29"></span><h2>espnet2.bin.split_scps<a class="headerlink" href="#espnet2-bin-split-scps" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.bin.split_scps"></span><dl class="function">
 <dt id="espnet2.bin.split_scps.get_parser">
 <code class="sig-prename descclassname">espnet2.bin.split_scps.</code><code class="sig-name descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; argparse.ArgumentParser<a class="reference internal" href="../_modules/espnet2/bin/split_scps.html#get_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.bin.split_scps.get_parser" title="Permalink to this definition">¶</a></dt>
@@ -1513,7 +1535,7 @@ Currently, the tags of espnet_model_zoo are supported.</p>
 
 </section>
 <section id="espnet2-bin-tokenize-text">
-<span id="id29"></span><h2>espnet2.bin.tokenize_text<a class="headerlink" href="#espnet2-bin-tokenize-text" title="Permalink to this headline">¶</a></h2>
+<span id="id30"></span><h2>espnet2.bin.tokenize_text<a class="headerlink" href="#espnet2-bin-tokenize-text" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.bin.tokenize_text"></span><dl class="function">
 <dt id="espnet2.bin.tokenize_text.field2slice">
 <code class="sig-prename descclassname">espnet2.bin.tokenize_text.</code><code class="sig-name descname">field2slice</code><span class="sig-paren">(</span><em class="sig-param">field: Optional[str]</em><span class="sig-paren">)</span> &#x2192; slice<a class="reference internal" href="../_modules/espnet2/bin/tokenize_text.html#field2slice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.bin.tokenize_text.field2slice" title="Permalink to this definition">¶</a></dt>
@@ -1547,7 +1569,7 @@ Currently, the tags of espnet_model_zoo are supported.</p>
 
 </section>
 <section id="espnet2-bin-enh-inference">
-<span id="id30"></span><h2>espnet2.bin.enh_inference<a class="headerlink" href="#espnet2-bin-enh-inference" title="Permalink to this headline">¶</a></h2>
+<span id="id31"></span><h2>espnet2.bin.enh_inference<a class="headerlink" href="#espnet2-bin-enh-inference" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.bin.enh_inference"></span><dl class="class">
 <dt id="espnet2.bin.enh_inference.SeparateSpeech">
 <em class="property">class </em><code class="sig-prename descclassname">espnet2.bin.enh_inference.</code><code class="sig-name descname">SeparateSpeech</code><span class="sig-paren">(</span><em class="sig-param">train_config: Union[pathlib.Path</em>, <em class="sig-param">str] = None</em>, <em class="sig-param">model_file: Union[pathlib.Path</em>, <em class="sig-param">str] = None</em>, <em class="sig-param">inference_config: Union[pathlib.Path</em>, <em class="sig-param">str] = None</em>, <em class="sig-param">segment_size: Optional[float] = None</em>, <em class="sig-param">hop_size: Optional[float] = None</em>, <em class="sig-param">normalize_segment_scale: bool = False</em>, <em class="sig-param">show_progressbar: bool = False</em>, <em class="sig-param">ref_channel: Optional[int] = None</em>, <em class="sig-param">normalize_output_wav: bool = False</em>, <em class="sig-param">device: str = 'cpu'</em>, <em class="sig-param">dtype: str = 'float32'</em>, <em class="sig-param">enh_s2t_task: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/espnet2/bin/enh_inference.html#SeparateSpeech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#espnet2.bin.enh_inference.SeparateSpeech" title="Permalink to this definition">¶</a></dt>
@@ -1640,7 +1662,7 @@ Currently, the tags of espnet_model_zoo are supported.</p>
 
 </section>
 <section id="espnet2-bin-tts-inference">
-<span id="id31"></span><h2>espnet2.bin.tts_inference<a class="headerlink" href="#espnet2-bin-tts-inference" title="Permalink to this headline">¶</a></h2>
+<span id="id32"></span><h2>espnet2.bin.tts_inference<a class="headerlink" href="#espnet2-bin-tts-inference" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-espnet2.bin.tts_inference"></span><p>Script to run the inference of text-to-speeech model.</p>
 <dl class="class">
 <dt id="espnet2.bin.tts_inference.Text2Speech">

@@ -115,6 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="_gen/espnet2.optimizers.html">espnet2.optimizers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_gen/espnet2.st.html">espnet2.st package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_gen/espnet2.tasks.html">espnet2.tasks package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_gen/espnet2.category.html">espnet2.category package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_gen/espnet2.mt.html">espnet2.mt package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_gen/espnet2.bin.html">espnet2.bin package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="_gen/espnet2.samplers.html">espnet2.samplers package</a></li>
@@ -217,7 +218,11 @@
       <li><a href="_gen/espnet2.tts.html#espnet2.tts.feats_extract.abs_feats_extract.AbsFeatsExtract">AbsFeatsExtract (class in espnet2.tts.feats_extract.abs_feats_extract)</a>
 </li>
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.frontend.abs_frontend.AbsFrontend">AbsFrontend (class in espnet2.asr.frontend.abs_frontend)</a>
+
+      <ul>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.abs_frontend.AbsFrontend">(class in espnet2.category.frontend.abs_frontend)</a>
 </li>
+      </ul></li>
       <li><a href="_gen/espnet2.train.html#espnet2.train.abs_gan_espnet_model.AbsGANESPnetModel">AbsGANESPnetModel (class in espnet2.train.abs_gan_espnet_model)</a>
 </li>
       <li><a href="_gen/espnet2.gan_tts.html#espnet2.gan_tts.abs_gan_tts.AbsGANTTS">AbsGANTTS (class in espnet2.gan_tts.abs_gan_tts)</a>
@@ -243,7 +248,11 @@
       <li><a href="_gen/espnet2.enh.html#espnet2.enh.separator.abs_separator.AbsSeparator">AbsSeparator (class in espnet2.enh.separator.abs_separator)</a>
 </li>
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.specaug.abs_specaug.AbsSpecAug">AbsSpecAug (class in espnet2.asr.specaug.abs_specaug)</a>
+
+      <ul>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.specaug.abs_specaug.AbsSpecAug">(class in espnet2.category.specaug.abs_specaug)</a>
 </li>
+      </ul></li>
       <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.abs_task.AbsTask">AbsTask (class in espnet2.tasks.abs_task)</a>
 </li>
       <li><a href="_gen/espnet2.text.html#espnet2.text.abs_tokenizer.AbsTokenizer">AbsTokenizer (class in espnet2.text.abs_tokenizer)</a>
@@ -426,6 +435,8 @@
 
       <ul>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.asr.ASRTask.add_task_arguments">(espnet2.tasks.asr.ASRTask class method)</a>
+</li>
+        <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.category.CategoryTask.add_task_arguments">(espnet2.tasks.category.CategoryTask class method)</a>
 </li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.diar.DiarizationTask.add_task_arguments">(espnet2.tasks.diar.DiarizationTask class method)</a>
 </li>
@@ -717,6 +728,8 @@
 </li>
         <li><a href="_gen/espnet2.asr.html#espnet2.asr.frontend.s3prl_0_1_2.base_s3prl_setup">(in module espnet2.asr.frontend.s3prl_0_1_2)</a>
 </li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.s3prl.base_s3prl_setup">(in module espnet2.category.frontend.s3prl)</a>
+</li>
       </ul></li>
       <li><a href="_gen/espnet.utils.html#espnet.utils.training.evaluator.BaseEvaluator">BaseEvaluator (class in espnet.utils.training.evaluator)</a>
 </li>
@@ -859,6 +872,8 @@
       <ul>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.asr.ASRTask.build_collate_fn">(espnet2.tasks.asr.ASRTask class method)</a>
 </li>
+        <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.category.CategoryTask.build_collate_fn">(espnet2.tasks.category.CategoryTask class method)</a>
+</li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.diar.DiarizationTask.build_collate_fn">(espnet2.tasks.diar.DiarizationTask class method)</a>
 </li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.enh.EnhancementTask.build_collate_fn">(espnet2.tasks.enh.EnhancementTask class method)</a>
@@ -905,6 +920,8 @@
       <ul>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.asr.ASRTask.build_model">(espnet2.tasks.asr.ASRTask class method)</a>
 </li>
+        <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.category.CategoryTask.build_model">(espnet2.tasks.category.CategoryTask class method)</a>
+</li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.diar.DiarizationTask.build_model">(espnet2.tasks.diar.DiarizationTask class method)</a>
 </li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.enh.EnhancementTask.build_model">(espnet2.tasks.enh.EnhancementTask class method)</a>
@@ -946,6 +963,8 @@
 
       <ul>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.asr.ASRTask.build_preprocess_fn">(espnet2.tasks.asr.ASRTask class method)</a>
+</li>
+        <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.category.CategoryTask.build_preprocess_fn">(espnet2.tasks.category.CategoryTask class method)</a>
 </li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.diar.DiarizationTask.build_preprocess_fn">(espnet2.tasks.diar.DiarizationTask class method)</a>
 </li>
@@ -1078,6 +1097,12 @@
 </li>
       <li><a href="_gen/espnet2.enh.html#espnet2.enh.layers.complex_utils.cat">cat() (in module espnet2.enh.layers.complex_utils)</a>
 </li>
+      <li><a href="_gen/espnet2.category.html#espnet2.category.espnet_model.Category">Category (class in espnet2.category.espnet_model)</a>
+</li>
+      <li><a href="_gen/espnet2.train.html#espnet2.train.preprocessor.CategoryPreprocessor">CategoryPreprocessor (class in espnet2.train.preprocessor)</a>
+</li>
+      <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.category.CategoryTask">CategoryTask (class in espnet2.tasks.category)</a>
+</li>
       <li><a href="_gen/espnet.nets.html#espnet.nets.pytorch_backend.transducer.conv1d_nets.CausalConv1d">CausalConv1d (class in espnet.nets.pytorch_backend.transducer.conv1d_nets)</a>
 
       <ul>
@@ -1145,6 +1170,8 @@
       <ul>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.asr.ASRTask.class_choices_list">(espnet2.tasks.asr.ASRTask attribute)</a>
 </li>
+        <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.category.CategoryTask.class_choices_list">(espnet2.tasks.category.CategoryTask attribute)</a>
+</li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.diar.DiarizationTask.class_choices_list">(espnet2.tasks.diar.DiarizationTask attribute)</a>
 </li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.enh.EnhancementTask.class_choices_list">(espnet2.tasks.enh.EnhancementTask attribute)</a>
@@ -1201,6 +1228,8 @@
 </li>
         <li><a href="_gen/espnet2.asr.html#espnet2.asr.espnet_model_wavlm_0_1_2_noise.ESPnetASRModelWavLM_0_1_2_noise.collect_feats">(espnet2.asr.espnet_model_wavlm_0_1_2_noise.ESPnetASRModelWavLM_0_1_2_noise method)</a>
 </li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.espnet_model.ESPnetCategoryModel.collect_feats">(espnet2.category.espnet_model.ESPnetCategoryModel method)</a>
+</li>
         <li><a href="_gen/espnet2.diar.html#espnet2.diar.espnet_model.ESPnetDiarizationModel.collect_feats">(espnet2.diar.espnet_model.ESPnetDiarizationModel method)</a>
 </li>
         <li><a href="_gen/espnet2.enh.html#espnet2.enh.espnet_enh_s2t_model.ESPnetEnhS2TModel.collect_feats">(espnet2.enh.espnet_enh_s2t_model.ESPnetEnhS2TModel method)</a>
@@ -1230,14 +1259,14 @@
 </li>
       <li><a href="_gen/espnet2.train.html#espnet2.train.collate_fn.CommonCollateFn">CommonCollateFn (class in espnet2.train.collate_fn)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_gen/espnet2.train.html#espnet2.train.preprocessor.CommonPreprocessor">CommonPreprocessor (class in espnet2.train.preprocessor)</a>
 </li>
       <li><a href="_gen/espnet2.train.html#espnet2.train.preprocessor.CommonPreprocessor_multi">CommonPreprocessor_multi (class in espnet2.train.preprocessor)</a>
 </li>
       <li><a href="_gen/espnet.asr.html#espnet.asr.asr_utils.CompareValueTrigger">CompareValueTrigger (class in espnet.asr.asr_utils)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_gen/espnet2.enh.html#espnet2.enh.layers.complexnn.complex_cat">complex_cat() (in module espnet2.enh.layers.complexnn)</a>
 </li>
       <li><a href="_gen/espnet2.enh.html#espnet2.enh.layers.complex_utils.complex_norm">complex_norm() (in module espnet2.enh.layers.complex_utils)</a>
@@ -1603,7 +1632,11 @@
       <li><a href="_gen/espnet.transform.html#espnet.transform.functional.FuncTrans.default_params">default_params() (espnet.transform.functional.FuncTrans class method)</a>
 </li>
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.frontend.default.DefaultFrontend">DefaultFrontend (class in espnet2.asr.frontend.default)</a>
+
+      <ul>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.default.DefaultFrontend">(class in espnet2.category.frontend.default)</a>
 </li>
+      </ul></li>
       <li><a href="_gen/espnet.lm.html#espnet.lm.chainer_backend.lm.DefaultRNNLM">DefaultRNNLM (class in espnet.lm.chainer_backend.lm)</a>
 
       <ul>
@@ -1814,6 +1847,8 @@
         <li><a href="_gen/espnet2.asr.html#espnet2.asr.espnet_model_wavlm_0_1_2_clean_noise.ESPnetASRModelWavLM_0_1_2_clean_noise.encode">(espnet2.asr.espnet_model_wavlm_0_1_2_clean_noise.ESPnetASRModelWavLM_0_1_2_clean_noise method)</a>
 </li>
         <li><a href="_gen/espnet2.asr.html#espnet2.asr.espnet_model_wavlm_0_1_2_noise.ESPnetASRModelWavLM_0_1_2_noise.encode">(espnet2.asr.espnet_model_wavlm_0_1_2_noise.ESPnetASRModelWavLM_0_1_2_noise method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.espnet_model.ESPnetCategoryModel.encode">(espnet2.category.espnet_model.ESPnetCategoryModel method)</a>
 </li>
         <li><a href="_gen/espnet2.diar.html#espnet2.diar.espnet_model.ESPnetDiarizationModel.encode">(espnet2.diar.espnet_model.ESPnetDiarizationModel method)</a>
 </li>
@@ -2458,8 +2493,6 @@
 </li>
       <li><a href="_gen/espnet2.asr.html#module-espnet2.asr.frontend.abs_frontend">espnet2.asr.frontend.abs_frontend (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_gen/espnet2.asr.html#module-espnet2.asr.frontend.default">espnet2.asr.frontend.default (module)</a>
 </li>
       <li><a href="_gen/espnet2.asr.html#module-espnet2.asr.frontend.ds2">espnet2.asr.frontend.ds2 (module)</a>
@@ -2474,6 +2507,8 @@
 </li>
       <li><a href="_gen/espnet2.asr.html#module-espnet2.asr.maskctc_model">espnet2.asr.maskctc_model (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_gen/espnet2.asr.html#module-espnet2.asr.postencoder.__init__">espnet2.asr.postencoder.__init__ (module)</a>
 </li>
       <li><a href="_gen/espnet2.asr.html#module-espnet2.asr.postencoder.abs_postencoder">espnet2.asr.postencoder.abs_postencoder (module)</a>
@@ -2524,6 +2559,8 @@
 </li>
       <li><a href="_gen/espnet2.bin.html#module-espnet2.bin.asr_train">espnet2.bin.asr_train (module)</a>
 </li>
+      <li><a href="_gen/espnet2.bin.html#module-espnet2.bin.category_train">espnet2.bin.category_train (module)</a>
+</li>
       <li><a href="_gen/espnet2.bin.html#module-espnet2.bin.diar_inference">espnet2.bin.diar_inference (module)</a>
 </li>
       <li><a href="_gen/espnet2.bin.html#module-espnet2.bin.diar_train">espnet2.bin.diar_train (module)</a>
@@ -2565,6 +2602,28 @@
       <li><a href="_gen/espnet2.bin.html#module-espnet2.bin.tts_inference">espnet2.bin.tts_inference (module)</a>
 </li>
       <li><a href="_gen/espnet2.bin.html#module-espnet2.bin.tts_train">espnet2.bin.tts_train (module)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#module-espnet2.category.__init__">espnet2.category.__init__ (module)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#module-espnet2.category.espnet_model">espnet2.category.espnet_model (module)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#module-espnet2.category.frontend.__init__">espnet2.category.frontend.__init__ (module)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#module-espnet2.category.frontend.abs_frontend">espnet2.category.frontend.abs_frontend (module)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#module-espnet2.category.frontend.default">espnet2.category.frontend.default (module)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#module-espnet2.category.frontend.fused">espnet2.category.frontend.fused (module)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#module-espnet2.category.frontend.s3prl">espnet2.category.frontend.s3prl (module)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#module-espnet2.category.frontend.windowing">espnet2.category.frontend.windowing (module)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#module-espnet2.category.specaug.__init__">espnet2.category.specaug.__init__ (module)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#module-espnet2.category.specaug.abs_specaug">espnet2.category.specaug.abs_specaug (module)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#module-espnet2.category.specaug.specaug">espnet2.category.specaug.specaug (module)</a>
 </li>
       <li><a href="_gen/espnet2.diar.html#module-espnet2.diar.__init__">espnet2.diar.__init__ (module)</a>
 </li>
@@ -2904,6 +2963,8 @@
 </li>
       <li><a href="_gen/espnet2.tasks.html#module-espnet2.tasks.asr">espnet2.tasks.asr (module)</a>
 </li>
+      <li><a href="_gen/espnet2.tasks.html#module-espnet2.tasks.category">espnet2.tasks.category (module)</a>
+</li>
       <li><a href="_gen/espnet2.tasks.html#module-espnet2.tasks.diar">espnet2.tasks.diar (module)</a>
 </li>
       <li><a href="_gen/espnet2.tasks.html#module-espnet2.tasks.enh">espnet2.tasks.enh (module)</a>
@@ -3070,6 +3131,8 @@
 </li>
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.espnet_model_wavlm_0_1_2_noise.ESPnetASRModelWavLM_0_1_2_noise">ESPnetASRModelWavLM_0_1_2_noise (class in espnet2.asr.espnet_model_wavlm_0_1_2_noise)</a>
 </li>
+      <li><a href="_gen/espnet2.category.html#espnet2.category.espnet_model.ESPnetCategoryModel">ESPnetCategoryModel (class in espnet2.category.espnet_model)</a>
+</li>
       <li><a href="_gen/espnet2.train.html#espnet2.train.dataset.ESPnetDataset">ESPnetDataset (class in espnet2.train.dataset)</a>
 </li>
       <li><a href="_gen/espnet2.diar.html#espnet2.diar.espnet_model.ESPnetDiarizationModel">ESPnetDiarizationModel (class in espnet2.diar.espnet_model)</a>
@@ -3199,6 +3262,8 @@
       <li><a href="_gen/espnet2.tts.html#espnet2.tts.fastspeech2.fastspeech2.FastSpeech2">FastSpeech2 (class in espnet2.tts.fastspeech2.fastspeech2)</a>
 </li>
       <li><a href="_gen/espnet2.tts.html#espnet2.tts.fastspeech2.loss.FastSpeech2Loss">FastSpeech2Loss (class in espnet2.tts.fastspeech2.loss)</a>
+</li>
+      <li><a href="_gen/espnet2.category.html#espnet2.category.espnet_model.FC">FC (class in espnet2.category.espnet_model)</a>
 </li>
       <li><a href="_gen/espnet.nets.html#espnet.nets.pytorch_backend.frontends.feature_transform.feature_transform_for">feature_transform_for() (in module espnet.nets.pytorch_backend.frontends.feature_transform)</a>
 </li>
@@ -3704,6 +3769,26 @@
         <li><a href="_gen/espnet2.asr.html#espnet2.asr.transducer.joint_network.JointNetwork.forward">(espnet2.asr.transducer.joint_network.JointNetwork method)</a>
 </li>
         <li><a href="_gen/espnet2.asr.html#espnet2.asr.transducer.transducer_decoder.TransducerDecoder.forward">(espnet2.asr.transducer.transducer_decoder.TransducerDecoder method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.espnet_model.Category.forward">(espnet2.category.espnet_model.Category method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.espnet_model.ESPnetCategoryModel.forward">(espnet2.category.espnet_model.ESPnetCategoryModel method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.espnet_model.FC.forward">(espnet2.category.espnet_model.FC method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.abs_frontend.AbsFrontend.forward">(espnet2.category.frontend.abs_frontend.AbsFrontend method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.default.DefaultFrontend.forward">(espnet2.category.frontend.default.DefaultFrontend method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.fused.FusedFrontends.forward">(espnet2.category.frontend.fused.FusedFrontends method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.s3prl.S3prlFrontend.forward">(espnet2.category.frontend.s3prl.S3prlFrontend method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.windowing.SlidingWindow.forward">(espnet2.category.frontend.windowing.SlidingWindow method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.specaug.abs_specaug.AbsSpecAug.forward">(espnet2.category.specaug.abs_specaug.AbsSpecAug method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.specaug.specaug.SpecAug.forward">(espnet2.category.specaug.specaug.SpecAug method)</a>
 </li>
         <li><a href="_gen/espnet2.diar.html#espnet2.diar.abs_diar.AbsDiarization.forward">(espnet2.diar.abs_diar.AbsDiarization method)</a>
 </li>
@@ -4227,7 +4312,11 @@
       <li><a href="_gen/espnet.transform.html#espnet.transform.functional.FuncTrans">FuncTrans (class in espnet.transform.functional)</a>
 </li>
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.frontend.fused.FusedFrontends">FusedFrontends (class in espnet2.asr.frontend.fused)</a>
+
+      <ul>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.fused.FusedFrontends">(class in espnet2.category.frontend.fused)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -4424,6 +4513,8 @@
         <li><a href="_gen/espnet2.bin.html#espnet2.bin.asr_inference_streaming.get_parser">(in module espnet2.bin.asr_inference_streaming)</a>
 </li>
         <li><a href="_gen/espnet2.bin.html#espnet2.bin.asr_train.get_parser">(in module espnet2.bin.asr_train)</a>
+</li>
+        <li><a href="_gen/espnet2.bin.html#espnet2.bin.category_train.get_parser">(in module espnet2.bin.category_train)</a>
 </li>
         <li><a href="_gen/espnet2.bin.html#espnet2.bin.diar_inference.get_parser">(in module espnet2.bin.diar_inference)</a>
 </li>
@@ -5231,6 +5322,8 @@
 </li>
         <li><a href="_gen/espnet2.bin.html#espnet2.bin.asr_train.main">(in module espnet2.bin.asr_train)</a>
 </li>
+        <li><a href="_gen/espnet2.bin.html#espnet2.bin.category_train.main">(in module espnet2.bin.category_train)</a>
+</li>
         <li><a href="_gen/espnet2.bin.html#espnet2.bin.diar_inference.main">(in module espnet2.bin.diar_inference)</a>
 </li>
         <li><a href="_gen/espnet2.bin.html#espnet2.bin.diar_train.main">(in module espnet2.bin.diar_train)</a>
@@ -5512,6 +5605,8 @@
       </ul></li>
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.espnet_model_ds2avt.NoiseClassifier">NoiseClassifier (class in espnet2.asr.espnet_model_ds2avt)</a>
 </li>
+      <li><a href="_gen/espnet2.train.html#espnet2.train.preprocessor.NoiseDevPreprocessor">NoiseDevPreprocessor (class in espnet2.train.preprocessor)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_gen/espnet.transform.html#espnet.transform.perturb.NoiseInjection">NoiseInjection (class in espnet.transform.perturb)</a>
@@ -5544,6 +5639,8 @@
 
       <ul>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.asr.ASRTask.num_optimizers">(espnet2.tasks.asr.ASRTask attribute)</a>
+</li>
+        <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.category.CategoryTask.num_optimizers">(espnet2.tasks.category.CategoryTask attribute)</a>
 </li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.diar.DiarizationTask.num_optimizers">(espnet2.tasks.diar.DiarizationTask attribute)</a>
 </li>
@@ -5620,6 +5717,8 @@
 
       <ul>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.asr.ASRTask.optional_data_names">(espnet2.tasks.asr.ASRTask class method)</a>
+</li>
+        <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.category.CategoryTask.optional_data_names">(espnet2.tasks.category.CategoryTask class method)</a>
 </li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.diar.DiarizationTask.optional_data_names">(espnet2.tasks.diar.DiarizationTask class method)</a>
 </li>
@@ -5704,6 +5803,16 @@
         <li><a href="_gen/espnet2.asr.html#espnet2.asr.preencoder.linear.LinearProjection.output_size">(espnet2.asr.preencoder.linear.LinearProjection method)</a>
 </li>
         <li><a href="_gen/espnet2.asr.html#espnet2.asr.preencoder.sinc.LightweightSincConvs.output_size">(espnet2.asr.preencoder.sinc.LightweightSincConvs method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.abs_frontend.AbsFrontend.output_size">(espnet2.category.frontend.abs_frontend.AbsFrontend method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.default.DefaultFrontend.output_size">(espnet2.category.frontend.default.DefaultFrontend method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.fused.FusedFrontends.output_size">(espnet2.category.frontend.fused.FusedFrontends method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.s3prl.S3prlFrontend.output_size">(espnet2.category.frontend.s3prl.S3prlFrontend method)</a>
+</li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.windowing.SlidingWindow.output_size">(espnet2.category.frontend.windowing.SlidingWindow method)</a>
 </li>
         <li><a href="_gen/espnet2.mt.html#espnet2.mt.frontend.embedding.Embedding.output_size">(espnet2.mt.frontend.embedding.Embedding method)</a>
 </li>
@@ -6039,6 +6148,8 @@
 </li>
         <li><a href="_gen/espnet2.asr.html#espnet2.asr.postencoder.hugging_face_transformers_postencoder.HuggingFaceTransformersPostEncoder.reload_pretrained_parameters">(espnet2.asr.postencoder.hugging_face_transformers_postencoder.HuggingFaceTransformersPostEncoder method)</a>
 </li>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.s3prl.S3prlFrontend.reload_pretrained_parameters">(espnet2.category.frontend.s3prl.S3prlFrontend method)</a>
+</li>
       </ul></li>
       <li><a href="_gen/espnet.nets.html#espnet.nets.pytorch_backend.transformer.embedding.RelPositionalEncoding">RelPositionalEncoding (class in espnet.nets.pytorch_backend.transformer.embedding)</a>
 </li>
@@ -6136,6 +6247,8 @@
 
       <ul>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.asr.ASRTask.required_data_names">(espnet2.tasks.asr.ASRTask class method)</a>
+</li>
+        <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.category.CategoryTask.required_data_names">(espnet2.tasks.category.CategoryTask class method)</a>
 </li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.diar.DiarizationTask.required_data_names">(espnet2.tasks.diar.DiarizationTask class method)</a>
 </li>
@@ -6323,7 +6436,11 @@
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.encoder.s3prl_encoder.S3prlEncoder">S3prlEncoder (class in espnet2.asr.encoder.s3prl_encoder)</a>
 </li>
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.frontend.s3prl.S3prlFrontend">S3prlFrontend (class in espnet2.asr.frontend.s3prl)</a>
+
+      <ul>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.s3prl.S3prlFrontend">(class in espnet2.category.frontend.s3prl)</a>
 </li>
+      </ul></li>
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.frontend.s3prl_0_1_2.S3prlFrontend_0_1_2">S3prlFrontend_0_1_2 (class in espnet2.asr.frontend.s3prl_0_1_2)</a>
 </li>
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.encoder.wavlm.modules.SamePad">SamePad (class in espnet2.asr.encoder.wavlm.modules)</a>
@@ -6556,10 +6673,10 @@
 </li>
       <li><a href="_gen/espnet2.enh.html#espnet2.enh.layers.dprnn.SingleRNN">SingleRNN (class in espnet2.enh.layers.dprnn)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_gen/espnet2.enh.html#espnet2.enh.loss.criterions.time_domain.SISNRLoss">SISNRLoss (class in espnet2.enh.loss.criterions.time_domain)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_gen/espnet2.utils.html#espnet2.utils.sized_dict.SizedDict">SizedDict (class in espnet2.utils.sized_dict)</a>
 </li>
       <li><a href="_gen/espnet2.enh.html#espnet2.enh.layers.skim.SkiM">SkiM (class in espnet2.enh.layers.skim)</a>
@@ -6567,7 +6684,11 @@
       <li><a href="_gen/espnet2.enh.html#espnet2.enh.separator.skim_separator.SkiMSeparator">SkiMSeparator (class in espnet2.enh.separator.skim_separator)</a>
 </li>
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.frontend.windowing.SlidingWindow">SlidingWindow (class in espnet2.asr.frontend.windowing)</a>
+
+      <ul>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.frontend.windowing.SlidingWindow">(class in espnet2.category.frontend.windowing)</a>
 </li>
+      </ul></li>
       <li><a href="_gen/espnet.asr.html#espnet.asr.asr_utils.snapshot_object">snapshot_object() (in module espnet.asr.asr_utils)</a>
 </li>
       <li><a href="_gen/espnet2.enh.html#espnet2.enh.loss.criterions.time_domain.SNRLoss">SNRLoss (class in espnet2.enh.loss.criterions.time_domain)</a>
@@ -6621,7 +6742,11 @@
       <li><a href="_gen/espnet.transform.html#espnet.transform.spec_augment.spec_augment">spec_augment() (in module espnet.transform.spec_augment)</a>
 </li>
       <li><a href="_gen/espnet2.asr.html#espnet2.asr.specaug.specaug.SpecAug">SpecAug (class in espnet2.asr.specaug.specaug)</a>
+
+      <ul>
+        <li><a href="_gen/espnet2.category.html#espnet2.category.specaug.specaug.SpecAug">(class in espnet2.category.specaug.specaug)</a>
 </li>
+      </ul></li>
       <li><a href="_gen/espnet.utils.html#espnet.utils.spec_augment.specaug">specaug() (in module espnet.utils.spec_augment)</a>
 </li>
       <li><a href="_gen/espnet.transform.html#espnet.transform.spec_augment.SpecAugment">SpecAugment (class in espnet.transform.spec_augment)</a>
@@ -6950,10 +7075,10 @@
 </li>
       <li><a href="_gen/espnet.asr.html#espnet.asr.asr_utils.torch_save">torch_save() (in module espnet.asr.asr_utils)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_gen/espnet.asr.html#espnet.asr.asr_utils.torch_snapshot">torch_snapshot() (in module espnet.asr.asr_utils)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_gen/espnet2.enh.html#espnet2.enh.layers.complex_utils.trace">trace() (in module espnet2.enh.layers.complex_utils)</a>
 </li>
       <li><a href="_gen/espnet.asr.html#espnet.asr.chainer_backend.asr.train">train() (in module espnet.asr.chainer_backend.asr)</a>
@@ -6988,6 +7113,8 @@
 
       <ul>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.asr.ASRTask.trainer">(espnet2.tasks.asr.ASRTask attribute)</a>
+</li>
+        <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.category.CategoryTask.trainer">(espnet2.tasks.category.CategoryTask attribute)</a>
 </li>
         <li><a href="_gen/espnet2.tasks.html#espnet2.tasks.diar.DiarizationTask.trainer">(espnet2.tasks.diar.DiarizationTask attribute)</a>
 </li>
