@@ -650,7 +650,7 @@
         <span class="k">assert</span> <span class="n">check_return_type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
-<div class="viewcode-block" id="NoiseDevPreprocessor"><a class="viewcode-back" href="../../../_gen/espnet2.train.html#espnet2.train.preprocessor.NoiseDevPreprocessor">[docs]</a><span class="k">class</span> <span class="nc">NoiseDevPreprocessor</span><span class="p">(</span><span class="n">AbsPreprocessor</span><span class="p">):</span>
+<div class="viewcode-block" id="NoiseDevPreprocessor"><a class="viewcode-back" href="../../../_gen/espnet2.train.html#espnet2.train.preprocessor.NoiseDevPreprocessor">[docs]</a><span class="k">class</span> <span class="nc">NoiseDevPreprocessor</span><span class="p">(</span><span class="n">CommonPreprocessor</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">train</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -815,7 +815,8 @@
                         <span class="p">)</span>
                         <span class="n">speech</span> <span class="o">=</span> <span class="n">speech</span> <span class="o">+</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">noise</span>
 
-                <span class="n">speech</span> <span class="o">=</span> <span class="n">speech</span><span class="o">.</span><span class="n">T</span>
+                <span class="c1"># speech = speech.T</span>
+                <span class="n">speech</span> <span class="o">=</span> <span class="n">speech</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
                 <span class="n">ma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">speech</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">ma</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
                     <span class="n">speech</span> <span class="o">/=</span> <span class="n">ma</span>

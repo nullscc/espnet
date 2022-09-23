@@ -902,7 +902,7 @@ Text converter related:
                     [--noise_scp NOISE_SCP]
                     [--noise_apply_prob NOISE_APPLY_PROB]
                     [--noise_db_range NOISE_DB_RANGE]
-                    [--preprocessor {default,ds2,category}]
+                    [--preprocessor {default,ds2,category,noise_dev}]
                     [--preprocessor_conf PREPROCESSOR_CONF]
                     [--frontend {default,sliding_window,s3prl,s3prl_0_1_2,fused,ds2}]
                     [--frontend_conf FRONTEND_CONF] [--specaug {specaug,None}]
@@ -1269,7 +1269,7 @@ Optimizer related:
   --token_type {bpe,char,word,phn}
                         The text will be tokenized in the specified level token (default: bpe)
   --bpemodel BPEMODEL   The model file of sentencepiece (default: None)
-  --preprocessor {default,ds2,category}
+  --preprocessor {default,ds2,category,noise_dev}
                         The preprocessor type (default: default)
   --preprocessor_conf PREPROCESSOR_CONF
                         The keyword arguments for preprocessor (default: {})
