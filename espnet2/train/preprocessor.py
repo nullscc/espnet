@@ -661,7 +661,8 @@ class NoiseDevPreprocessor(CommonPreprocessor):
                         )
                         speech = speech + scale * noise
 
-                speech = speech.T
+                # speech = speech.T
+                speech = speech.squeeze(0).T
                 ma = np.max(np.abs(speech))
                 if ma > 1.0:
                     speech /= ma
