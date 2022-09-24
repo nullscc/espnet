@@ -709,8 +709,7 @@ class NoiseDevPreprocessor(CommonPreprocessor):
         data = self._text_process(data)
         return data
 
-
-class CategoryPreprocessor(AbsPreprocessor):
+class CategoryPreprocessor(CommonPreprocessor):
     def __init__(
         self,
         train: bool,
@@ -731,6 +730,7 @@ class CategoryPreprocessor(AbsPreprocessor):
         speech_volume_normalize: float = None,
         speech_name: str = "speech",
         text_name: str = "text",
+        noise_map_scp: str = None,
     ):
         super().__init__(train)
         self.train = train
@@ -774,7 +774,6 @@ class CategoryPreprocessor(AbsPreprocessor):
         else:
             self.rirs = None
 
-        # if train and noise_scp is not None:
         if noise_scp is not None:
             self.noises = []
             with open(noise_scp, "r", encoding="utf-8") as f:
@@ -795,13 +794,18 @@ class CategoryPreprocessor(AbsPreprocessor):
                 )
         else:
             self.noises = None
+        self.noise_map = {}
+        if noise_map_scp:
+            with open(noise_map_scp, "r", encoding="utf-8") as f:
+                for line in f:
+                    uid, noise_path, noise_db, offset = line.strip().split()
+                    self.noise_map[uid] = f"{noise_path} {noise_db} {offset}"
 
     def _speech_process(
-        self, data: Dict[str, Union[str, np.ndarray]]
+        self, uid, data: Dict[str, Union[str, np.ndarray]]
     ) -> Dict[str, Union[str, np.ndarray]]:
         assert check_argument_types()
         if self.speech_name in data:
-            # if self.train and (self.rirs is not None or self.noises is not None):
             if (self.rirs is not None or self.noises is not None):
                 speech = data[self.speech_name]
                 nsamples = len(speech)
@@ -833,25 +837,43 @@ class CategoryPreprocessor(AbsPreprocessor):
                         # Reverse mean power to the original power
                         power2 = (speech[detect_non_silence(speech)] ** 2).mean()
                         speech = np.sqrt(power / max(power2, 1e-10)) * speech
+
                 # 2. Add Noise
-                if (
-                    self.noises is not None
-                    and self.noise_apply_prob >= np.random.random()
-                ):
-                    noise_path = np.random.choice(self.noises)
-                    data['text'] = '<unk>'
+                map_str = self.noise_map.get(uid)
+                add_noise_flag = False
+                if self.noise_map and not map_str:
+                    add_noise_flag = False
+                elif self.noise_map and map_str:
+                    add_noise_flag = True
+                else:
+                    if (
+                        self.noises is not None
+                        and self.noise_apply_prob >= np.random.random()
+                    ):
+                        add_noise_flag = True
+                
+                data['text'] = '<unk>'
+                if add_noise_flag: 
+                    noise_path, noise_db, offset = None, None, None
+                    if map_str:
+                        noise_path, noise_db, offset = map_str.split()
+                        noise_db = float(noise_db)
+                        offset = int(offset)
+                    if noise_path is None:
+                        noise_path = np.random.choice(self.noises)
                     if noise_path is not None:
-                        # TODO: specify how to get label from file path
                         noise_label = noise_path.split("/")[-1].split("_")[0]
                         data['text'] = noise_label.lower()
-                        noise_db = np.random.uniform(
-                            self.noise_db_low, self.noise_db_high
-                        )
+                        if noise_db is None:
+                            noise_db = np.random.uniform(
+                                self.noise_db_low, self.noise_db_high
+                            )
                         with soundfile.SoundFile(noise_path) as f:
                             if f.frames == nsamples:
                                 noise = f.read(dtype=np.float64, always_2d=True)
                             elif f.frames < nsamples:
-                                offset = np.random.randint(0, nsamples - f.frames)
+                                if offset is None:
+                                    offset = np.random.randint(0, nsamples - f.frames)
                                 # noise: (Time, Nmic)
                                 noise = f.read(dtype=np.float64, always_2d=True)
                                 # Repeat noise
@@ -861,14 +883,15 @@ class CategoryPreprocessor(AbsPreprocessor):
                                     mode="wrap",
                                 )
                             else:
-                                offset = np.random.randint(0, f.frames - nsamples)
+                                if offset is None:
+                                    offset = np.random.randint(0, f.frames - nsamples)
                                 f.seek(offset)
                                 # noise: (Time, Nmic)
                                 noise = f.read(
                                     nsamples, dtype=np.float64, always_2d=True
                                 )
                                 if len(noise) != nsamples:
-                                    raise RuntimeError(f"Something wrong: {noise_path}")
+                                    raise RuntimeError(f"Something wrong: {noise_path}, {uid} {offset} {nsamples}")
                         # noise: (Nmic, Time)
                         noise = noise.T
 
@@ -880,6 +903,7 @@ class CategoryPreprocessor(AbsPreprocessor):
                         )
                         speech = speech + scale * noise
 
+                # speech = speech.T
                 speech = speech.squeeze(0).T
                 ma = np.max(np.abs(speech))
                 if ma > 1.0:
@@ -892,28 +916,14 @@ class CategoryPreprocessor(AbsPreprocessor):
                 data[self.speech_name] = speech * self.speech_volume_normalize / ma
         assert check_return_type(data)
         return data
-
-    def _text_process(
-        self, data: Dict[str, Union[str, np.ndarray]]
-    ) -> Dict[str, np.ndarray]:
-        if self.text_name in data and self.tokenizer is not None:
-            text = data[self.text_name]
-            text = self.text_cleaner(text)
-            tokens = self.tokenizer.text2tokens(text)
-            text_ints = self.token_id_converter.tokens2ids(tokens)
-            data[self.text_name] = np.array(text_ints, dtype=np.int64)
-        assert check_return_type(data)
-        return data
-
     def __call__(
         self, uid: str, data: Dict[str, Union[str, np.ndarray]]
     ) -> Dict[str, np.ndarray]:
         assert check_argument_types()
 
-        data = self._speech_process(data)
+        data = self._speech_process(uid, data)
         data = self._text_process(data)
         return data
-
 
 class CommonPreprocessor_multi(AbsPreprocessor):
     def __init__(

@@ -11,8 +11,14 @@ valid_set="dev_clean"
 test_sets="test_clean"
 
 asr_tag=category
-asr_config=conf/tuning/train_category.yaml
 inference_config=conf/decode_asr.yaml
+
+collect_npy=false
+if "${collect_npy}"; then
+    asr_config=conf/tuning/train_category_for_npy.yaml
+else
+    asr_config=conf/tuning/train_category.yaml
+fi
 
 #--speed_perturb_factors "0.9 1.0 1.1" \
 ./category.sh \
