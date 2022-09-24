@@ -1186,24 +1186,7 @@ if ! "${skip_eval}"; then
         # 2. Generate run.sh
         log "Generate '${asr_exp}/${inference_tag}/run.sh'. You can resume the process from stage 12 using this script"
         mkdir -p "${asr_exp}/${inference_tag}"; echo "${run_args} --stage 12 \"\$@\"; exit \$?" > "${asr_exp}/${inference_tag}/run.sh"; chmod +x "${asr_exp}/${inference_tag}/run.sh"
-        if "${use_k2}"; then
-          # Now only _nj=1 is verified if using k2
-          asr_inference_tool="espnet2.bin.asr_inference_k2"
-
-          _opts+="--is_ctc_decoding ${k2_ctc_decoding} "
-          _opts+="--use_nbest_rescoring ${use_nbest_rescoring} "
-          _opts+="--num_paths ${num_paths} "
-          _opts+="--nll_batch_size ${nll_batch_size} "
-          _opts+="--k2_config ${k2_config} "
-        else
-          if "${use_streaming}"; then
-              asr_inference_tool="espnet2.bin.asr_inference_streaming"
-          elif "${use_maskctc}"; then
-              asr_inference_tool="espnet2.bin.asr_inference_maskctc"
-          else
-              asr_inference_tool="espnet2.bin.asr_inference"
-          fi
-        fi
+		asr_inference_tool="espnet2.bin.category_inference"
 
         for dset in ${test_sets}; do
             _data="${data_feats}/${dset}"
@@ -1255,10 +1238,10 @@ if ! "${skip_eval}"; then
                     ${_opts} ${inference_args} || { cat $(grep -l -i error "${_logdir}"/asr_inference.*.log) ; exit 1; }
 
             # 3. Concatenates the output files from each jobs
-            for f in token token_int score text; do
-                if [ -f "${_logdir}/output.1/1best_recog/${f}" ]; then
+            for f in label ok; do
+                if [ -f "${_logdir}/output.1/best_recog/${f}" ]; then
                   for i in $(seq "${_nj}"); do
-                      cat "${_logdir}/output.${i}/1best_recog/${f}"
+                      cat "${_logdir}/output.${i}/best_recog/${f}"
                   done | sort -k1 >"${_dir}/${f}"
                 fi
             done
@@ -1276,108 +1259,12 @@ if ! "${skip_eval}"; then
         for dset in ${test_sets}; do
             _data="${data_feats}/${dset}"
             _dir="${asr_exp}/${inference_tag}/${dset}"
+            log "result for: $dset"
+            <$_dir/ok awk 'BEGIN{total_cnt=0; correct_cnt=0}{total_cnt++; if ($2 == 1) correct_cnt++}END{print "\toverall acc:" correct_cnt/total_cnt}'
+            utils/filter_scp.pl <(<$_dir/label awk '{if ($2 != 0) print $0}') $_dir/ok | awk 'BEGIN{total_cnt=0;
+            correct_cnt=0}{total_cnt++; if ($2 == 1) correct_cnt++}END{print "\tacc except unk:" correct_cnt/total_cnt}'
 
-            for _type in cer wer ter; do
-                [ "${_type}" = ter ] && [ ! -f "${bpemodel}" ] && continue
-
-                _scoredir="${_dir}/score_${_type}"
-                mkdir -p "${_scoredir}"
-
-                if [ "${_type}" = wer ]; then
-                    # Tokenize text to word level
-                    paste \
-                        <(<"${_data}/text" \
-                              ${python} -m espnet2.bin.tokenize_text  \
-                                  -f 2- --input - --output - \
-                                  --token_type word \
-                                  --non_linguistic_symbols "${nlsyms_txt}" \
-                                  --remove_non_linguistic_symbols true \
-                                  --cleaner "${cleaner}" \
-                                  ) \
-                        <(<"${_data}/utt2spk" awk '{ print "(" $2 "-" $1 ")" }') \
-                            >"${_scoredir}/ref.trn"
-
-                    # NOTE(kamo): Don't use cleaner for hyp
-                    paste \
-                        <(<"${_dir}/text"  \
-                              ${python} -m espnet2.bin.tokenize_text  \
-                                  -f 2- --input - --output - \
-                                  --token_type word \
-                                  --non_linguistic_symbols "${nlsyms_txt}" \
-                                  --remove_non_linguistic_symbols true \
-                                  ) \
-                        <(<"${_data}/utt2spk" awk '{ print "(" $2 "-" $1 ")" }') \
-                            >"${_scoredir}/hyp.trn"
-
-
-                elif [ "${_type}" = cer ]; then
-                    # Tokenize text to char level
-                    paste \
-                        <(<"${_data}/text" \
-                              ${python} -m espnet2.bin.tokenize_text  \
-                                  -f 2- --input - --output - \
-                                  --token_type char \
-                                  --non_linguistic_symbols "${nlsyms_txt}" \
-                                  --remove_non_linguistic_symbols true \
-                                  --cleaner "${cleaner}" \
-                                  ) \
-                        <(<"${_data}/utt2spk" awk '{ print "(" $2 "-" $1 ")" }') \
-                            >"${_scoredir}/ref.trn"
-
-                    # NOTE(kamo): Don't use cleaner for hyp
-                    paste \
-                        <(<"${_dir}/text"  \
-                              ${python} -m espnet2.bin.tokenize_text  \
-                                  -f 2- --input - --output - \
-                                  --token_type char \
-                                  --non_linguistic_symbols "${nlsyms_txt}" \
-                                  --remove_non_linguistic_symbols true \
-                                  ) \
-                        <(<"${_data}/utt2spk" awk '{ print "(" $2 "-" $1 ")" }') \
-                            >"${_scoredir}/hyp.trn"
-
-                elif [ "${_type}" = ter ]; then
-                    # Tokenize text using BPE
-                    paste \
-                        <(<"${_data}/text" \
-                              ${python} -m espnet2.bin.tokenize_text  \
-                                  -f 2- --input - --output - \
-                                  --token_type bpe \
-                                  --bpemodel "${bpemodel}" \
-                                  --cleaner "${cleaner}" \
-                                ) \
-                        <(<"${_data}/utt2spk" awk '{ print "(" $2 "-" $1 ")" }') \
-                            >"${_scoredir}/ref.trn"
-
-                    # NOTE(kamo): Don't use cleaner for hyp
-                    paste \
-                        <(<"${_dir}/text" \
-                              ${python} -m espnet2.bin.tokenize_text  \
-                                  -f 2- --input - --output - \
-                                  --token_type bpe \
-                                  --bpemodel "${bpemodel}" \
-                                  ) \
-                        <(<"${_data}/utt2spk" awk '{ print "(" $2 "-" $1 ")" }') \
-                            >"${_scoredir}/hyp.trn"
-
-                fi
-
-                sclite \
-		    ${score_opts} \
-                    -r "${_scoredir}/ref.trn" trn \
-                    -h "${_scoredir}/hyp.trn" trn \
-                    -i rm -o all stdout > "${_scoredir}/result.txt"
-
-                log "Write ${_type} result in ${_scoredir}/result.txt"
-                grep -e Avg -e SPKR -m 2 "${_scoredir}/result.txt"
-            done
         done
-
-        [ -f local/score.sh ] && local/score.sh ${local_score_opts} "${asr_exp}"
-
-        # Show results in Markdown syntax
-        scripts/utils/show_asr_result.sh "${asr_exp}" > "${asr_exp}"/RESULTS.md
-        cat "${asr_exp}"/RESULTS.md
 
     fi
 else

@@ -12,7 +12,7 @@ test_sets="test_clean"
 
 asr_tag=category
 asr_config=conf/tuning/train_category.yaml
-inference_config=conf/decode_asr_ds2.yaml
+inference_config=conf/decode_asr.yaml
 
 #--speed_perturb_factors "0.9 1.0 1.1" \
 ./category.sh \
@@ -23,6 +23,7 @@ inference_config=conf/decode_asr_ds2.yaml
     --ngpu 1 \
     --nj 32 \
     --inference_nj 1 \
+	--gpu_inference true \
     --token_type char \
     --nbpe 5000 \
     --max_wav_duration 30 \
@@ -32,8 +33,7 @@ inference_config=conf/decode_asr_ds2.yaml
     --use_lm false \
     --asr_tag "${asr_tag}" \
     --asr_config "${asr_config}" \
-	--inference_asr_model "valid.cer_ctc.best.pth" \
-    --gpu_inference true \
+	--inference_asr_model "valid.acc.best.pth" \
     --inference_config "${inference_config}" \
     --train_set "${train_set}" \
     --valid_set "${valid_set}" \
