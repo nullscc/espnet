@@ -30,6 +30,7 @@ inference_config=conf/decode_asr.yaml
     --asr_tag "${asr_tag}" \
     --asr_config "${asr_config}" \
     --inference_config "${inference_config}" \
+	--inference_asr_model "valid.acc.best.pth" \
     --train_set "${train_set}" \
     --valid_set "${valid_set}" \
     --test_sets "${test_sets}" \
