@@ -334,6 +334,17 @@ espnet2.bin.tokenize_text
     :show-inheritance:
 
 
+.. _espnet2.bin.category_inference:
+
+espnet2.bin.category_inference
+------------------------------
+
+.. automodule:: espnet2.bin.category_inference
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 .. _espnet2.bin.enh_inference:
 
 espnet2.bin.enh_inference
