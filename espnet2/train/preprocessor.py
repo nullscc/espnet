@@ -517,6 +517,7 @@ class NoiseDevPreprocessor(CommonPreprocessor):
         speech_volume_normalize: float = None,
         speech_name: str = "speech",
         text_name: str = "text",
+        noise_map_scp: str = None,
     ):
         super().__init__(train)
         self.train = train
@@ -580,9 +581,15 @@ class NoiseDevPreprocessor(CommonPreprocessor):
                 )
         else:
             self.noises = None
+        self.noise_map = {}
+        if noise_map_scp:
+            with open(noise_map_scp, "r", encoding="utf-8") as f:
+                for line in f:
+                    uid, noise_path, noise_db, offset = line.strip().split()
+                    self.noise_map[uid] = f"{noise_path} {noise_db} {offset}"
 
     def _speech_process(
-        self, data: Dict[str, Union[str, np.ndarray]]
+        self, uid, data: Dict[str, Union[str, np.ndarray]]
     ) -> Dict[str, Union[str, np.ndarray]]:
         assert check_argument_types()
         if self.speech_name in data:
@@ -619,20 +626,38 @@ class NoiseDevPreprocessor(CommonPreprocessor):
                         speech = np.sqrt(power / max(power2, 1e-10)) * speech
 
                 # 2. Add Noise
-                if (
-                    self.noises is not None
-                    and self.noise_apply_prob >= np.random.random()
-                ):
-                    noise_path = np.random.choice(self.noises)
+                map_str = self.noise_map.get(uid)
+                add_noise_flag = False
+                if self.noise_map and not map_str:
+                    add_noise_flag = False
+                elif self.noise_map and map_str:
+                    add_noise_flag = True
+                else:
+                    if (
+                        self.noises is not None
+                        and self.noise_apply_prob >= np.random.random()
+                    ):
+                        add_noise_flag = True
+                
+                if add_noise_flag: 
+                    noise_path, noise_db, offset = None, None, None
+                    if map_str:
+                        noise_path, noise_db, offset = map_str.split()
+                        noise_db = float(noise_db)
+                        offset = int(offset)
+                    if noise_path is None:
+                        noise_path = np.random.choice(self.noises)
                     if noise_path is not None:
-                        noise_db = np.random.uniform(
-                            self.noise_db_low, self.noise_db_high
-                        )
+                        if noise_db is None:
+                            noise_db = np.random.uniform(
+                                self.noise_db_low, self.noise_db_high
+                            )
                         with soundfile.SoundFile(noise_path) as f:
                             if f.frames == nsamples:
                                 noise = f.read(dtype=np.float64, always_2d=True)
                             elif f.frames < nsamples:
-                                offset = np.random.randint(0, nsamples - f.frames)
+                                if offset is None:
+                                    offset = np.random.randint(0, nsamples - f.frames)
                                 # noise: (Time, Nmic)
                                 noise = f.read(dtype=np.float64, always_2d=True)
                                 # Repeat noise
@@ -642,14 +667,15 @@ class NoiseDevPreprocessor(CommonPreprocessor):
                                     mode="wrap",
                                 )
                             else:
-                                offset = np.random.randint(0, f.frames - nsamples)
+                                if offset is None:
+                                    offset = np.random.randint(0, f.frames - nsamples)
                                 f.seek(offset)
                                 # noise: (Time, Nmic)
                                 noise = f.read(
                                     nsamples, dtype=np.float64, always_2d=True
                                 )
                                 if len(noise) != nsamples:
-                                    raise RuntimeError(f"Something wrong: {noise_path}")
+                                    raise RuntimeError(f"Something wrong: {noise_path}, {uid} {offset} {nsamples}")
                         # noise: (Nmic, Time)
                         noise = noise.T
 
@@ -673,6 +699,14 @@ class NoiseDevPreprocessor(CommonPreprocessor):
                 ma = np.max(np.abs(speech))
                 data[self.speech_name] = speech * self.speech_volume_normalize / ma
         assert check_return_type(data)
+        return data
+    def __call__(
+        self, uid: str, data: Dict[str, Union[str, np.ndarray]]
+    ) -> Dict[str, np.ndarray]:
+        assert check_argument_types()
+
+        data = self._speech_process(uid, data)
+        data = self._text_process(data)
         return data
 
 
