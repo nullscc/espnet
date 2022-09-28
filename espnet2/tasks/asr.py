@@ -372,7 +372,14 @@ class ASRTask(AbsTask):
     ) -> Optional[Callable[[str, Dict[str, np.array]], Dict[str, np.ndarray]]]:
         assert check_argument_types()
         if args.use_preprocessor:
-            preprocessor_class = preprocessor_choices.get_class(args.preprocessor)
+            try:
+                preprocessor_class = preprocessor_choices.get_class(args.preprocessor)
+            except AttributeError:
+                preprocessor_class = preprocessor_choices.get_class("default")
+            try:
+                args.preprocessor_conf
+            except Exception as e:
+                args.preprocessor_conf = {}
             retval = preprocessor_class(
                 train=train,
                 token_type=args.token_type,
