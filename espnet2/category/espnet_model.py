@@ -1,3 +1,5 @@
+import os
+import numpy as np
 import logging
 from contextlib import contextmanager
 from typing import Dict, List, Optional, Tuple, Union
@@ -49,13 +51,14 @@ class Category(torch.nn.Module):
         self.linear = torch.nn.Linear(128, 1024)
         self.out = torch.nn.Linear(1024, class_num)
         
-    def forward(self, x, lengths):
+    def forward(self, x, lengths, extract=False):
         x = self.fcs(x)
+        tmp = x
         lengths = lengths.to(x.device)
         x = x.sum(dim=1)/lengths.view(-1,1)
         x = self.linear(x)
         x = self.out(x)
-        return x
+        return x, tmp
 
 
 class ESPnetCategoryModel(AbsESPnetModel):
@@ -69,6 +72,7 @@ class ESPnetCategoryModel(AbsESPnetModel):
         specaug: Optional[AbsSpecAug],
         normalize: Optional[AbsNormalize],
         extract_feats_in_collect_stats: bool = True,
+        npy_dir: str = '',
     ):
         assert check_argument_types()
 
@@ -83,6 +87,8 @@ class ESPnetCategoryModel(AbsESPnetModel):
         self.category = Category(vocab_size)
         self.criterion = torch.nn.CrossEntropyLoss()
         self.extract_feats_in_collect_stats = extract_feats_in_collect_stats
+        self.npy_dir = npy_dir
+        self.collect_npy = bool(npy_dir)
 
     def forward(
         self,
@@ -116,7 +122,11 @@ class ESPnetCategoryModel(AbsESPnetModel):
 
         # 1. Encoder
         feats, feats_lengths = self.encode(speech, speech_lengths)
-        out = self.category(feats, feats_lengths)
+        out, features = self.category(feats, feats_lengths)
+        if self.collect_npy:
+            for index, uid in enumerate(kwargs['utt_id']):
+                npy_data = features[index][:feats_lengths[index], :]
+                np.save(os.path.join(self.npy_dir, f"{uid}"), npy_data.detach().cpu())
 
         stats = dict()
         targets = torch.LongTensor([int(item[0]) for item in text]).to(out.device)

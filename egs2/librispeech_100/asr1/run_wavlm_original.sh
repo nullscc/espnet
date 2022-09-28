@@ -13,6 +13,7 @@ asr_tag=wavlm_conformer_transformer_original
 asr_config=conf/tuning/wavlm_conformer_transformer_original.yaml
 inference_config=conf/decode_asr.yaml
 
+# --inference_asr_model "valid.acc.best.pth" \
 ./asr.sh \
     --skip_data_prep false \
     --skip_train false \
@@ -20,7 +21,8 @@ inference_config=conf/decode_asr.yaml
     --lang en \
     --ngpu 2 \
     --nj 8 \
-    --inference_nj 8 \
+    --inference_nj 1 \
+	--gpu_inference true \
     --nbpe 5000 \
     --max_wav_duration 30 \
     --audio_format "wav" \
@@ -30,7 +32,6 @@ inference_config=conf/decode_asr.yaml
     --asr_tag "${asr_tag}" \
     --asr_config "${asr_config}" \
     --inference_config "${inference_config}" \
-	--inference_asr_model "valid.acc.best.pth" \
     --train_set "${train_set}" \
     --valid_set "${valid_set}" \
     --test_sets "${test_sets}" \

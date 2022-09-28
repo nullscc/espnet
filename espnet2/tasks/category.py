@@ -260,6 +260,7 @@ class CategoryTask(AbsTask):
                 speech_volume_normalize=args.speech_volume_normalize
                 if hasattr(args, "rir_scp")
                 else None,
+                **args.preprocessor_conf,
             )
         else:
             retval = None
