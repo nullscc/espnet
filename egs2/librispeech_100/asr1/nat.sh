@@ -1245,13 +1245,18 @@ if ! "${skip_eval}"; then
 
             # 2. Submit decoding jobs
             log "Decoding started... log: '${_logdir}/asr_inference.*.log'"
+			if [ "$dset" = dev_clean ]; then
+				npy_scp=dev_npy.scp
+			else
+				npy_scp=test_npy.scp
+			fi
             # shellcheck disable=SC2046,SC2086
             ${_cmd} --gpu "${_ngpu}" JOB=1:"${_nj}" "${_logdir}"/asr_inference.JOB.log \
                 ${python} -m ${asr_inference_tool} \
                     --batch_size ${batch_size} \
                     --ngpu "${_ngpu}" \
                     --data_path_and_name_and_type "${_data}/${_scp},speech,${_type}" \
-                    --data_path_and_name_and_type "test_npy.scp,noise_vector,npy" \
+                    --data_path_and_name_and_type "${npy_scp},noise_vector,npy" \
                     --key_file "${_logdir}"/keys.JOB.scp \
                     --asr_train_config "${asr_exp}"/config.yaml \
                     --asr_model_file "${asr_exp}"/"${inference_asr_model}" \

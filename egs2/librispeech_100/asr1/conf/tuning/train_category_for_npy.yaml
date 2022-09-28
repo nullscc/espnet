@@ -1,11 +1,11 @@
 batch_type: numel
-batch_bins: 2000000
+batch_bins: 8000000
 # batch_bins: 32000000
 # batch_type: unsorted
 # batch_size: 2
 num_workers: 16
 accum_grad: 4
-max_epoch: 1
+max_epoch: 29
 
 preprocessor: category
 preprocessor_conf:
@@ -14,18 +14,19 @@ noise_apply_prob: 0.875
 noise_scp: noise.scp
 noise_db_range: "0_25"
 freeze_param: [
-"frontend.upstream"
+"frontend",
+"category.fcs"
 ]
 model: espnet
 model_conf:
     extract_feats_in_collect_stats: false
-    npy_dir: ttt
+    npy_dir: /root/autodl-tmp/npy_data
 
 frontend: s3prl
 frontend_conf:
     frontend_conf:
         upstream: wavlm_local    # Note: If the upstream is changed, please change the input_size in the preencoder.
-        upstream_ckpt: /student/temp/xiezhiwei/WavLM-Large.pt
+        upstream_ckpt: /root/autodl-tmp/WavLM-Large.pt
     download_dir: ./hub
     multilayer_feature: True
 
