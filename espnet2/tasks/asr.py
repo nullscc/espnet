@@ -40,6 +40,7 @@ from espnet2.asr.encoder.ds2_encoder import DS2Encoder
 from espnet2.asr.encoder.vgg_rnn_encoder import VGGRNNEncoder
 from espnet2.asr.encoder.wav2vec2_encoder import FairSeqWav2Vec2Encoder
 from espnet2.asr.espnet_model import ESPnetASRModel
+from espnet2.asr.nat import NatModel
 from espnet2.asr.espnet_model_ds2 import ESPnetASRModelDS2
 from espnet2.asr.espnet_model_ds2avt import ESPnetASRModelDS2AVT
 from espnet2.asr.espnet_model_wavlm_0_1_2 import ESPnetASRModelWavLM_0_1_2
@@ -127,6 +128,7 @@ model_choices = ClassChoices(
     "model",
     classes=dict(
         espnet=ESPnetASRModel,
+        nat=NatModel,
         espnet_ds2=ESPnetASRModelDS2,
         espnet_ds2_avt=ESPnetASRModelDS2AVT,
         espnet_wavlm_0_1_2=ESPnetASRModelWavLM_0_1_2,

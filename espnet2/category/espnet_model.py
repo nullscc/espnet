@@ -125,7 +125,7 @@ class ESPnetCategoryModel(AbsESPnetModel):
         out, features = self.category(feats, feats_lengths)
         if self.collect_npy:
             for index, uid in enumerate(kwargs['utt_id']):
-                npy_data = features[index]
+                npy_data = features[index][:feats_lengths[index], :]
                 np.save(os.path.join(self.npy_dir, f"{uid}"), npy_data.detach().cpu())
 
         stats = dict()

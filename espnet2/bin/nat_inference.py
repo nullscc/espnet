@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import os
 import argparse
 import logging
 import sys
@@ -18,7 +17,7 @@ from espnet2.asr.transducer.beam_search_transducer import (
 )
 from espnet2.asr.transducer.beam_search_transducer import Hypothesis as TransHypothesis
 from espnet2.fileio.datadir_writer import DatadirWriter
-from espnet2.tasks.category import CategoryTask
+from espnet2.tasks.asr import ASRTask
 from espnet2.tasks.enh_s2t import EnhS2TTask
 from espnet2.tasks.lm import LMTask
 from espnet2.text.build_tokenizer import build_tokenizer
@@ -80,7 +79,7 @@ class Speech2Text:
     ):
         assert check_argument_types()
 
-        task = CategoryTask if not enh_s2t_task else EnhS2TTask
+        task = ASRTask if not enh_s2t_task else EnhS2TTask
 
         if quantize_asr_model or quantize_lm:
             if quantize_dtype == "float16" and torch.__version__ < LooseVersion(
@@ -120,6 +119,107 @@ class Speech2Text:
                 asr_model, qconfig_spec=quantize_modules, dtype=quantize_dtype
             )
 
+        decoder = asr_model.decoder
+
+        ctc = CTCPrefixScorer(ctc=asr_model.ctc, eos=asr_model.eos)
+        token_list = asr_model.token_list
+        scorers.update(
+            decoder=decoder,
+            ctc=ctc,
+            length_bonus=LengthBonus(len(token_list)),
+        )
+
+        # 2. Build Language model
+        if lm_train_config is not None:
+            lm, lm_train_args = LMTask.build_model_from_file(
+                lm_train_config, lm_file, device
+            )
+
+            if quantize_lm:
+                logging.info("Use quantized lm for decoding.")
+
+                lm = torch.quantization.quantize_dynamic(
+                    lm, qconfig_spec=quantize_modules, dtype=quantize_dtype
+                )
+
+            scorers["lm"] = lm.lm
+
+        # 3. Build ngram model
+        if ngram_file is not None:
+            if ngram_scorer == "full":
+                from espnet.nets.scorers.ngram import NgramFullScorer
+
+                ngram = NgramFullScorer(ngram_file, token_list)
+            else:
+                from espnet.nets.scorers.ngram import NgramPartScorer
+
+                ngram = NgramPartScorer(ngram_file, token_list)
+        else:
+            ngram = None
+        scorers["ngram"] = ngram
+
+        # 4. Build BeamSearch object
+        if asr_model.use_transducer_decoder:
+            beam_search_transducer = BeamSearchTransducer(
+                decoder=asr_model.decoder,
+                joint_network=asr_model.joint_network,
+                beam_size=beam_size,
+                lm=scorers["lm"] if "lm" in scorers else None,
+                lm_weight=lm_weight,
+                **transducer_conf,
+            )
+            beam_search = None
+        else:
+            beam_search_transducer = None
+
+            weights = dict(
+                decoder=1.0 - ctc_weight,
+                ctc=ctc_weight,
+                lm=lm_weight,
+                ngram=ngram_weight,
+                length_bonus=penalty,
+            )
+            beam_search = BeamSearch(
+                beam_size=beam_size,
+                weights=weights,
+                scorers=scorers,
+                sos=asr_model.sos,
+                eos=asr_model.eos,
+                vocab_size=len(token_list),
+                token_list=token_list,
+                pre_beam_score_key=None if ctc_weight == 1.0 else "full",
+            )
+
+            # TODO(karita): make all scorers batchfied
+            if batch_size == 1:
+                non_batch = [
+                    k
+                    for k, v in beam_search.full_scorers.items()
+                    if not isinstance(v, BatchScorerInterface)
+                ]
+                if len(non_batch) == 0:
+                    if streaming:
+                        beam_search.__class__ = BatchBeamSearchOnlineSim
+                        beam_search.set_streaming_config(asr_train_config)
+                        logging.info(
+                            "BatchBeamSearchOnlineSim implementation is selected."
+                        )
+                    else:
+                        beam_search.__class__ = BatchBeamSearch
+                        logging.info("BatchBeamSearch implementation is selected.")
+                else:
+                    logging.warning(
+                        f"As non-batch scorers {non_batch} are found, "
+                        f"fall back to non-batch implementation."
+                    )
+
+            beam_search.to(device=device, dtype=getattr(torch, dtype)).eval()
+            for scorer in scorers.values():
+                if isinstance(scorer, torch.nn.Module):
+                    scorer.to(device=device, dtype=getattr(torch, dtype)).eval()
+            logging.info(f"Beam_search: {beam_search}")
+            logging.info(f"Decoding device={device}, dtype={dtype}")
+
         # 5. [Optional] Build Text converter: e.g. bpe-sym -> Text
         if token_type is None:
             token_type = asr_train_args.token_type
@@ -135,7 +235,6 @@ class Speech2Text:
                 tokenizer = None
         else:
             tokenizer = build_tokenizer(token_type=token_type)
-        token_list = asr_model.token_list
         converter = TokenIDConverter(token_list=token_list)
         logging.info(f"Text tokenizer: {tokenizer}")
 
@@ -143,6 +242,8 @@ class Speech2Text:
         self.asr_train_args = asr_train_args
         self.converter = converter
         self.tokenizer = tokenizer
+        self.beam_search = beam_search
+        self.beam_search_transducer = beam_search_transducer
         self.maxlenratio = maxlenratio
         self.minlenratio = minlenratio
         self.device = device
@@ -151,7 +252,7 @@ class Speech2Text:
 
     @torch.no_grad()
     def __call__(
-            self, keys, speech: Union[torch.Tensor, np.ndarray]
+        self, speech: Union[torch.Tensor, np.ndarray], noise_vector: Union[torch.Tensor, np.ndarray] = None
     ) -> List[
         Tuple[
             Optional[str],
@@ -184,14 +285,47 @@ class Speech2Text:
         batch = to_device(batch, device=self.device)
 
         # b. Forward Encoder
-        feats, feats_lengths = self.asr_model.encode(**batch)
-        out, features = self.asr_model.category(feats, feats_lengths)
-        if True:
-            npy_data = features[0]
-            np.save(os.path.join("/root/autodl-tmp/npy_data_test", f"{keys[0]}"), npy_data.detach().cpu())
+        noise_vector = noise_vector.unsqueeze(0).to(self.device)
+        enc, _ = self.asr_model.encode(**batch, noise_vectors=noise_vector)
+        if isinstance(enc, tuple):
+            enc = enc[0]
+        assert len(enc) == 1, len(enc)
 
-        results = out.argmax(1)
-        return results.item()
+        # c. Passed the encoder result and the beam search
+        if self.beam_search_transducer:
+            nbest_hyps = self.beam_search_transducer(enc[0])
+        else:
+            nbest_hyps = self.beam_search(
+                x=enc[0], maxlenratio=self.maxlenratio, minlenratio=self.minlenratio
+            )
+
+        nbest_hyps = nbest_hyps[: self.nbest]
+
+        results = []
+        for hyp in nbest_hyps:
+            assert isinstance(hyp, (Hypothesis, TransHypothesis)), type(hyp)
+
+            # remove sos/eos and get results
+            last_pos = None if self.asr_model.use_transducer_decoder else -1
+            if isinstance(hyp.yseq, list):
+                token_int = hyp.yseq[1:last_pos]
+            else:
+                token_int = hyp.yseq[1:last_pos].tolist()
+
+            # remove blank symbol id, which is assumed to be 0
+            token_int = list(filter(lambda x: x != 0, token_int))
+
+            # Change integer-ids to tokens
+            token = self.converter.ids2tokens(token_int)
+
+            if self.tokenizer is not None:
+                text = self.tokenizer.tokens2text(token)
+            else:
+                text = None
+            results.append((text, token, token_int, hyp))
+
+        assert check_return_type(results)
+        return results
 
     @staticmethod
     def from_pretrained(
@@ -315,14 +449,14 @@ def inference(
     )
 
     # 3. Build data-iterator
-    loader = CategoryTask.build_streaming_iterator(
+    loader = ASRTask.build_streaming_iterator(
         data_path_and_name_and_type,
         dtype=dtype,
         batch_size=batch_size,
         key_file=key_file,
         num_workers=num_workers,
-        preprocess_fn=CategoryTask.build_preprocess_fn(speech2text.asr_train_args, False),
-        collate_fn=CategoryTask.build_collate_fn(speech2text.asr_train_args, False),
+        preprocess_fn=ASRTask.build_preprocess_fn(speech2text.asr_train_args, False),
+        collate_fn=ASRTask.build_collate_fn(speech2text.asr_train_args, False),
         allow_variable_data_keys=allow_variable_data_keys,
         inference=True,
     )
@@ -339,24 +473,25 @@ def inference(
 
             # N-best list of (text, token, token_int, hyp_object)
             try:
-                results = speech2text(keys, speech=batch['speech'])
+                results = speech2text(**batch)
             except TooShortUttError as e:
-                raise
                 logging.warning(f"Utterance {keys} {e}")
                 hyp = Hypothesis(score=0.0, scores={}, states={}, yseq=[])
-            
-            key = keys[0]
+                results = [[" ", ["<space>"], [2], hyp]] * nbest
+
             # Only supporting batch_size==1
-            ibest_writer = writer[f"best_recog"]
-            if batch.get('text'):
-                label_int = batch['text'].item()
-            else:
-                label_int = 0
-            ibest_writer["label"][key] = str(label_int)
-            if results == label_int:
-                ibest_writer["ok"][key] = '1'
-            else:
-                ibest_writer["ok"][key] = '0'
+            key = keys[0]
+            for n, (text, token, token_int, hyp) in zip(range(1, nbest + 1), results):
+                # Create a directory: outdir/{n}best_recog
+                ibest_writer = writer[f"{n}best_recog"]
+
+                # Write the result to each file
+                ibest_writer["token"][key] = " ".join(token)
+                ibest_writer["token_int"][key] = " ".join(map(str, token_int))
+                ibest_writer["score"][key] = str(hyp.score)
+
+                if text is not None:
+                    ibest_writer["text"][key] = text
 
 
 def get_parser():
