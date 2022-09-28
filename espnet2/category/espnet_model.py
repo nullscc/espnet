@@ -46,9 +46,9 @@ class Category(torch.nn.Module):
         self.fcs = torch.nn.Sequential(
                 FC(1024, 1024),
                 FC(1024, 1024),
-                FC(1024, 128),
+                FC(1024, 40),
                 )
-        self.linear = torch.nn.Linear(128, 1024)
+        self.linear = torch.nn.Linear(40, 1024)
         self.out = torch.nn.Linear(1024, class_num)
         
     def forward(self, x, lengths, extract=False):
