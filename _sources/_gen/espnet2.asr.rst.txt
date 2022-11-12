@@ -587,6 +587,17 @@ espnet2.asr.frontend.s3prl
     :show-inheritance:
 
 
+.. _espnet2.asr.frontend.whisper:
+
+espnet2.asr.frontend.whisper
+----------------------------
+
+.. automodule:: espnet2.asr.frontend.whisper
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 .. _espnet2.asr.frontend.ds2:
 
 espnet2.asr.frontend.ds2
