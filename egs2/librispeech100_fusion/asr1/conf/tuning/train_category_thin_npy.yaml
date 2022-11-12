@@ -1,0 +1,58 @@
+batch_type: numel
+batch_bins: 6000000
+# batch_bins: 32000000
+# batch_type: unsorted
+# batch_size: 2
+num_workers: 16
+accum_grad: 4
+max_epoch: 51
+
+preprocessor: category
+preprocessor_conf:
+    noise_map_scp: wav_noise_map.scp
+noise_apply_prob: 0.875
+noise_scp: noise.scp
+noise_db_range: "0_25"
+freeze_param: [
+"frontend",
+"category.fcs"
+]
+
+model: espnet_thin
+model_conf:
+    extract_feats_in_collect_stats: false
+    npy_dir: npy_data_thin
+
+frontend: s3prl
+frontend_conf:
+    frontend_conf:
+        upstream: wavlm_local    # Note: If the upstream is changed, please change the input_size in the preencoder.
+        upstream_ckpt: /ssdhome/lgx521/pkg/pre-training/pre_trained_model/wavlm/WavLM-Large.pt
+    download_dir: ./hub
+    multilayer_feature: True
+
+seed: 2022
+num_att_plot: 0     
+sort_in_batch: descending       # how to sort data in making batch
+sort_batch: descending          # how to sort created batches
+patience: 10
+init: none
+best_model_criterion:
+-   - valid
+    - acc
+    - max
+keep_nbest_models: 5
+
+use_amp: true      
+cudnn_deterministic: false  
+cudnn_benchmark: false      
+
+optim: adam
+optim_conf:
+    lr: 0.0006
+    weight_decay: 0.000001
+scheduler: warmuplr
+scheduler_conf:
+    warmup_steps: 15000
+
+specaug: none
