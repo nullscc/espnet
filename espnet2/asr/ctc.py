@@ -184,4 +184,5 @@ class CTC(torch.nn.Module):
         Returns:
             torch.Tensor: argmax applied 2d tensor (B, Tmax)
         """
+        
         return torch.argmax(self.ctc_lo(hs_pad), dim=2)

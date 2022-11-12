@@ -1292,7 +1292,8 @@ if ! "${skip_eval}"; then
             _data="${data_feats}/${dset}"
             _dir="${asr_exp}/${inference_tag}/${dset}"
 
-            for _type in cer wer ter; do
+            # for _type in cer wer ter; do
+            for _type in wer ter; do
                 [ "${_type}" = ter ] && [ ! -f "${bpemodel}" ] && continue
 
                 _scoredir="${_dir}/score_${_type}"
@@ -1376,12 +1377,15 @@ if ! "${skip_eval}"; then
                             >"${_scoredir}/hyp.trn"
 
                 fi
-
+				
+				echo "~~~~~~~~~~~~~~~~********************"
+				echo "${score_opts} ${_scoredir}"
                 sclite \
 		    ${score_opts} \
                     -r "${_scoredir}/ref.trn" trn \
                     -h "${_scoredir}/hyp.trn" trn \
                     -i rm -o all stdout > "${_scoredir}/result.txt"
+				echo "~~~~~~~~~~~~~~~~----------------------"
 
                 log "Write ${_type} result in ${_scoredir}/result.txt"
                 grep -e Avg -e SPKR -m 2 "${_scoredir}/result.txt"

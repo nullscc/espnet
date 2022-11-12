@@ -7,6 +7,7 @@ import torch
 from typeguard import check_argument_types, check_return_type
 
 from espnet2.category.espnet_model import ESPnetCategoryModel
+from espnet2.category.espnet_model_thin import ESPnetCategoryModelThin
 from espnet2.category.frontend.abs_frontend import AbsFrontend
 from espnet2.category.frontend.default import DefaultFrontend
 from espnet2.category.frontend.fused import FusedFrontends
@@ -74,6 +75,7 @@ model_choices = ClassChoices(
     "model",
     classes=dict(
         espnet=ESPnetCategoryModel,
+        espnet_thin=ESPnetCategoryModelThin,
     ),
     type_check=AbsESPnetModel,
     default="espnet",
@@ -287,7 +289,7 @@ class CategoryTask(AbsTask):
         return retval
 
     @classmethod
-    def build_model(cls, args: argparse.Namespace) -> Union[ESPnetCategoryModel]:
+    def build_model(cls, args: argparse.Namespace) -> Union[ESPnetCategoryModel, ESPnetCategoryModelThin]:
         assert check_argument_types()
         if isinstance(args.token_list, str):
             with open(args.token_list, encoding="utf-8") as f:

@@ -7,12 +7,14 @@ set -o pipefail
 
 train_set="train_clean_100"
 valid_set="dev_clean"
-test_sets="test_clean"
+test_sets="dev_clean"
 
-asr_tag=nat
+asr_tag=nat_more_layer
 asr_config=conf/tuning/nat.yaml
 inference_config=conf/decode_asr.yaml
+train_npy_scp=npy.scp
 
+# --inference_asr_model "valid.acc.best.pth" \
 ./nat.sh \
     --skip_data_prep false \
     --skip_train false \
@@ -27,11 +29,11 @@ inference_config=conf/decode_asr.yaml
     --audio_format "wav" \
 	--feats_normalize utt_mvn \
     --feats_type raw \
+	--train_npy_scp ${train_npy_scp} \
     --use_lm false \
     --asr_tag "${asr_tag}" \
     --asr_config "${asr_config}" \
     --inference_config "${inference_config}" \
-	--inference_asr_model "valid.acc.best.pth" \
     --train_set "${train_set}" \
     --valid_set "${valid_set}" \
     --test_sets "${test_sets}" \

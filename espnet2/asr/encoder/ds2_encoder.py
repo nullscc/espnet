@@ -114,7 +114,7 @@ class DS2Encoder(AbsEncoder):
         rnn_input_size = input_size
         rnn_input_size = int(math.floor(rnn_input_size + 2 * 20 - 41) / 2 + 1)
         rnn_input_size = int(math.floor(rnn_input_size + 2 * 10 - 21) / 2 + 1)
-        rnn_input_size *= 32 
+        rnn_input_size *= 32
         rnn = BatchRNN(input_size=rnn_input_size, hidden_size=rnn_hidden_size, rnn_type=self.rnn_type,
                        bidirectional=bidirectional, batch_norm=False)
         rnns.append(('0', rnn))
@@ -136,7 +136,7 @@ class DS2Encoder(AbsEncoder):
         )
 
     def forward(self, x, lengths, rnn_split=2):
-        x = x.transpose(2, 3)
+        x = x.unsqueeze(1).transpose(2, 3)
         lengths = lengths.cpu().int()
         output_lengths = self.get_seq_lens(lengths)
         x, _ = self.conv(x, output_lengths)

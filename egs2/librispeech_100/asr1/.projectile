@@ -1,0 +1,6 @@
+!/exp
+-*.npy
+-/npy_data
+-/npy_data_thin
+-/npy_data_more_layer
+-/npy_data_test

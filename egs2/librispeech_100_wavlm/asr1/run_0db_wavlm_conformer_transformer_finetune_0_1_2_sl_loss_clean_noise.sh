@@ -42,6 +42,7 @@ inference_config=conf/decode_asr.yaml
 	--asr_stats_dir "${asr_stats_dir}" \
 	--dumpdir "${dumpdir}" \
     --asr_config "${asr_config}" \
+	--inference_asr_model  "26epoch.pth" \
     --inference_config "${inference_config}" \
 	--feats_normalize utt_mvn \
     --train_set "${train_set}" \

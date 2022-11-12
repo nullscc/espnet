@@ -414,11 +414,12 @@ class ESPnetDataset(AbsDataset):
                 value = value.numpy()
             elif isinstance(value, numbers.Number):
                 value = np.array([value])
+
             if name == "speech_ds2":
                 data[name] = wav2stftspec(value.squeeze()).T
-                # get D * T
             else:
                 data[name] = value
+
 
         # 2. [Option] Apply preprocessing
         #   e.g. espnet2.train.preprocessor:CommonPreprocessor

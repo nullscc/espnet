@@ -316,6 +316,226 @@ class CommonPreprocessor(AbsPreprocessor):
         data = self._speech_process(data)
         data = self._text_process(data)
         return data
+class NoiseSplitPreprocessor(AbsPreprocessor):
+    def __init__(
+        self,
+        train: bool,
+        token_type: str = None,
+        token_list: Union[Path, str, Iterable[str]] = None,
+        bpemodel: Union[Path, str, Iterable[str]] = None,
+        text_cleaner: Collection[str] = None,
+        g2p_type: str = None,
+        unk_symbol: str = "<unk>",
+        space_symbol: str = "<space>",
+        non_linguistic_symbols: Union[Path, str, Iterable[str]] = None,
+        delimiter: str = None,
+        rir_scp: str = None,
+        rir_apply_prob: float = 1.0,
+        noise_scp: str = None,
+        noise_apply_prob: float = 1.0,
+        noise_db_range: str = "3_10",
+        speech_volume_normalize: float = None,
+        speech_name: str = "speech",
+        text_name: str = "text",
+        train_noise_scp: str = "",
+        nontrain_noise_scp: str = "",
+    ):
+        super().__init__(train)
+        self.train = train
+        self.speech_name = speech_name
+        self.text_name = text_name
+        self.speech_volume_normalize = speech_volume_normalize
+        self.rir_apply_prob = rir_apply_prob
+        self.noise_apply_prob = noise_apply_prob
+
+        if token_type is not None:
+            if token_list is None:
+                raise ValueError("token_list is required if token_type is not None")
+            self.text_cleaner = TextCleaner(text_cleaner)
+
+            self.tokenizer = build_tokenizer(
+                token_type=token_type,
+                bpemodel=bpemodel,
+                delimiter=delimiter,
+                space_symbol=space_symbol,
+                non_linguistic_symbols=non_linguistic_symbols,
+                g2p_type=g2p_type,
+            )
+            self.token_id_converter = TokenIDConverter(
+                token_list=token_list,
+                unk_symbol=unk_symbol,
+            )
+        else:
+            self.text_cleaner = None
+            self.tokenizer = None
+            self.token_id_converter = None
+
+        if train and rir_scp is not None:
+            self.rirs = []
+            with open(rir_scp, "r", encoding="utf-8") as f:
+                for line in f:
+                    sps = line.strip().split(None, 1)
+                    if len(sps) == 1:
+                        self.rirs.append(sps[0])
+                    else:
+                        self.rirs.append(sps[1])
+        else:
+            self.rirs = None
+
+        if train and train_noise_scp:
+            self.noises = []
+            with open(train_noise_scp, "r", encoding="utf-8") as f:
+                for line in f:
+                    sps = line.strip().split(None, 1)
+                    if len(sps) == 1:
+                        self.noises.append(sps[0])
+                    else:
+                        self.noises.append(sps[1])
+            sps = noise_db_range.split("_")
+            if len(sps) == 1:
+                self.noise_db_low, self.noise_db_high = float(sps[0])
+            elif len(sps) == 2:
+                self.noise_db_low, self.noise_db_high = float(sps[0]), float(sps[1])
+            else:
+                raise ValueError(
+                    "Format error: '{noise_db_range}' e.g. -3_4 -> [-3db,4db]"
+                )
+        if not train and dev_noise_scp:
+            self.noises = []
+            with open(dev_noise_scp, "r", encoding="utf-8") as f:
+                for line in f:
+                    sps = line.strip().split(None, 1)
+                    if len(sps) == 1:
+                        self.noises.append(sps[0])
+                    else:
+                        self.noises.append(sps[1])
+            sps = noise_db_range.split("_")
+            if len(sps) == 1:
+                self.noise_db_low, self.noise_db_high = float(sps[0])
+            elif len(sps) == 2:
+                self.noise_db_low, self.noise_db_high = float(sps[0]), float(sps[1])
+            else:
+                raise ValueError(
+                    "Format error: '{noise_db_range}' e.g. -3_4 -> [-3db,4db]"
+                )
+        else:
+            self.noises = None
+
+    def _speech_process(
+        self, data: Dict[str, Union[str, np.ndarray]]
+    ) -> Dict[str, Union[str, np.ndarray]]:
+        assert check_argument_types()
+        if self.speech_name in data:
+            if self.train and (self.rirs is not None or self.noises is not None):
+                speech = data[self.speech_name]
+                nsamples = len(speech)
+
+                # speech: (Nmic, Time)
+                if speech.ndim == 1:
+                    speech = speech[None, :]
+                else:
+                    speech = speech.T
+                # Calc power on non shlence region
+                power = (speech[detect_non_silence(speech)] ** 2).mean()
+
+                # 1. Convolve RIR
+                if self.rirs is not None and self.rir_apply_prob >= np.random.random():
+                    rir_path = np.random.choice(self.rirs)
+                    if rir_path is not None:
+                        rir, _ = soundfile.read(
+                            rir_path, dtype=np.float64, always_2d=True
+                        )
+
+                        # rir: (Nmic, Time)
+                        rir = rir.T
+
+                        # speech: (Nmic, Time)
+                        # Note that this operation doesn't change the signal length
+                        speech = scipy.signal.convolve(speech, rir, mode="full")[
+                            :, : speech.shape[1]
+                        ]
+                        # Reverse mean power to the original power
+                        power2 = (speech[detect_non_silence(speech)] ** 2).mean()
+                        speech = np.sqrt(power / max(power2, 1e-10)) * speech
+
+                # 2. Add Noise
+                if (
+                    self.noises is not None
+                    and self.noise_apply_prob >= np.random.random()
+                ):
+                    noise_path = np.random.choice(self.noises)
+                    if noise_path is not None:
+                        noise_db = np.random.uniform(
+                            self.noise_db_low, self.noise_db_high
+                        )
+                        with soundfile.SoundFile(noise_path) as f:
+                            if f.frames == nsamples:
+                                noise = f.read(dtype=np.float64, always_2d=True)
+                            elif f.frames < nsamples:
+                                offset = np.random.randint(0, nsamples - f.frames)
+                                # noise: (Time, Nmic)
+                                noise = f.read(dtype=np.float64, always_2d=True)
+                                # Repeat noise
+                                noise = np.pad(
+                                    noise,
+                                    [(offset, nsamples - f.frames - offset), (0, 0)],
+                                    mode="wrap",
+                                )
+                            else:
+                                offset = np.random.randint(0, f.frames - nsamples)
+                                f.seek(offset)
+                                # noise: (Time, Nmic)
+                                noise = f.read(
+                                    nsamples, dtype=np.float64, always_2d=True
+                                )
+                                if len(noise) != nsamples:
+                                    raise RuntimeError(f"Something wrong: {noise_path}")
+                        # noise: (Nmic, Time)
+                        noise = noise.T
+
+                        noise_power = (noise**2).mean()
+                        scale = (
+                            10 ** (-noise_db / 20)
+                            * np.sqrt(power)
+                            / np.sqrt(max(noise_power, 1e-10))
+                        )
+                        speech = speech + scale * noise
+
+                speech = speech.T
+                ma = np.max(np.abs(speech))
+                if ma > 1.0:
+                    speech /= ma
+                data[self.speech_name] = speech
+
+            if self.speech_volume_normalize is not None:
+                speech = data[self.speech_name]
+                ma = np.max(np.abs(speech))
+                data[self.speech_name] = speech * self.speech_volume_normalize / ma
+        assert check_return_type(data)
+        return data
+
+    def _text_process(
+        self, data: Dict[str, Union[str, np.ndarray]]
+    ) -> Dict[str, np.ndarray]:
+        if self.text_name in data and self.tokenizer is not None:
+            text = data[self.text_name]
+            text = self.text_cleaner(text)
+            tokens = self.tokenizer.text2tokens(text)
+            text_ints = self.token_id_converter.tokens2ids(tokens)
+            data[self.text_name] = np.array(text_ints, dtype=np.int64)
+        assert check_return_type(data)
+        return data
+
+    def __call__(
+        self, uid: str, data: Dict[str, Union[str, np.ndarray]]
+    ) -> Dict[str, np.ndarray]:
+        assert check_argument_types()
+
+        data = self._speech_process(data)
+        data = self._text_process(data)
+        return data
+
+
 
 class DS2Preprocessor(CommonPreprocessor):
     def __init__(
@@ -496,6 +716,7 @@ class DS2Preprocessor(CommonPreprocessor):
         assert check_return_type(data)
         return data
 
+
 class NoiseDevPreprocessor(CommonPreprocessor):
     def __init__(
         self,
@@ -638,8 +859,8 @@ class NoiseDevPreprocessor(CommonPreprocessor):
                         and self.noise_apply_prob >= np.random.random()
                     ):
                         add_noise_flag = True
-                
-                if add_noise_flag: 
+
+                if add_noise_flag:
                     noise_path, noise_db, offset = None, None, None
                     if map_str:
                         noise_path, noise_db, offset = map_str.split()
@@ -675,7 +896,8 @@ class NoiseDevPreprocessor(CommonPreprocessor):
                                     nsamples, dtype=np.float64, always_2d=True
                                 )
                                 if len(noise) != nsamples:
-                                    raise RuntimeError(f"Something wrong: {noise_path}, {uid} {offset} {nsamples}")
+                                    raise RuntimeError(
+                                        f"Something wrong: {noise_path}, {uid} {offset} {nsamples}")
                         # noise: (Nmic, Time)
                         noise = noise.T
 
@@ -700,6 +922,7 @@ class NoiseDevPreprocessor(CommonPreprocessor):
                 data[self.speech_name] = speech * self.speech_volume_normalize / ma
         assert check_return_type(data)
         return data
+
     def __call__(
         self, uid: str, data: Dict[str, Union[str, np.ndarray]]
     ) -> Dict[str, np.ndarray]:
@@ -708,6 +931,228 @@ class NoiseDevPreprocessor(CommonPreprocessor):
         data = self._speech_process(uid, data)
         data = self._text_process(data)
         return data
+
+
+class NoiseDevWithNoisePreprocessor(CommonPreprocessor):
+    def __init__(
+        self,
+        train: bool,
+        token_type: str = None,
+        token_list: Union[Path, str, Iterable[str]] = None,
+        bpemodel: Union[Path, str, Iterable[str]] = None,
+        text_cleaner: Collection[str] = None,
+        g2p_type: str = None,
+        unk_symbol: str = "<unk>",
+        space_symbol: str = "<space>",
+        non_linguistic_symbols: Union[Path, str, Iterable[str]] = None,
+        delimiter: str = None,
+        rir_scp: str = None,
+        rir_apply_prob: float = 1.0,
+        noise_scp: str = None,
+        noise_apply_prob: float = 1.0,
+        noise_db_range: str = "3_10",
+        speech_volume_normalize: float = None,
+        speech_name: str = "speech",
+        text_name: str = "text",
+        noise_map_scp: str = None,
+    ):
+        super().__init__(train)
+        self.train = train
+        self.speech_name = speech_name
+        self.text_name = text_name
+        self.speech_volume_normalize = speech_volume_normalize
+        self.rir_apply_prob = rir_apply_prob
+        self.noise_apply_prob = noise_apply_prob
+
+        if token_type is not None:
+            if token_list is None:
+                raise ValueError("token_list is required if token_type is not None")
+            self.text_cleaner = TextCleaner(text_cleaner)
+
+            self.tokenizer = build_tokenizer(
+                token_type=token_type,
+                bpemodel=bpemodel,
+                delimiter=delimiter,
+                space_symbol=space_symbol,
+                non_linguistic_symbols=non_linguistic_symbols,
+                g2p_type=g2p_type,
+            )
+            self.token_id_converter = TokenIDConverter(
+                token_list=token_list,
+                unk_symbol=unk_symbol,
+            )
+        else:
+            self.text_cleaner = None
+            self.tokenizer = None
+            self.token_id_converter = None
+
+        if train and rir_scp is not None:
+            self.rirs = []
+            with open(rir_scp, "r", encoding="utf-8") as f:
+                for line in f:
+                    sps = line.strip().split(None, 1)
+                    if len(sps) == 1:
+                        self.rirs.append(sps[0])
+                    else:
+                        self.rirs.append(sps[1])
+        else:
+            self.rirs = None
+
+        if noise_scp is not None:
+            self.noises = []
+            with open(noise_scp, "r", encoding="utf-8") as f:
+                for line in f:
+                    sps = line.strip().split(None, 1)
+                    if len(sps) == 1:
+                        self.noises.append(sps[0])
+                    else:
+                        self.noises.append(sps[1])
+            sps = noise_db_range.split("_")
+            if len(sps) == 1:
+                self.noise_db_low, self.noise_db_high = float(sps[0])
+            elif len(sps) == 2:
+                self.noise_db_low, self.noise_db_high = float(sps[0]), float(sps[1])
+            else:
+                raise ValueError(
+                    "Format error: '{noise_db_range}' e.g. -3_4 -> [-3db,4db]"
+                )
+        else:
+            self.noises = None
+        self.noise_map = {}
+        if noise_map_scp:
+            with open(noise_map_scp, "r", encoding="utf-8") as f:
+                for line in f:
+                    uid, noise_path, noise_db, offset = line.strip().split()
+                    self.noise_map[uid] = f"{noise_path} {noise_db} {offset}"
+
+    def _speech_process(
+        self, uid, data: Dict[str, Union[str, np.ndarray]]
+    ) -> Dict[str, Union[str, np.ndarray]]:
+        assert check_argument_types()
+        if self.speech_name in data:
+            if (self.rirs is not None or self.noises is not None):
+                speech = data[self.speech_name]
+                nsamples = len(speech)
+
+                # speech: (Nmic, Time)
+                if speech.ndim == 1:
+                    speech = speech[None, :]
+                else:
+                    speech = speech.T
+                # Calc power on non shlence region
+                power = (speech[detect_non_silence(speech)] ** 2).mean()
+
+                # 1. Convolve RIR
+                if self.rirs is not None and self.rir_apply_prob >= np.random.random():
+                    rir_path = np.random.choice(self.rirs)
+                    if rir_path is not None:
+                        rir, _ = soundfile.read(
+                            rir_path, dtype=np.float64, always_2d=True
+                        )
+
+                        # rir: (Nmic, Time)
+                        rir = rir.T
+
+                        # speech: (Nmic, Time)
+                        # Note that this operation doesn't change the signal length
+                        speech = scipy.signal.convolve(speech, rir, mode="full")[
+                            :, : speech.shape[1]
+                        ]
+                        # Reverse mean power to the original power
+                        power2 = (speech[detect_non_silence(speech)] ** 2).mean()
+                        speech = np.sqrt(power / max(power2, 1e-10)) * speech
+
+                # 2. Add Noise
+                map_str = self.noise_map.get(uid)
+                add_noise_flag = False
+                if self.noise_map and not map_str:
+                    add_noise_flag = False
+                elif self.noise_map and map_str:
+                    add_noise_flag = True
+                else:
+                    if (
+                        self.noises is not None
+                        and self.noise_apply_prob >= np.random.random()
+                    ):
+                        add_noise_flag = True
+
+                if add_noise_flag:
+                    noise_path, noise_db, offset = None, None, None
+                    if map_str:
+                        noise_path, noise_db, offset = map_str.split()
+                        noise_db = float(noise_db)
+                        offset = int(offset)
+                    if noise_path is None:
+                        noise_path = np.random.choice(self.noises)
+                    if noise_path is not None:
+                        if noise_db is None:
+                            noise_db = np.random.uniform(
+                                self.noise_db_low, self.noise_db_high
+                            )
+                        with soundfile.SoundFile(noise_path) as f:
+                            if f.frames == nsamples:
+                                noise = f.read(dtype=np.float64, always_2d=True)
+                            elif f.frames < nsamples:
+                                if offset is None:
+                                    offset = np.random.randint(0, nsamples - f.frames)
+                                # noise: (Time, Nmic)
+                                noise = f.read(dtype=np.float64, always_2d=True)
+                                # Repeat noise
+                                noise = np.pad(
+                                    noise,
+                                    [(offset, nsamples - f.frames - offset), (0, 0)],
+                                    mode="wrap",
+                                )
+                            else:
+                                if offset is None:
+                                    offset = np.random.randint(0, f.frames - nsamples)
+                                f.seek(offset)
+                                # noise: (Time, Nmic)
+                                noise = f.read(
+                                    nsamples, dtype=np.float64, always_2d=True
+                                )
+                                if len(noise) != nsamples:
+                                    raise RuntimeError(
+                                        f"Something wrong: {noise_path}, {uid} {offset} {nsamples}")
+                        # noise: (Nmic, Time)
+                        noise = noise.T
+
+                        noise_power = (noise**2).mean()
+                        scale = (
+                            10 ** (-noise_db / 20)
+                            * np.sqrt(power)
+                            / np.sqrt(max(noise_power, 1e-10))
+                        )
+                        speech = speech + scale * noise
+
+                        noise = noise.squeeze(0).T
+                        ma = np.max(np.abs(noise))
+                        if ma > 1.0:
+                            noise /= ma
+                        data["noise_" + self.speech_name] = noise
+                # speech = speech.T
+                speech = speech.squeeze(0).T
+                ma = np.max(np.abs(speech))
+                if ma > 1.0:
+                    speech /= ma
+                data[self.speech_name] = speech
+
+            if self.speech_volume_normalize is not None:
+                speech = data[self.speech_name]
+                ma = np.max(np.abs(speech))
+                data[self.speech_name] = speech * self.speech_volume_normalize / ma
+        assert check_return_type(data)
+        return data
+
+    def __call__(
+        self, uid: str, data: Dict[str, Union[str, np.ndarray]]
+    ) -> Dict[str, np.ndarray]:
+        assert check_argument_types()
+
+        data = self._speech_process(uid, data)
+        data = self._text_process(data)
+        return data
+
 
 class CategoryPreprocessor(CommonPreprocessor):
     def __init__(
@@ -851,9 +1296,9 @@ class CategoryPreprocessor(CommonPreprocessor):
                         and self.noise_apply_prob >= np.random.random()
                     ):
                         add_noise_flag = True
-                
+
                 data['text'] = '<unk>'
-                if add_noise_flag: 
+                if add_noise_flag:
                     noise_path, noise_db, offset = None, None, None
                     if map_str:
                         noise_path, noise_db, offset = map_str.split()
@@ -891,7 +1336,8 @@ class CategoryPreprocessor(CommonPreprocessor):
                                     nsamples, dtype=np.float64, always_2d=True
                                 )
                                 if len(noise) != nsamples:
-                                    raise RuntimeError(f"Something wrong: {noise_path}, {uid} {offset} {nsamples}")
+                                    raise RuntimeError(
+                                        f"Something wrong: {noise_path}, {uid} {offset} {nsamples}")
                         # noise: (Nmic, Time)
                         noise = noise.T
 
@@ -916,6 +1362,7 @@ class CategoryPreprocessor(CommonPreprocessor):
                 data[self.speech_name] = speech * self.speech_volume_normalize / ma
         assert check_return_type(data)
         return data
+
     def __call__(
         self, uid: str, data: Dict[str, Union[str, np.ndarray]]
     ) -> Dict[str, np.ndarray]:
@@ -924,6 +1371,7 @@ class CategoryPreprocessor(CommonPreprocessor):
         data = self._speech_process(uid, data)
         data = self._text_process(data)
         return data
+
 
 class CommonPreprocessor_multi(AbsPreprocessor):
     def __init__(

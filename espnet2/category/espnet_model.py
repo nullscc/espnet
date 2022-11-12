@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from typing import Dict, List, Optional, Tuple, Union
 
 import torch
+from torch.nn import Dropout
 from packaging.version import parse as V
 from typeguard import check_argument_types
 
@@ -30,6 +31,7 @@ else:
 class FC(torch.nn.Module):
     def __init__(self, in_dim, out_dim):
         super().__init__()
+        self.dropout = Dropout(p=0.1)
         self.layer = torch.nn.Sequential(
                     torch.nn.Linear(in_dim, out_dim),
                     torch.nn.LayerNorm(out_dim),
@@ -47,6 +49,7 @@ class Category(torch.nn.Module):
                 FC(1024, 1024),
                 FC(1024, 1024),
                 FC(1024, 40),
+                FC(40, 40),
                 )
         self.linear = torch.nn.Linear(40, 1024)
         self.out = torch.nn.Linear(1024, class_num)

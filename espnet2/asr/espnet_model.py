@@ -558,3 +558,7 @@ class ESPnetASRModel(AbsESPnetModel):
             )
 
         return loss_transducer, cer_transducer, wer_transducer
+
+
+if __name__ == "__main__":
+    print("hello")

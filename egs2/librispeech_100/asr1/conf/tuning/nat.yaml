@@ -1,7 +1,7 @@
 # Trained with Ampere A6000(48GB) x 2 GPUs. It takes about 10 days.
 batch_type: numel
 # batch_bins: 40000000
-batch_bins: 8000000
+batch_bins: 4000000
 num_workers: 16
 accum_grad: 4
 max_epoch: 50
@@ -29,13 +29,13 @@ frontend: s3prl
 frontend_conf:
     frontend_conf:
         upstream: wavlm_local    # Note: If the upstream is changed, please change the input_size in the preencoder.
-        upstream_ckpt: /root/autodl-tmp/WavLM-Large.pt
+        upstream_ckpt: /ssdhome/lgx521/pkg/pre-training/pre_trained_model/wavlm/WavLM-Large.pt
     download_dir: ./hub
     multilayer_feature: True
 
 preencoder: linear
 preencoder_conf:
-    input_size: 1152  # Note: If the upstream is changed, please change this value accordingly.
+    input_size: 1064  # Note: If the upstream is changed, please change this value accordingly.
     output_size: 80
 
 encoder: conformer
@@ -74,7 +74,7 @@ model_conf:
 
 optim: adam
 optim_conf:
-    lr: 0.0012
+    lr: 0.0008
 scheduler: warmuplr
 scheduler_conf:
     warmup_steps: 50000

@@ -10,7 +10,7 @@ valid_set="dev_clean"
 # test_sets="test_clean test_other dev_clean dev_other"
 test_sets="test_clean"
 
-asr_tag=category
+asr_tag=category_more_layer
 inference_config=conf/decode_asr.yaml
 
 collect_npy=true
@@ -27,7 +27,7 @@ fi
     --skip_train false \
     --skip_eval false \
     --lang en \
-    --ngpu 1 \
+    --ngpu 2 \
     --nj 32 \
     --inference_nj 1 \
 	--gpu_inference true \

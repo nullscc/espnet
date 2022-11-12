@@ -9,7 +9,7 @@ train_set="train100"
 valid_set="dev"
 # test_sets="test_0db"
 # test_sets="test_clean_original test_15db test_0db"
-test_sets="test_15db"
+test_sets="test_15db_youtube test_0db_youtube"
 
 collect_npy=false
 clean_scp=false

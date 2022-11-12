@@ -40,8 +40,12 @@ from espnet2.asr.encoder.ds2_encoder import DS2Encoder
 from espnet2.asr.encoder.vgg_rnn_encoder import VGGRNNEncoder
 from espnet2.asr.encoder.wav2vec2_encoder import FairSeqWav2Vec2Encoder
 from espnet2.asr.espnet_model import ESPnetASRModel
+from espnet2.asr.nat_thin import NatThinModel
 from espnet2.asr.nat import NatModel
+from espnet2.asr.utt_nat import UttNatModel
+from espnet2.asr.utt_nat_frame_cat import UttNatFrameCatModel
 from espnet2.asr.espnet_model_ds2 import ESPnetASRModelDS2
+from espnet2.asr.espnet_model_2wavlm import ESPnetASR2WavLMModel
 from espnet2.asr.espnet_model_ds2avt import ESPnetASRModelDS2AVT
 from espnet2.asr.espnet_model_wavlm_0_1_2 import ESPnetASRModelWavLM_0_1_2
 from espnet2.asr.espnet_model_wavlm_0_1_2_noise import ESPnetASRModelWavLM_0_1_2_noise
@@ -51,6 +55,7 @@ from espnet2.asr.frontend.default import DefaultFrontend
 from espnet2.asr.frontend.ds2 import DS2Frontend
 from espnet2.asr.frontend.fused import FusedFrontends
 from espnet2.asr.frontend.s3prl import S3prlFrontend
+from espnet2.asr.frontend.s3prl_2wavlm import S3prl2WavLMFrontend
 from espnet2.asr.frontend.s3prl_0_1_2 import S3prlFrontend_0_1_2
 from espnet2.asr.frontend.windowing import SlidingWindow
 from espnet2.asr.maskctc_model import MaskCTCModel
@@ -74,7 +79,7 @@ from espnet2.torch_utils.initialize import initialize
 from espnet2.train.abs_espnet_model import AbsESPnetModel
 from espnet2.train.class_choices import ClassChoices
 from espnet2.train.collate_fn import CommonCollateFn
-from espnet2.train.preprocessor import AbsPreprocessor, CommonPreprocessor, DS2Preprocessor, CategoryPreprocessor, NoiseDevPreprocessor
+from espnet2.train.preprocessor import AbsPreprocessor, CommonPreprocessor, DS2Preprocessor, CategoryPreprocessor, NoiseDevPreprocessor, NoiseDevWithNoisePreprocessor, NoiseSplitPreprocessor
 from espnet2.train.trainer import Trainer
 from espnet2.utils.get_default_kwargs import get_default_kwargs
 from espnet2.utils.nested_dict_action import NestedDictAction
@@ -87,6 +92,8 @@ preprocessor_choices = ClassChoices(
         ds2=DS2Preprocessor,
         category=CategoryPreprocessor,
         noise_dev=NoiseDevPreprocessor,
+        noise_dev_with_noise=NoiseDevWithNoisePreprocessor,
+        noise_split=NoiseSplitPreprocessor,
     ),
     type_check=AbsPreprocessor,
     default="default",
@@ -98,6 +105,7 @@ frontend_choices = ClassChoices(
         default=DefaultFrontend,
         sliding_window=SlidingWindow,
         s3prl=S3prlFrontend,
+        s3prl_2wavlm=S3prl2WavLMFrontend,
         s3prl_0_1_2=S3prlFrontend_0_1_2,
         fused=FusedFrontends,
         ds2=DS2Frontend,
@@ -129,7 +137,11 @@ model_choices = ClassChoices(
     classes=dict(
         espnet=ESPnetASRModel,
         nat=NatModel,
+        nat_thin=NatThinModel,
+        utt_nat=UttNatModel,
+        utt_nat_cat_frame=UttNatFrameCatModel,
         espnet_ds2=ESPnetASRModelDS2,
+        espnet_2wavlm=ESPnetASR2WavLMModel,
         espnet_ds2_avt=ESPnetASRModelDS2AVT,
         espnet_wavlm_0_1_2=ESPnetASRModelWavLM_0_1_2,
         espnet_wavlm_0_1_2_noise=ESPnetASRModelWavLM_0_1_2_noise,

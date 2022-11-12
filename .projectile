@@ -1,0 +1,10 @@
+!/egs2/librispeech_100/asr1/exp
+-*.png
+-*.pth
+-/egs
+-/egs2
+-*.npy
+-/egs2/librispeech_100/asr1/npy_data
+-/egs2/librispeech_100/asr1/npy_data_thin
+-/egs2/librispeech_100/asr1/npy_data_more_layer
+-/egs2/librispeech_100/asr1/npy_data_test

@@ -1,0 +1,4 @@
+[submodule "tools/fairseq"]
+    path = tools/fairseq
+    url = https://github.com/facebookresearch/fairseq
+    branch = main

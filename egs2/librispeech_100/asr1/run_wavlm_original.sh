@@ -7,9 +7,10 @@ set -o pipefail
 
 train_set="train_clean_100"
 valid_set="dev_clean"
-test_sets="test_clean"
+# test_sets="test_clean"
+test_sets="dev_clean test_clean"
 
-asr_tag=wavlm_conformer_transformer_original
+asr_tag=wavlm_conformer_transformer_original_all_noise
 asr_config=conf/tuning/wavlm_conformer_transformer_original.yaml
 inference_config=conf/decode_asr.yaml
 

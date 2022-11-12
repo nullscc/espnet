@@ -144,6 +144,7 @@ local_score_opts=          # The options given to local/score.sh.
 asr_speech_fold_length=800 # fold_length for speech data during ASR training.
 asr_text_fold_length=150   # fold_length for text data during ASR training.
 lm_fold_length=150         # fold_length for LM training.
+train_npy_scp=npy.scp
 
 help_message=$(cat << EOF
 Usage: $0 --train-set "<train_set_name>" --valid-set "<valid_set_name>" --test_sets "<test_set_names>"
@@ -1071,7 +1072,7 @@ if ! "${skip_train}"; then
         else
             _opts+="--train_data_path_and_name_and_type ${_asr_train_dir}/${_scp},speech,${_type} "
             _opts+="--train_data_path_and_name_and_type ${_asr_train_dir}/text,text,text "
-            _opts+="--train_data_path_and_name_and_type ${_asr_train_dir}/npy.scp,noise_vector,npy "
+            _opts+="--train_data_path_and_name_and_type ${_asr_train_dir}/${train_npy_scp},noise_vector,npy "
             _opts+="--train_shape_file ${asr_stats_dir}/train/speech_shape "
             _opts+="--train_shape_file ${asr_stats_dir}/train/text_shape.${token_type} "
         fi
@@ -1106,7 +1107,7 @@ if ! "${skip_train}"; then
                 --cleaner "${cleaner}" \
                 --g2p "${g2p}" \
                 --valid_data_path_and_name_and_type "${_asr_valid_dir}/${_scp},speech,${_type}" \
-                --valid_data_path_and_name_and_type "${_asr_valid_dir}/npy.scp,noise_vector,npy" \
+                --valid_data_path_and_name_and_type "${_asr_valid_dir}/${train_npy_scp},noise_vector,npy" \
                 --valid_data_path_and_name_and_type "${_asr_valid_dir}/text,text,text" \
                 --valid_shape_file "${asr_stats_dir}/valid/speech_shape" \
                 --valid_shape_file "${asr_stats_dir}/valid/text_shape.${token_type}" \

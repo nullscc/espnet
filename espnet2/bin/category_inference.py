@@ -188,7 +188,7 @@ class Speech2Text:
         out, features = self.asr_model.category(feats, feats_lengths)
         if True:
             npy_data = features[0]
-            np.save(os.path.join("/root/autodl-tmp/npy_data_test", f"{keys[0]}"), npy_data.detach().cpu())
+            np.save(os.path.join("npy_data_test", f"{keys[0]}"), npy_data.detach().cpu())
 
         results = out.argmax(1)
         return results.item()

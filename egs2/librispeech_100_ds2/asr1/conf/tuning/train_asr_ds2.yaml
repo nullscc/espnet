@@ -5,7 +5,12 @@ batch_bins: 8000000
 # batch_size: 2
 
 accum_grad: 4
-max_epoch: 30
+max_epoch: 80
+
+preprocessor: ds2
+noise_apply_prob: 0.875
+noise_scp: noise.scp
+noise_db_range: "0_25"
 
 encoder: ds2
 encoder_conf:
@@ -17,21 +22,19 @@ decoder: identity
 decoder_conf:
     hello: world
 
-model: espnet_ds2
+model: espnet
 model_conf:
     ctc_weight: 1.0
     lsm_weight: 0.1
     length_normalized_loss: false
     extract_feats_in_collect_stats: false
 
-input_size: 161
-frontend: none
-# frontend_conf:
-#     n_fft: 320
-#     win_length: 320
-#     hop_length: 160
-#     window: hamming
-#     normalized: true
+frontend_conf:
+    n_fft: 320
+    win_length: 320
+    hop_length: 160
+    window: hamming
+    normalized: true
 
 seed: 2022
 log_interval: 400   
@@ -39,13 +42,13 @@ num_att_plot: 0
 num_workers: 8      
 sort_in_batch: descending       # how to sort data in making batch
 sort_batch: descending          # how to sort created batches
-patience: none
+patience: 5
 init: none
 best_model_criterion:
 -   - valid
     - cer_ctc
     - min
-keep_nbest_models: 10
+keep_nbest_models: 5
 
 use_amp: true      
 cudnn_deterministic: false  
@@ -53,7 +56,7 @@ cudnn_benchmark: false
 
 optim: adam
 optim_conf:
-    lr: 0.0006
+    lr: 0.0008
     weight_decay: 0.000001
 scheduler: warmuplr
 scheduler_conf:
