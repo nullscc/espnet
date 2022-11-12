@@ -25,6 +25,7 @@ from espnet2.fileio.rttm import RttmReader
 from espnet2.fileio.sound_scp import SoundScpReader
 from espnet2.utils.sized_dict import SizedDict
 from espnet2.utils.wav2stftspec import wav2stftspec
+import whisper
 
 
 class AdapterForSoundScpReader(collections.abc.Mapping):
@@ -425,6 +426,12 @@ class ESPnetDataset(AbsDataset):
         #   e.g. espnet2.train.preprocessor:CommonPreprocessor
         if self.preprocess is not None:
             data = self.preprocess(uid, data)
+
+        if "speech_whisper" in data:
+            audio = data["speech_whisper"]
+            audio = whisper.pad_or_trim(audio.flatten()).astype(self.float_dtype)
+            data["speech"] = whisper.log_mel_spectrogram(audio).numpy()
+            del data["speech_whisper"]
 
         # 3. Force data-precision
         for name in data:

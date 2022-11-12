@@ -12,6 +12,7 @@ from torch.utils.data.dataset import IterableDataset
 from typeguard import check_argument_types
 
 from espnet2.train.dataset import ESPnetDataset
+import whisper
 
 
 def load_kaldi(input):
@@ -207,6 +208,11 @@ class IterableESPnetDataset(IterableDataset):
             #   e.g. espnet2.train.preprocessor:CommonPreprocessor
             if self.preprocess is not None:
                 data = self.preprocess(uid, data)
+                if "speech_whisper" in data:
+                    audio = data["speech_whisper"]
+                    audio = whisper.pad_or_trim(audio.flatten()).astype(self.float_dtype)
+                    data["speech"] = whisper.log_mel_spectrogram(audio).numpy()
+                    del data["speech_whisper"]
 
             # 4. Force data-precision
             for name in data:

@@ -400,9 +400,9 @@ class NoiseSplitPreprocessor(AbsPreprocessor):
                 raise ValueError(
                     "Format error: '{noise_db_range}' e.g. -3_4 -> [-3db,4db]"
                 )
-        if not train and dev_noise_scp:
+        if not train and nontrain_noise_scp:
             self.noises = []
-            with open(dev_noise_scp, "r", encoding="utf-8") as f:
+            with open(nontrain_noise_scp, "r", encoding="utf-8") as f:
                 for line in f:
                     sps = line.strip().split(None, 1)
                     if len(sps) == 1:
