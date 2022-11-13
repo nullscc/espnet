@@ -21,16 +21,17 @@ class WhisperFrontend(AbsFrontend):
 
     def __init__(self, fs):
         super().__init__()
-        self.model = whisper.load_model("large", device="cpu")
-
-
+        model = whisper.load_model("large", device="cpu")
+        self.whisper_encoder = model.encoder
+        self._output_size = model.dims.n_audio_state
+    
     def output_size(self) -> int:
-        return self.model.dims.n_audio_state
-
+        return self._output_size
+    
     def forward(
         self, input: torch.Tensor, input_lengths: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor]:
-        input_feats = self.model.encoder(input)
-
-        return input_feats, [input_feats.shape[1] for i in range(input_feats.shape[0])]
+        input_feats = self.whisper_encoder(input)
+    
+        return input_feats, torch.tensor([input_feats.shape[1] for i in range(input_feats.shape[0])])
 

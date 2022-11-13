@@ -28,6 +28,7 @@ inference_config=conf/decode_asr.yaml
     --use_lm false \
     --asr_tag "${asr_tag}" \
     --asr_config "${asr_config}" \
+    --feats_normalize utt_mvn \
     --inference_config "${inference_config}" \
     --train_set "${train_set}" \
     --valid_set "${valid_set}" \

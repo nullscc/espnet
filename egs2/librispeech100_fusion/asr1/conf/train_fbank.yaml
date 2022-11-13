@@ -1,7 +1,7 @@
 batch_type: numel
-batch_bins: 16000000
+batch_bins: 64000000
 accum_grad: 4
-max_epoch: 70
+max_epoch: 220
 
 preprocessor: noise_split
 preprocessor_conf:
@@ -9,6 +9,26 @@ preprocessor_conf:
     nontrain_noise_scp: dev_noise.scp
 noise_apply_prob: 0.9
 noise_db_range: "0_25"
+
+
+encoder: conformer
+encoder_conf:
+    output_size: 256
+    attention_heads: 4
+    linear_units: 1024
+    num_blocks: 12
+    dropout_rate: 0.1
+    positional_dropout_rate: 0.1
+    attention_dropout_rate: 0.1
+    input_layer: conv2d
+    normalize_before: true
+    macaron_style: true
+    rel_pos_type: latest
+    pos_enc_layer_type: rel_pos
+    selfattention_layer_type: rel_selfattn
+    activation_type: swish
+    use_cnn_module: true
+    cnn_module_kernel: 31
 
 
 decoder: transformer
@@ -51,7 +71,7 @@ cudnn_benchmark: false
 
 optim: adam
 optim_conf:
-    lr: 0.002
+    lr: 0.008
     weight_decay: 0.000001
 scheduler: warmuplr
 scheduler_conf:

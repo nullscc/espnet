@@ -19,7 +19,7 @@ inference_config=conf/decode_asr.yaml
     --skip_eval false \
     --lang en \
     --ngpu 2 \
-    --nj 12 \
+    --nj 8 \
     --inference_nj 12 \
     --nbpe 5000 \
     --max_wav_duration 30 \
@@ -27,6 +27,7 @@ inference_config=conf/decode_asr.yaml
     --feats_type raw \
     --use_lm false \
     --asr_tag "${asr_tag}" \
+	--feats_normalize utt_mvn \
     --asr_config "${asr_config}" \
     --inference_config "${inference_config}" \
     --train_set "${train_set}" \

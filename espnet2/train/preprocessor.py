@@ -400,7 +400,7 @@ class NoiseSplitPreprocessor(AbsPreprocessor):
                 raise ValueError(
                     "Format error: '{noise_db_range}' e.g. -3_4 -> [-3db,4db]"
                 )
-        if not train and nontrain_noise_scp:
+        elif not train and nontrain_noise_scp:
             self.noises = []
             with open(nontrain_noise_scp, "r", encoding="utf-8") as f:
                 for line in f:
@@ -426,7 +426,7 @@ class NoiseSplitPreprocessor(AbsPreprocessor):
     ) -> Dict[str, Union[str, np.ndarray]]:
         assert check_argument_types()
         if self.speech_name in data:
-            if self.train and (self.rirs is not None or self.noises is not None):
+            if self.rirs is not None or self.noises is not None:
                 speech = data[self.speech_name]
                 nsamples = len(speech)
 
