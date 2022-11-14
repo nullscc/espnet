@@ -1249,7 +1249,8 @@ if ! "${skip_eval}"; then
                 ${python} -m ${asr_inference_tool} \
                     --batch_size ${batch_size} \
                     --ngpu "${_ngpu}" \
-                    --data_path_and_name_and_type "${_data}/${_scp},speech,${_type}" \
+                    --data_path_and_name_and_type "${_data}/${_scp},speech_whisper,${_type}" \
+					--allow_variable_data_keys true \
                     --key_file "${_logdir}"/keys.JOB.scp \
                     --asr_train_config "${asr_exp}"/config.yaml \
                     --asr_model_file "${asr_exp}"/"${inference_asr_model}" \
