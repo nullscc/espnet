@@ -7,7 +7,7 @@ set -o pipefail
 
 train_set="train_clean_100"
 valid_set="dev_clean"
-test_sets="test_clean"
+test_sets="test_clean_5db"
 
 asr_tag=whisper
 asr_config=conf/train_whisper.yaml
@@ -18,10 +18,12 @@ inference_config=conf/decode_asr.yaml
     --skip_train false \
     --skip_eval false \
     --lang en \
-    --ngpu 2 \
+    --ngpu 1 \
     --nj 8 \
-    --inference_nj 12 \
+    --inference_nj 1 \
     --nbpe 5000 \
+ 	--gpu_inference true \
+	--expdir exp_whisper \
     --max_wav_duration 30 \
     --audio_format "wav" \
     --feats_type raw \
